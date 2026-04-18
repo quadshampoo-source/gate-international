@@ -17,11 +17,12 @@ export default async function HomePage({ params }) {
     acc[p.district] = (acc[p.district] || 0) + 1;
     return acc;
   }, {});
-  const districts = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Üsküdar', 'Zekeriyaköy'].map((d) => ({
+  const districts = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Üsküdar', 'Bodrum'].map((d) => ({
     name: d,
     nameAr: DISTRICT_NAMES_AR[d],
     nameZh: DISTRICT_NAMES_ZH[d],
-    count: districtCounts[d] || (d === 'Zekeriyaköy' ? 2 : 0),
+    count: districtCounts[d] || 0,
+    href: d === 'Bodrum' ? `/${lang}/districts/bodrum` : `/${lang}/projects?district=${encodeURIComponent(d)}`,
   }));
 
   const heroImg = 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=2400&q=85';
@@ -142,7 +143,7 @@ export default async function HomePage({ params }) {
               return (
                 <Link
                   key={d.name}
-                  href={`/${lang}/projects?district=${encodeURIComponent(d.name)}`}
+                  href={d.href}
                   className="bg-bg p-5 md:p-7 cursor-pointer transition-colors hover:bg-bg-raised group"
                 >
                   <div className="font-mono text-[10px] text-fg-dim tracking-[0.12em] mb-8">

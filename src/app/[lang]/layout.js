@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
   const { lang } = await params;
   const dict = getDict(lang);
   return {
-    title: `${dict.brand} — Istanbul Properties`,
+    title: `${dict.brand} — Istanbul & Bodrum Premium Real Estate`,
     description: dict.home.heroSub,
   };
 }

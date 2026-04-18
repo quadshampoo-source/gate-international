@@ -9,11 +9,13 @@ const GROWTH = {
   Maslak: 'high', Kağıthane: 'high', Levent: 'high', Güneşli: 'high',
   Beyoğlu: 'medium', Şişli: 'medium', Ataşehir: 'medium',
   Sariyer: 'medium', Beşiktaş: 'stable', Üsküdar: 'stable', Göktürk: 'medium',
+  Bodrum: 'high',
 };
 const PRIMARY_MARKET = {
   Maslak: 'china', Kağıthane: 'china', Levent: 'china', Güneşli: 'china',
   Beşiktaş: 'arab', Beyoğlu: 'arab', Şişli: 'arab', Göktürk: 'arab',
   Sariyer: 'both', Üsküdar: 'both', Ataşehir: 'both',
+  Bodrum: 'arab',
 };
 
 const fmtUsd = (n) => {

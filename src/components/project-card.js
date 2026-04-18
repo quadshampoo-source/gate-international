@@ -59,7 +59,9 @@ export default function ProjectCard({ project, index, lang, wide = false, showFr
         <div>
           <div className="font-serif text-[22px] leading-tight mb-1">{name}</div>
           <div className="text-xs text-fg-muted tracking-[0.08em]">
-            {district.toUpperCase()} · {project.bedrooms} {dict.projects.bedrooms} · {project.area}m²
+            {district.toUpperCase()}
+            {project.subDistrict ? ` · ${project.subDistrict.toUpperCase()}` : ''}
+            {' · '}{project.bedrooms} {dict.projects.bedrooms} · {project.area}m²
           </div>
           {project.category && (
             <div className="font-mono text-[10px] tracking-[0.18em] text-gold/80 mt-1.5 uppercase">
