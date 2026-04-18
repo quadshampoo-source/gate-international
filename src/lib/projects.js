@@ -1,0 +1,376 @@
+// 42 Istanbul premium properties.
+// market: 'china' | 'arab' | 'both'
+// typology: 'Apartment' | 'Villa' | 'Townhouse' | 'Yalı' | 'Penthouse' | 'Loft' | 'Residence'
+// category: 'premium' | 'ultra-luxury' | 'branded-residence' | 'investment' | 'family' | 'boutique' | 'villa' | 'nature' | 'large-scale'
+// status: 'forSale' | 'construction' | 'delivered'
+
+export const PROJECTS = [
+  // --- Existing 1–30 (retrofitted with status + category) ---
+  { id: 'bosphorus-reserve', name: 'Bosphorus Reserve', nameAr: 'محمية البوسفور', nameZh: '博斯普鲁斯领地', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'Gate Developments', priceUsd: 4850000, bedrooms: 4, area: 312, typology: 'Villa', market: 'both', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'villa', metro: false, img: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1600&q=80', vimeoId: '' },
+  { id: 'nisantasi-atelier', name: 'Nişantaşı Atelier', nameAr: 'أتيليه نيشانتاشي', nameZh: '尼山塔什艺术家室', district: 'Şişli', districtAr: 'شيشلي', districtZh: '希什利', developer: 'Bilgili Holding', priceUsd: 1950000, bedrooms: 3, area: 186, typology: 'Apartment', market: 'arab', view: 'City', delivery: '2026 Q3', status: 'construction', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1600&q=80', vimeoId: '' },
+  { id: 'cihangir-townhouse', name: 'Cihangir Townhouse', nameAr: 'منزل جيهانغير', nameZh: '西海岸联排别墅', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Boutique Developments', priceUsd: 2750000, bedrooms: 3, area: 224, typology: 'Townhouse', market: 'both', view: 'City', delivery: 'Ready', status: 'delivered', category: 'boutique', metro: true, img: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1600&q=80', vimeoId: '' },
+  { id: 'bebek-waterfront', name: 'Bebek Waterfront', nameAr: 'واجهة بيبك', nameZh: '贝贝克海滨', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Prestige Yalı', priceUsd: 8200000, bedrooms: 5, area: 420, typology: 'Yalı', market: 'both', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'ultra-luxury', metro: false, img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=80', vimeoId: '' },
+  { id: 'uskudar-pavilion', name: 'Üsküdar Pavilion', nameAr: 'جناح أسكدار', nameZh: '乌斯库达尔楼阁', district: 'Üsküdar', districtAr: 'أسكدار', districtZh: '乌斯库达尔', developer: 'Asian Shore Co.', priceUsd: 1450000, bedrooms: 2, area: 142, typology: 'Apartment', market: 'china', view: 'Bosphorus', delivery: '2026 Q1', status: 'construction', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1600&q=80', vimeoId: '' },
+  { id: 'zekeriyakoy-forest', name: 'Zekeriyaköy Forest', nameAr: 'غابة زكرياكوي', nameZh: '扎克里亚科伊森林', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'Forest Residences', priceUsd: 3650000, bedrooms: 5, area: 380, typology: 'Villa', market: 'china', view: 'Forest', delivery: '2027 Q1', status: 'construction', category: 'nature', metro: false, img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1600&q=80', vimeoId: '' },
+  { id: 'levent-skyline', name: 'Levent Skyline', nameAr: 'أفق ليفنت', nameZh: '列文特天际线', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Skyline Group', priceUsd: 1150000, bedrooms: 2, area: 118, typology: 'Apartment', market: 'china', view: 'City', delivery: '2026 Q2', status: 'construction', category: 'investment', metro: true, img: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600&q=80', vimeoId: '' },
+  { id: 'cihangir-maisonette', name: 'Cihangir Maisonette', nameAr: 'ميزونيت جيهانغير', nameZh: '西海岸复式公寓', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Boutique Developments', priceUsd: 2250000, bedrooms: 3, area: 198, typology: 'Apartment', market: 'arab', view: 'City', delivery: 'Ready', status: 'delivered', category: 'boutique', metro: true, img: 'https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1600&q=80', vimeoId: '' },
+  { id: 'kandilli-estate', name: 'Kandilli Estate', nameAr: 'ضيعة كنديللي', nameZh: '坎迪利庄园', district: 'Üsküdar', districtAr: 'أسكدار', districtZh: '乌斯库达尔', developer: 'Heritage Estates', priceUsd: 11500000, bedrooms: 6, area: 612, typology: 'Yalı', market: 'both', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'ultra-luxury', metro: false, img: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600&q=80', vimeoId: '' },
+  { id: 'arnavutkoy-yali', name: 'Arnavutköy Yalı', nameAr: 'يالي أرنافوتكوي', nameZh: '阿尔纳武特柯伊海岸大宅', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Heritage Estates', priceUsd: 14750000, bedrooms: 7, area: 720, typology: 'Yalı', market: 'arab', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'ultra-luxury', metro: false, img: 'https://images.unsplash.com/photo-1600585154084-4e5fe7c39198?w=1600&q=80', vimeoId: '' },
+  { id: 'tarabya-residences', name: 'Tarabya Residences', nameAr: 'مساكن تراب يا', nameZh: '塔拉比亚住宅', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'North Bosphorus Group', priceUsd: 2950000, bedrooms: 3, area: 245, typology: 'Apartment', market: 'china', view: 'Bosphorus', delivery: '2026 Q4', status: 'construction', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1567496898669-ee935f5f647a?w=1600&q=80', vimeoId: '' },
+  { id: 'maslak-loft', name: 'Maslak Loft', nameAr: 'لوفت مسلك', nameZh: '马斯拉克 Loft', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'Urban Loft Co.', priceUsd: 890000, bedrooms: 1, area: 98, typology: 'Loft', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'investment', metro: true, img: 'https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=1600&q=80', vimeoId: '' },
+  { id: 'galata-penthouse', name: 'Galata Penthouse', nameAr: 'بنتهاوس غلطة', nameZh: '加拉塔顶层公寓', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Galata Development', priceUsd: 6450000, bedrooms: 4, area: 360, typology: 'Penthouse', market: 'both', view: 'City', delivery: 'Ready', status: 'delivered', category: 'ultra-luxury', metro: true, img: 'https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1600&q=80', vimeoId: '' },
+  { id: 'etiler-private', name: 'Etiler Private', nameAr: 'إيتيلر الخاصة', nameZh: '艾蒂勒私邸', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Etiler Co.', priceUsd: 3450000, bedrooms: 4, area: 290, typology: 'Apartment', market: 'arab', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80', vimeoId: '' },
+  { id: 'yenikoy-mansion', name: 'Yeniköy Mansion', nameAr: 'قصر يني كوي', nameZh: '叶尼柯伊大宅', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'Mansion Estates', priceUsd: 9750000, bedrooms: 6, area: 540, typology: 'Villa', market: 'both', view: 'Bosphorus', delivery: '2026 Q2', status: 'construction', category: 'ultra-luxury', metro: false, img: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=1600&q=80', vimeoId: '' },
+  { id: 'pera-loft', name: 'Pera Loft', nameAr: 'لوفت بيرا', nameZh: '佩拉 Loft', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Urban Loft Co.', priceUsd: 720000, bedrooms: 1, area: 88, typology: 'Loft', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'investment', metro: true, img: 'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1600&q=80', vimeoId: '' },
+  { id: 'tesvikiye-residence', name: 'Teşvikiye Residence', nameAr: 'إقامة تيشفيكية', nameZh: '泰什维基耶住宅', district: 'Şişli', districtAr: 'شيشلي', districtZh: '希什利', developer: 'Bilgili Holding', priceUsd: 1850000, bedrooms: 2, area: 165, typology: 'Apartment', market: 'arab', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1615875605825-5eb9bb5d52ac?w=1600&q=80', vimeoId: '' },
+  { id: 'kanlica-yali', name: 'Kanlıca Yalı', nameAr: 'يالي قانليجا', nameZh: '坎勒贾海岸宅', district: 'Üsküdar', districtAr: 'أسكدار', districtZh: '乌斯库达尔', developer: 'Heritage Estates', priceUsd: 18500000, bedrooms: 8, area: 880, typology: 'Yalı', market: 'both', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'ultra-luxury', metro: false, img: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1600&q=80', vimeoId: '' },
+  { id: 'istinye-park-residence', name: 'İstinye Park Residence', nameAr: 'مساكن إستينيه بارك', nameZh: '伊斯廷耶公园住宅', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'İstinye Group', priceUsd: 1650000, bedrooms: 2, area: 152, typology: 'Apartment', market: 'china', view: 'Forest', delivery: '2026 Q3', status: 'construction', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=1600&q=80', vimeoId: '' },
+  { id: 'kuzguncuk-house', name: 'Kuzguncuk House', nameAr: 'بيت قوزغونجوك', nameZh: '库兹君库克之家', district: 'Üsküdar', districtAr: 'أسكدار', districtZh: '乌斯库达尔', developer: 'Asian Shore Co.', priceUsd: 1320000, bedrooms: 3, area: 180, typology: 'Townhouse', market: 'arab', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'family', metro: false, img: 'https://images.unsplash.com/photo-1600566753086-00f18fe6ba68?w=1600&q=80', vimeoId: '' },
+  { id: 'taksim-tower-suite', name: 'Taksim Tower Suite', nameAr: 'جناح برج تقسيم', nameZh: '塔克西姆塔顶套房', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Taksim Group', priceUsd: 4250000, bedrooms: 3, area: 248, typology: 'Penthouse', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1545241047-6083a3684587?w=1600&q=80', vimeoId: '' },
+  { id: 'zorlu-twin', name: 'Zorlu Twin', nameAr: 'زورلو التوأم', nameZh: '佐鲁双子', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Zorlu Holding', priceUsd: 5950000, bedrooms: 4, area: 312, typology: 'Penthouse', market: 'both', view: 'City', delivery: '2027 Q1', status: 'construction', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600&q=80', vimeoId: '' },
+  { id: 'mecidiyekoy-loft', name: 'Mecidiyeköy Loft', nameAr: 'لوفت مجيدية كوي', nameZh: '梅吉迪耶柯伊 Loft', district: 'Şişli', districtAr: 'شيشلي', districtZh: '希什利', developer: 'Urban Loft Co.', priceUsd: 580000, bedrooms: 1, area: 76, typology: 'Loft', market: 'china', view: 'City', delivery: '2026 Q2', status: 'construction', category: 'investment', metro: true, img: 'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1600&q=80', vimeoId: '' },
+  { id: 'cubuklu-villa', name: 'Çubuklu Villa', nameAr: 'فيلا تشوبوكلو', nameZh: '丘布克卢别墅', district: 'Üsküdar', districtAr: 'أسكدار', districtZh: '乌斯库达尔', developer: 'Asian Shore Co.', priceUsd: 7250000, bedrooms: 5, area: 480, typology: 'Villa', market: 'arab', view: 'Bosphorus', delivery: '2026 Q4', status: 'construction', category: 'villa', metro: false, img: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=1600&q=80', vimeoId: '' },
+  { id: 'rumeli-hisari-yali', name: 'Rumelihisarı Yalı', nameAr: 'يالي روملي حصاري', nameZh: '鲁梅利堡垒海岸宅', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'Heritage Estates', priceUsd: 22000000, bedrooms: 8, area: 1020, typology: 'Yalı', market: 'both', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'ultra-luxury', metro: false, img: 'https://images.unsplash.com/photo-1605114412043-7baeebed25b9?w=1600&q=80', vimeoId: '' },
+  { id: 'fulya-park', name: 'Fulya Park', nameAr: 'فولايا بارك', nameZh: '富拉公园', district: 'Şişli', districtAr: 'شيشلي', districtZh: '希什利', developer: 'Fulya Group', priceUsd: 980000, bedrooms: 2, area: 124, typology: 'Apartment', market: 'china', view: 'Forest', delivery: 'Ready', status: 'delivered', category: 'family', metro: true, img: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1600&q=80', vimeoId: '' },
+  { id: 'beykoz-grove', name: 'Beykoz Grove', nameAr: 'بستان بيكوز', nameZh: '贝伊科兹林苑', district: 'Üsküdar', districtAr: 'أسكدار', districtZh: '乌斯库达尔', developer: 'Beykoz Estates', priceUsd: 2850000, bedrooms: 4, area: 295, typology: 'Villa', market: 'arab', view: 'Forest', delivery: '2027 Q2', status: 'construction', category: 'nature', metro: false, img: 'https://images.unsplash.com/photo-1600566753051-6057f5bf1f64?w=1600&q=80', vimeoId: '' },
+  { id: 'galata-port-residence', name: 'Galataport Residence', nameAr: 'إقامة غلطة بورت', nameZh: '加拉塔港住宅', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Galataport Co.', priceUsd: 5450000, bedrooms: 4, area: 340, typology: 'Apartment', market: 'both', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80', vimeoId: '' },
+  { id: 'maslak-vega-tower', name: 'Maslak Vega Tower', nameAr: 'برج فيغا مسلك', nameZh: '马斯拉克 Vega 塔', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'Vega Developments', priceUsd: 1250000, bedrooms: 2, area: 132, typology: 'Apartment', market: 'china', view: 'City', delivery: '2026 Q1', status: 'construction', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=80', vimeoId: '' },
+  { id: 'macka-grand', name: 'Maçka Grand', nameAr: 'ماشكا غراند', nameZh: '马奇卡大宅', district: 'Şişli', districtAr: 'شيشلي', districtZh: '希什利', developer: 'Maçka Group', priceUsd: 4150000, bedrooms: 4, area: 305, typology: 'Apartment', market: 'arab', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=1600&q=80', vimeoId: '' },
+
+  // --- New 31–42 ---
+  {
+    id: 'avrupa-residence-sisli-2', name: 'Avrupa Residence Şişli-2', nameAr: 'أوروبا ريزيدانس شيشلي 2', nameZh: '欧洲住宅 Şişli-2',
+    district: 'Şişli', districtAr: 'شيشلي', districtZh: '希什利', developer: 'Artaş İnşaat',
+    priceUsd: 450000, bedrooms: 2, area: 95, typology: 'Apartment', market: 'both', view: 'City',
+    delivery: '2027', status: 'construction', category: 'premium', metro: true,
+    img: '', vimeoId: '',
+    totalUnits: 321, blocks: 6, landArea: 15067,
+    unitTypes: ['1+1', '2+1', '3+1'],
+    paymentPlan: { downPct: 30, termMonths: 18, interestPct: 0 },
+    priceTable: [
+      { type: '1+1', priceUsd: 350000 },
+      { type: '2+1', priceUsd: 450000 },
+      { type: '3+1', priceUsd: 620000 },
+    ],
+    distances: { metro_km: 0.3, mall_km: 0.8, airport_km: 28, hospital_km: 1.2, school_km: 0.9 },
+    reasons: ['Mecidiyeköy metro ve metrobüs yürüme mesafesi', 'Levent/Maslak/Zincirlikuyu yakın', '%30 peşinat + 18 ay %0 faiz', 'Kapalı havuz, fitness, yürüyüş parkuru', 'Kreş, yeşil alan, aile konsepti'],
+    chinaScore: 5, arabScore: 4,
+  },
+  {
+    id: 'avrupa-konutlari-guneşli', name: 'Avrupa Konutları Güneşli', nameAr: 'أوروبا كونوتلاري جونشلي', nameZh: '欧洲住宅 Güneşli',
+    district: 'Güneşli', districtAr: 'جونشلي', districtZh: '居内什利', developer: 'Artaş İnşaat',
+    priceUsd: 285000, bedrooms: 2, area: 85, typology: 'Apartment', market: 'both', view: 'City',
+    delivery: '2027', status: 'construction', category: 'large-scale', metro: true,
+    img: '', vimeoId: '',
+    totalUnits: 1312, blocks: 11, landArea: 72148,
+    unitTypes: ['1+1', '2+1', '3+1', '4+1'],
+    paymentPlan: { downPct: 30, termMonths: 18, interestPct: 0 },
+    priceTable: [
+      { type: '1+1', priceUsd: 210000 },
+      { type: '2+1', priceUsd: 285000 },
+      { type: '3+1', priceUsd: 395000 },
+      { type: '4+1', priceUsd: 520000 },
+    ],
+    distances: { metro_km: 1.2, mall_km: 1.5, airport_km: 12, hospital_km: 2, school_km: 0.6 },
+    reasons: ['1.312 konut, 11 blok — büyük ölçek', 'Çocuk havuzu, sauna, spor salonu', '%30 peşinat + 18 ay %0 faiz', '32 dükkan, karma kullanım', 'Yatırım için uygun fiyat'],
+    chinaScore: 4, arabScore: 3,
+  },
+  {
+    id: 'zorlu-center-residence', name: 'Zorlu Center Residence', nameAr: 'زورلو سنتر ريزيدانس', nameZh: '佐鲁中心住宅',
+    district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Zorlu Holding',
+    priceUsd: 2200000, bedrooms: 3, area: 220, typology: 'Residence', market: 'both', view: 'Bosphorus',
+    delivery: 'Ready', status: 'delivered', category: 'ultra-luxury', metro: true,
+    img: '', vimeoId: '',
+    totalUnits: 584, blocks: 4, landArea: 102000,
+    unitTypes: ['1+1', '2+1', '3+1', '4+1', '5.5+1'],
+    priceTable: [
+      { type: '2+1', priceUsd: 1300000 },
+      { type: '3+1', priceUsd: 2200000 },
+      { type: '4+1', priceUsd: 3000000 },
+    ],
+    distances: { metro_km: 0.1, mall_km: 0, airport_km: 22, hospital_km: 1, school_km: 1.5 },
+    reasons: ['Raffles Istanbul markalı (1 blok otel)', 'Zorlu Center AVM entegre', '4 açık + 1 kapalı havuz, 1.600 m² fitness', '18-22 kat, şehir + Boğaz manzarası', 'Zincirlikuyu merkezde, metroya bitişik'],
+    chinaScore: 3, arabScore: 5,
+  },
+  {
+    id: 'ozak-palas-balmumcu', name: 'Özak Palas Balmumcu', nameAr: 'أوزاك بالاس بالمومجو', nameZh: '厄扎克宫 Balmumcu',
+    district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Özak GYO & İnt-Er Yapı',
+    priceUsd: null, bedrooms: 3, area: 280, typology: 'Apartment', market: 'arab', view: 'City',
+    delivery: 'Construction', status: 'construction', category: 'ultra-luxury', metro: true,
+    img: '', vimeoId: '',
+    totalUnits: 34, blocks: 1, landArea: 16424,
+    unitTypes: ['3+1', '4+1'],
+    distances: { metro_km: 0.4, mall_km: 0.7, airport_km: 20, hospital_km: 0.8, school_km: 1.1 },
+    reasons: ['Ultra butik — sadece 34 konut', 'Renaissance Polat Bosphorus yakın', 'Balmumcu Parkı civarında', 'Gazi Umur Paşa Sokak, prestijli lokasyon', 'Proje değeri 2+ milyar TL'],
+    chinaScore: 2, arabScore: 5,
+  },
+  {
+    id: 'ozak-duyu-gokturk', name: 'Özak Duyu Göktürk', nameAr: 'أوزاك دويو غوكتورك', nameZh: '厄扎克 Duyu Göktürk',
+    district: 'Göktürk', districtAr: 'غوكتورك', districtZh: '戈克蒂尔克', developer: 'Özak GYO',
+    priceUsd: 520000, bedrooms: 3, area: 180, typology: 'Villa', market: 'both', view: 'Forest',
+    delivery: '2026 Q2', status: 'construction', category: 'nature', metro: false,
+    img: '', vimeoId: '',
+    totalUnits: 141, blocks: 0,
+    distances: { metro_km: 6, mall_km: 3, airport_km: 25, hospital_km: 4, school_km: 2 },
+    reasons: ['Doğa içi konsept — Göktürk/Kemerburgaz', 'Belgrad Ormanı yakın', 'Aile odaklı, sakin yaşam', 'Özak GYO kalite güvencesi', '141 daire, butik ölçek'],
+    chinaScore: 2, arabScore: 4,
+  },
+  {
+    id: 'ozak-doa-gokturk', name: 'Özak Doa Göktürk', nameAr: 'أوزاك دوا غوكتورك', nameZh: '厄扎克 Doa Göktürk',
+    district: 'Göktürk', districtAr: 'غوكتورك', districtZh: '戈克蒂尔克', developer: 'Özak GYO',
+    priceUsd: 480000, bedrooms: 3, area: 170, typology: 'Villa', market: 'both', view: 'Forest',
+    delivery: 'Ready', status: 'delivered', category: 'nature', metro: false,
+    img: '', vimeoId: '',
+    distances: { metro_km: 6.5, mall_km: 3.2, airport_km: 26, hospital_km: 4, school_km: 2.5 },
+    reasons: ['Teslim edildi — hemen taşınabilir', 'Doğa konsepti, Belgrad Ormanı', 'Özak GYO imzası', 'Sakin aile yaşamı', 'Göktürk\'ün gelişen bölgesi'],
+    chinaScore: 2, arabScore: 4,
+  },
+  {
+    id: 'rixos-tersane', name: 'Rixos Tersane İstanbul Residences', nameAr: 'ريكسوس ترسانة إسطنبول', nameZh: 'Rixos 海军造船厂住宅',
+    district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Rixos Group',
+    priceUsd: 850000, bedrooms: 2, area: 120, typology: 'Residence', market: 'both', view: 'Bosphorus',
+    delivery: '2026', status: 'construction', category: 'branded-residence', metro: true,
+    img: '', vimeoId: '',
+    totalUnits: 590, blocks: 14, landArea: 242000,
+    unitTypes: ['1+1', '2+1', '3+1', '4.5+1'],
+    priceTable: [
+      { type: '1+1', priceUsd: 650000 },
+      { type: '2+1', priceUsd: 850000 },
+      { type: '3+1', priceUsd: 1450000 },
+      { type: '4.5+1', priceUsd: 2850000 },
+    ],
+    distances: { metro_km: 0.8, mall_km: 0, airport_km: 25, hospital_km: 1.5, school_km: 2 },
+    reasons: ['Otel markalı konut — 5★ Rixos servisi', 'Haliç deniz manzarası, 2 marina', 'USD kira garantisi (2027\'den)', 'Tapu 2067\'ye kadar, vatandaşlık uygun', '24 saat concierge, butler, in-residence dining'],
+    chinaScore: 3, arabScore: 5,
+  },
+  {
+    id: 'ritz-carlton-residences', name: 'Ritz-Carlton Residences İstanbul', nameAr: 'ريتز كارلتون ريزيدانسز إسطنبول', nameZh: '丽思卡尔顿住宅 伊斯坦布尔',
+    district: 'Şişli', districtAr: 'شيشلي', districtZh: '希什利', developer: 'Bilgili Holding',
+    priceUsd: 3500000, bedrooms: 3, area: 268, typology: 'Residence', market: 'arab', view: 'Bosphorus',
+    delivery: 'Ready', status: 'delivered', category: 'branded-residence', metro: true,
+    img: '', vimeoId: '',
+    totalUnits: 121, blocks: 1,
+    unitTypes: ['1+1', '2+1', '3+1', 'Penthouse'],
+    priceTable: [
+      { type: '1+1', priceUsd: 1450000 },
+      { type: '2+1', priceUsd: 2350000 },
+      { type: '3+1', priceUsd: 3500000 },
+      { type: 'Penthouse', priceUsd: 9500000 },
+    ],
+    distances: { metro_km: 0.3, mall_km: 0.6, airport_km: 18, hospital_km: 0.8, school_km: 1.2 },
+    reasons: ['Avrupa\'nın ilk Ritz-Carlton Residences', 'Tam rezidans servisi', 'Nişantaşı/Teşvikiye — prime location', '22 kat, 121 konut, 31 farklı tip', 'Doğan Tekeli mimarisi, TO Design yenileme'],
+    chinaScore: 2, arabScore: 5,
+  },
+  {
+    id: 'oyak-maslak-ayazaga', name: 'OYAK Maslak Ayazağa', nameAr: 'أوياك مسلك أيازاغا', nameZh: 'OYAK Maslak Ayazağa',
+    district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'OYAK İnşaat',
+    priceUsd: 420000, bedrooms: 2, area: 110, typology: 'Apartment', market: 'china', view: 'City',
+    delivery: '2026-10', status: 'construction', category: 'premium', metro: true,
+    img: '', vimeoId: '',
+    totalUnits: 413, blocks: 4, landArea: 18352,
+    unitTypes: ['1+1', '2+1', '3+1', '4+1'],
+    distances: { metro_km: 0.4, mall_km: 0.85, airport_km: 20, hospital_km: 1, school_km: 1.3 },
+    reasons: ['Nef Stadyumu yanı', 'Vadistanbul AVM 850m, TEM 220m', 'LIV Hospital 1km', '4 blok, 413 konut + 12 ticari', 'OYAK İnşaat güvencesi'],
+    chinaScore: 5, arabScore: 3,
+  },
+  {
+    id: 'rams-ayazaga', name: 'RAMS Ayazağa', nameAr: 'رامز أيازاغا', nameZh: 'RAMS Ayazağa',
+    district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'RAMS Global',
+    priceUsd: 395000, bedrooms: 2, area: 100, typology: 'Apartment', market: 'china', view: 'City',
+    delivery: 'Construction', status: 'construction', category: 'premium', metro: true,
+    img: '', vimeoId: '',
+    unitTypes: ['1+1', '2+1', '3+1', '4+1'],
+    distances: { metro_km: 0.2, mall_km: 1, airport_km: 20, hospital_km: 1.2, school_km: 1 },
+    reasons: ['Akıllı ev, yüksek tavan', 'Metro yürüme mesafesi', 'Havuz, fitness, sauna', '7/24 güvenlik, resepsiyon', 'RAMS Global kalitesi'],
+    chinaScore: 5, arabScore: 3,
+  },
+  {
+    id: 'saklivadi', name: 'Saklıvadi', nameAr: 'ساكليفادي', nameZh: 'Saklıvadi',
+    district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'Artaş İnşaat',
+    priceUsd: 680000, bedrooms: 3, area: 155, typology: 'Apartment', market: 'arab', view: 'Forest',
+    delivery: 'Ready', status: 'delivered', category: 'family', metro: true,
+    img: '', vimeoId: '',
+    unitTypes: ['2+1', '3+1'],
+    distances: { metro_km: 1.5, mall_km: 0.3, airport_km: 20, hospital_km: 1.8, school_km: 1 },
+    reasons: ['Vadistanbul bölgesinin tek butik aile projesi', 'Aile odaklı — sadece 2+1 ve 3+1', 'Teslim edildi, hemen taşınabilir', 'Artaş İnşaat imzası', 'AVM ve sosyal hayata yakın'],
+    chinaScore: 3, arabScore: 5,
+  },
+  {
+    id: 'referans-besiktas', name: 'Referans Beşiktaş', nameAr: 'ريفرانس بشكتاش', nameZh: '参照 Beşiktaş',
+    district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Kiler GYO & Biskon Yapı',
+    priceUsd: 1800000, bedrooms: 4, area: 250, typology: 'Apartment', market: 'arab', view: 'City',
+    delivery: '2025', status: 'construction', category: 'family', metro: false,
+    img: '', vimeoId: '',
+    totalUnits: 293, blocks: 10, landArea: 17665,
+    unitTypes: ['2.5+1', '3+1', '3.5+1', '4+1', '4.5+1', '5.5+1', '6.5+1'],
+    distances: { metro_km: 0.8, mall_km: 0.5, airport_km: 22, hospital_km: 0.6, school_km: 0.9 },
+    reasons: ['Barbaros Bulvarı 300m, Abbasağa Parkı 150m', 'Conrad Hotel 400m, Marmara Denizi 800m', 'Sinan Kafadar / Metex Design iç mimari', 'Kapalı havuz, Türk hamamı, spor salonu', 'Bahçeli, teraslı, az katlı aile konsepti'],
+    chinaScore: 3, arabScore: 5,
+  },
+
+  // --- 43–73: Real Istanbul portfolio additions ---
+  // Maslak (7)
+  { id: 'etro-residences', name: 'ETRO Residences', nameAr: 'إترو ريزيدانس', nameZh: 'ETRO 住宅', district: 'Maslak', districtAr: 'مسلك', districtZh: '马斯拉克', developer: 'RAMS Global', priceUsd: 560000, bedrooms: 2, area: 115, typology: 'Residence', market: 'china', view: 'City', delivery: '2027', status: 'construction', category: 'premium', metro: true, img: '', vimeoId: '' },
+  { id: 'prime-tower-maslak', name: 'Prime Tower Maslak', nameAr: 'برايم تاور مسلك', nameZh: '马斯拉克 Prime Tower', district: 'Maslak', districtAr: 'مسلك', districtZh: '马斯拉克', developer: 'Keleşoğlu Holding', priceUsd: 680000, bedrooms: 2, area: 130, typology: 'Apartment', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: '', vimeoId: '' },
+  { id: 'skyland-istanbul', name: 'Skyland İstanbul', nameAr: 'سكايلاند إسطنبول', nameZh: 'Skyland 伊斯坦布尔', district: 'Maslak', districtAr: 'مسلك', districtZh: '马斯拉克', developer: 'Eroğlu Yapı', priceUsd: 720000, bedrooms: 2, area: 135, typology: 'Residence', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: '', vimeoId: '' },
+  { id: 'maslak-dream', name: 'Maslak Dream', nameAr: 'مسلك دريم', nameZh: '马斯拉克之梦', district: 'Maslak', districtAr: 'مسلك', districtZh: '马斯拉克', developer: 'Dream Developments', priceUsd: 450000, bedrooms: 2, area: 105, typology: 'Apartment', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'investment', metro: true, img: '', vimeoId: '' },
+  { id: 'maslak-koru', name: 'Maslak Koru', nameAr: 'غابة مسلك', nameZh: '马斯拉克林苑', district: 'Maslak', districtAr: 'مسلك', districtZh: '马斯拉克', developer: 'Koru İnşaat', priceUsd: 850000, bedrooms: 3, area: 170, typology: 'Villa', market: 'both', view: 'Forest', delivery: '2026', status: 'construction', category: 'nature', metro: false, img: '', vimeoId: '' },
+  { id: 'rams-park-house', name: 'RAMS Park House', nameAr: 'رامز بارك هاوس', nameZh: 'RAMS 公园住宅', district: 'Maslak', districtAr: 'مسلك', districtZh: '马斯拉克', developer: 'RAMS Global', priceUsd: 520000, bedrooms: 2, area: 120, typology: 'Apartment', market: 'china', view: 'Forest', delivery: 'Ready', status: 'delivered', category: 'family', metro: true, img: '', vimeoId: '' },
+  { id: 'avangart-istanbul', name: 'Avangart İstanbul', nameAr: 'أفانغارت إسطنبول', nameZh: '先锋伊斯坦布尔', district: 'Maslak', districtAr: 'مسلك', districtZh: '马斯拉克', developer: 'Avangart Developments', priceUsd: 495000, bedrooms: 2, area: 110, typology: 'Apartment', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: '', vimeoId: '' },
+
+  // Beşiktaş (7)
+  { id: 'barbaros-48', name: 'Barbaros 48', nameAr: 'بربروس 48', nameZh: 'Barbaros 48', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Hevesa İnşaat', priceUsd: 1200000, bedrooms: 3, area: 180, typology: 'Apartment', market: 'arab', view: 'City', delivery: 'Ready', status: 'delivered', category: 'boutique', metro: true, totalUnits: 48, img: '', vimeoId: '' },
+  { id: 'polat-akatlar', name: 'Polat Akatlar', nameAr: 'بولات أكاتلار', nameZh: '波拉特 Akatlar', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Polat Holding', priceUsd: 1850000, bedrooms: 3, area: 220, typology: 'Apartment', market: 'arab', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: '', vimeoId: '' },
+  { id: 'kempinski-residences', name: 'Kempinski Residences', nameAr: 'إقامات كمبينسكي', nameZh: '凯宾斯基住宅', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Demsa Group', priceUsd: 3800000, bedrooms: 3, area: 260, typology: 'Residence', market: 'arab', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'branded-residence', metro: true, img: '', vimeoId: '' },
+  { id: 'nisantasi-koru', name: 'Nişantaşı Koru', nameAr: 'نيشانتاشي كورو', nameZh: '尼山塔什林苑', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Koru Yapı', priceUsd: 2650000, bedrooms: 3, area: 240, typology: 'Apartment', market: 'arab', view: 'Forest', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: '', vimeoId: '' },
+  { id: 'besiktas-modern', name: 'Beşiktaş Modern', nameAr: 'بشكتاش مودرن', nameZh: '贝什塔什 Modern', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Modern İnşaat', priceUsd: 1550000, bedrooms: 2, area: 160, typology: 'Apartment', market: 'both', view: 'City', delivery: '2026', status: 'construction', category: 'premium', metro: true, img: '', vimeoId: '' },
+  { id: 'maanaa-48-etiler', name: 'MaaNaa 48 Etiler', nameAr: 'ماناع 48 إيتيلر', nameZh: 'MaaNaa 48 Etiler', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'MaaNaa Developments', priceUsd: 2100000, bedrooms: 3, area: 210, typology: 'Apartment', market: 'arab', view: 'City', delivery: '2026', status: 'construction', category: 'boutique', metro: true, totalUnits: 48, img: '', vimeoId: '' },
+  { id: 'yooistanbul', name: 'Yooistanbul', nameAr: 'يو إسطنبول', nameZh: 'Yoo 伊斯坦布尔', district: 'Beşiktaş', districtAr: 'بشكتاش', districtZh: '贝什塔什', developer: 'Yoo / Starck Design', priceUsd: 2950000, bedrooms: 3, area: 235, typology: 'Residence', market: 'both', view: 'Bosphorus', delivery: 'Ready', status: 'delivered', category: 'branded-residence', metro: true, img: '', vimeoId: '' },
+
+  // Levent (5)
+  { id: 'next-level-istanbul', name: 'Next Level İstanbul', nameAr: 'نيكست ليفل إسطنبول', nameZh: 'Next Level 伊斯坦布尔', district: 'Levent', districtAr: 'ليفنت', districtZh: '列文特', developer: 'Next Level Developments', priceUsd: 1150000, bedrooms: 2, area: 145, typology: 'Residence', market: 'both', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: '', vimeoId: '' },
+  { id: 'polat-levent-exclusive', name: 'Polat Levent Exclusive', nameAr: 'بولات ليفنت إكسكلوسيف', nameZh: '波拉特 Levent Exclusive', district: 'Levent', districtAr: 'ليفنت', districtZh: '列文特', developer: 'Polat Holding', priceUsd: 1650000, bedrooms: 3, area: 200, typology: 'Apartment', market: 'arab', view: 'City', delivery: 'Ready', status: 'delivered', category: 'ultra-luxury', metro: true, img: '', vimeoId: '' },
+  { id: '5-levent-korupark', name: '5. Levent Korupark', nameAr: 'الليفنت الخامس كوروبارك', nameZh: '5. Levent Korupark', district: 'Levent', districtAr: 'ليفنت', districtZh: '列文特', developer: 'Bulut İnşaat', priceUsd: 890000, bedrooms: 2, area: 130, typology: 'Apartment', market: 'china', view: 'Forest', delivery: 'Ready', status: 'delivered', category: 'family', metro: true, img: '', vimeoId: '' },
+  { id: 'dap-yeni-levent', name: 'DAP Yeni Levent', nameAr: 'داب يني ليفنت', nameZh: 'DAP 新 Levent', district: 'Levent', districtAr: 'ليفنت', districtZh: '列文特', developer: 'DAP Yapı', priceUsd: 720000, bedrooms: 2, area: 120, typology: 'Apartment', market: 'china', view: 'City', delivery: '2026', status: 'construction', category: 'investment', metro: true, img: '', vimeoId: '' },
+  { id: 'leventlife-residence-2', name: 'LeventLIFE Residence 2', nameAr: 'ليفنت لايف ريزيدانس 2', nameZh: 'LeventLIFE 住宅 2', district: 'Levent', districtAr: 'ليفنت', districtZh: '列文特', developer: 'LeventLIFE Developments', priceUsd: 980000, bedrooms: 2, area: 140, typology: 'Residence', market: 'both', view: 'City', delivery: '2026', status: 'construction', category: 'premium', metro: true, img: '', vimeoId: '' },
+
+  // Beyoğlu (4)
+  { id: 'piyalepasa-premium', name: 'Piyalepaşa Premium', nameAr: 'بيالي باشا بريميوم', nameZh: 'Piyalepaşa Premium', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Polat Holding', priceUsd: 850000, bedrooms: 2, area: 135, typology: 'Residence', market: 'both', view: 'City', delivery: 'Ready', status: 'delivered', category: 'branded-residence', metro: true, img: '', vimeoId: '' },
+  { id: 'piyalepasa-istanbul', name: 'Piyalepaşa İstanbul', nameAr: 'بيالي باشا إسطنبول', nameZh: 'Piyalepaşa 伊斯坦布尔', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Polat Holding', priceUsd: 580000, bedrooms: 2, area: 115, typology: 'Apartment', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'large-scale', metro: true, img: '', vimeoId: '' },
+  { id: 'hacimimi-gardens', name: 'Hacımimi Gardens', nameAr: 'حديقة حاجيميمي', nameZh: 'Hacımimi 花园', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'Gardens Developments', priceUsd: 1450000, bedrooms: 3, area: 185, typology: 'Apartment', market: 'arab', view: 'City', delivery: '2026', status: 'construction', category: 'boutique', metro: true, img: '', vimeoId: '' },
+  { id: 'egeyapi-beyoglu', name: 'EgeYapı Beyoğlu', nameAr: 'إيجه يابي بي أوغلو', nameZh: 'EgeYapı 贝尤卢', district: 'Beyoğlu', districtAr: 'بي أوغلو', districtZh: '贝尤卢', developer: 'EgeYapı Group', priceUsd: 620000, bedrooms: 2, area: 110, typology: 'Apartment', market: 'both', view: 'City', delivery: '2026', status: 'construction', category: 'premium', metro: true, img: '', vimeoId: '' },
+
+  // Kağıthane (3)
+  { id: 'seba-central', name: 'Seba Central', nameAr: 'سبا سنترال', nameZh: 'Seba Central', district: 'Kağıthane', districtAr: 'كاياتهانه', districtZh: '卡厄特哈内', developer: 'Seba İnşaat', priceUsd: 650000, bedrooms: 2, area: 130, typology: 'Residence', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'premium', metro: true, img: '', vimeoId: '' },
+  { id: 'orman-istanbul', name: 'Orman İstanbul', nameAr: 'أورمان إسطنبول', nameZh: 'Orman 伊斯坦布尔', district: 'Kağıthane', districtAr: 'كاياتهانه', districtZh: '卡厄特哈内', developer: 'Orman Developments', priceUsd: 480000, bedrooms: 2, area: 105, typology: 'Apartment', market: 'china', view: 'Forest', delivery: '2026', status: 'construction', category: 'nature', metro: true, img: '', vimeoId: '' },
+  { id: 'demir-levent', name: 'Demir Levent', nameAr: 'دمير ليفنت', nameZh: 'Demir Levent', district: 'Kağıthane', districtAr: 'كاياتهانه', districtZh: '卡厄特哈内', developer: 'Demir İnşaat', priceUsd: 520000, bedrooms: 2, area: 115, typology: 'Apartment', market: 'china', view: 'City', delivery: 'Ready', status: 'delivered', category: 'investment', metro: true, img: '', vimeoId: '' },
+
+  // Şişli (2)
+  { id: 'nidapark-seyrantepe', name: 'Nidapark Seyrantepe', nameAr: 'نيدا بارك سيرانتيبي', nameZh: 'Nidapark Seyrantepe', district: 'Şişli', districtAr: 'شيشلي', districtZh: '希什利', developer: 'Tahincioğlu', priceUsd: 780000, bedrooms: 2, area: 140, typology: 'Apartment', market: 'china', view: 'Forest', delivery: 'Ready', status: 'delivered', category: 'family', metro: true, img: '', vimeoId: '' },
+  { id: 'zer-mecidiyekoy', name: 'Zer Mecidiyeköy', nameAr: 'زر مجيدية كوي', nameZh: 'Zer 梅吉迪耶柯伊', district: 'Şişli', districtAr: 'شيشلي', districtZh: '希什利', developer: 'Keleşoğlu Holding', priceUsd: 950000, bedrooms: 2, area: 135, typology: 'Residence', market: 'arab', view: 'City', delivery: '2026', status: 'construction', category: 'premium', metro: true, img: '', vimeoId: '' },
+
+  // Ataşehir (1)
+  { id: 'nidapark-atasehir', name: 'Nidapark Ataşehir', nameAr: 'نيدا بارك أتاشهر', nameZh: 'Nidapark 阿塔谢希尔', district: 'Ataşehir', districtAr: 'أتاشهر', districtZh: '阿塔谢希尔', developer: 'Tahincioğlu', priceUsd: 620000, bedrooms: 2, area: 125, typology: 'Apartment', market: 'china', view: 'Forest', delivery: 'Ready', status: 'delivered', category: 'family', metro: true, img: '', vimeoId: '' },
+
+  // Sarıyer (2)
+  { id: 'camlivadi', name: 'Çamlıvadi', nameAr: 'تشاملي فادي', nameZh: 'Çamlıvadi', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'Evren Developments', priceUsd: 540000, bedrooms: 2, area: 120, typology: 'Apartment', market: 'china', view: 'Forest', delivery: 'Ready', status: 'delivered', category: 'family', metro: false, img: '', vimeoId: '' },
+  { id: 'vadistanbul', name: 'Vadistanbul', nameAr: 'فادي إسطنبول', nameZh: 'Vadistanbul', district: 'Sariyer', districtAr: 'ساريير', districtZh: '萨里耳', developer: 'Artaş & Evyap', priceUsd: 610000, bedrooms: 2, area: 125, typology: 'Residence', market: 'both', view: 'City', delivery: 'Ready', status: 'delivered', category: 'large-scale', metro: true, img: '', vimeoId: '' },
+];
+
+export const DISTRICTS = [
+  'Maslak',
+  'Beşiktaş',
+  'Levent',
+  'Beyoğlu',
+  'Kağıthane',
+  'Şişli',
+  'Ataşehir',
+  'Sariyer',
+  'Üsküdar',
+  'Göktürk',
+  'Güneşli',
+];
+
+export const TYPOLOGIES = ['Apartment', 'Villa', 'Townhouse', 'Yalı', 'Penthouse', 'Loft', 'Residence'];
+
+export const CATEGORIES = [
+  'premium',
+  'ultra-luxury',
+  'branded-residence',
+  'investment',
+  'family',
+  'boutique',
+  'villa',
+  'nature',
+  'large-scale',
+];
+
+export const BUDGET_OPTS = [
+  { k: 'u400', label: 'Under $400K', labelAr: 'أقل من 400 ألف', labelZh: '40万以下', min: 0, max: 400000 },
+  { k: '400-700', label: '$400K — $700K', labelAr: '400 — 700 ألف', labelZh: '40万 — 70万', min: 400000, max: 700000 },
+  { k: '700-1m', label: '$700K — $1M', labelAr: '700 ألف — 1م', labelZh: '70万 — 100万', min: 700000, max: 1000000 },
+  { k: '1-3m', label: '$1M — $3M', labelAr: '1م — 3م', labelZh: '100万 — 300万', min: 1000000, max: 3000000 },
+  { k: '3-6m', label: '$3M — $6M', labelAr: '3م — 6م', labelZh: '300万 — 600万', min: 3000000, max: 6000000 },
+  { k: 'o6m', label: 'Above $6M', labelAr: 'أكثر من 6م', labelZh: '600万以上', min: 6000000, max: Infinity },
+];
+
+export const BADGES = [
+  'citizenship',
+  'sea-view',
+  'ready-to-move',
+  'rental-guarantee',
+  'hot-offer',
+  'limited-units',
+  'branded-residence',
+  'metro-nearby',
+];
+
+export function badgesFor(p) {
+  const out = [];
+  if (typeof p.priceUsd === 'number' && p.priceUsd >= 400000) out.push('citizenship');
+  if (p.view === 'Bosphorus') out.push('sea-view');
+  if (p.status === 'delivered' || p.delivery === 'Ready') out.push('ready-to-move');
+  if (p.category === 'branded-residence') out.push('branded-residence');
+  if (p.metro) out.push('metro-nearby');
+  if (p.totalUnits && p.totalUnits < 50) out.push('limited-units');
+  if (p.id === 'rixos-tersane') out.push('rental-guarantee');
+  return out;
+}
+
+export const DISTRICT_COUNTS = (() => {
+  const c = {};
+  PROJECTS.forEach((p) => { c[p.district] = (c[p.district] || 0) + 1; });
+  return c;
+})();
+
+export const DISTRICT_NAMES_AR = {
+  Sariyer: 'ساريير',
+  'Beşiktaş': 'بشكتاش',
+  'Beyoğlu': 'بي أوغلو',
+  'Şişli': 'شيشلي',
+  'Üsküdar': 'أسكدار',
+  Zekeriyaköy: 'زكرياكوي',
+  Maslak: 'مسلك',
+  Levent: 'ليفنت',
+  Kağıthane: 'كاياتهانه',
+  Ataşehir: 'أتاشهر',
+  'Göktürk': 'غوكتورك',
+  'Güneşli': 'جونشلي',
+};
+export const DISTRICT_NAMES_ZH = {
+  Sariyer: '萨里耳',
+  'Beşiktaş': '贝什塔什',
+  'Beyoğlu': '贝尤卢',
+  'Şişli': '希什利',
+  'Üsküdar': '乌斯库达尔',
+  Zekeriyaköy: '扎克里亚科伊',
+  Maslak: '马斯拉克',
+  Levent: '列文特',
+  Kağıthane: '卡厄特哈内',
+  Ataşehir: '阿塔谢希尔',
+  'Göktürk': '戈克蒂尔克',
+  'Güneşli': '居内什利',
+};
+
+export const DEVELOPERS = [
+  'Polat', 'RAMS', 'Eroğlu', 'Tahincioğlu', 'OYAK', 'Artaş', 'Zorlu', 'Özak',
+  'Kiler', 'Rixos', 'Ritz-Carlton', 'Fuzul', 'DAP', 'EgeYapı', 'Bilgili',
+];
+
+// Aggregate district data for the compare page.
+export function districtStats(district) {
+  const list = PROJECTS.filter((p) => p.district === district && typeof p.priceUsd === 'number');
+  if (list.length === 0) return null;
+  const prices = list.map((p) => p.priceUsd);
+  const avg = prices.reduce((s, v) => s + v, 0) / prices.length;
+  const sqmAvg = list.reduce((s, p) => s + p.priceUsd / p.area, 0) / list.length;
+  const metroCount = list.filter((p) => p.metro).length;
+  return {
+    district,
+    count: list.length,
+    avgPriceUsd: Math.round(avg),
+    avgSqmUsd: Math.round(sqmAvg),
+    metroPct: Math.round((metroCount / list.length) * 100),
+    hasBosphorus: list.some((p) => p.view === 'Bosphorus'),
+  };
+}
