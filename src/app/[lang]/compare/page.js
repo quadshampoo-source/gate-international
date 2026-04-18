@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
-import { DISTRICTS, districtStats, PROJECTS } from '@/lib/projects';
+import { DISTRICTS } from '@/lib/projects';
+import { getProjects } from '@/lib/data';
+
+export const revalidate = 60;
 
 const GROWTH = {
   Maslak: 'high', Kağıthane: 'high', Levent: 'high', Güneşli: 'high',
@@ -24,16 +27,23 @@ export default async function ComparePage({ params }) {
   const t = getDict(lang);
   const c = t.compare;
 
+  const projects = await getProjects();
   const rows = DISTRICTS.map((d) => {
-    const count = PROJECTS.filter((p) => p.district === d).length;
-    const stats = districtStats(d);
+    const list = projects.filter((p) => p.district === d && typeof p.priceUsd === 'number');
+    const count = projects.filter((p) => p.district === d).length;
+    if (list.length === 0) {
+      return { d, count, avgPrice: null, avgSqm: null, metroPct: null, bosphorus: false, growth: GROWTH[d] || 'stable', primary: PRIMARY_MARKET[d] || 'both' };
+    }
+    const avg = list.reduce((s, p) => s + p.priceUsd, 0) / list.length;
+    const sqm = list.reduce((s, p) => s + p.priceUsd / p.area, 0) / list.length;
+    const metroPct = Math.round((list.filter((p) => p.metro).length / list.length) * 100);
     return {
       d,
       count,
-      avgPrice: stats?.avgPriceUsd || null,
-      avgSqm: stats?.avgSqmUsd || null,
-      metroPct: stats?.metroPct ?? null,
-      bosphorus: stats?.hasBosphorus || false,
+      avgPrice: Math.round(avg),
+      avgSqm: Math.round(sqm),
+      metroPct,
+      bosphorus: list.some((p) => p.view === 'Bosphorus'),
       growth: GROWTH[d] || 'stable',
       primary: PRIMARY_MARKET[d] || 'both',
     };

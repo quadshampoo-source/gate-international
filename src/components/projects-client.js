@@ -5,11 +5,25 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import ProjectCard from '@/components/project-card';
 import { getDict } from '@/lib/i18n';
-import { PROJECTS, DISTRICTS, TYPOLOGIES, CATEGORIES, BUDGET_OPTS, BADGES, badgesFor } from '@/lib/projects';
+import { DISTRICTS, TYPOLOGIES, CATEGORIES, BUDGET_OPTS, BADGES, badgesFor } from '@/lib/projects';
+
+function countActive(f) {
+  let n = 0;
+  if (f.district !== 'any') n++;
+  if (f.budget !== 'any') n++;
+  if (f.market !== 'any') n++;
+  if (f.type !== 'any') n++;
+  if (f.status !== 'any') n++;
+  if (f.category !== 'any') n++;
+  if (f.badge !== 'any') n++;
+  if (f.metro) n++;
+  if (f.q && f.q.trim()) n++;
+  return n;
+}
 
 const SORT_OPTS = ['priceDesc', 'priceAsc', 'newest'];
 
-export default function ProjectsClient({ lang }) {
+export default function ProjectsClient({ lang, projects = [] }) {
   const t = getDict(lang);
   const ext = t.projectsExtra;
   const searchParams = useSearchParams();
@@ -40,7 +54,7 @@ export default function ProjectsClient({ lang }) {
   }, [filters, pathname, router]);
 
   const filtered = useMemo(() => {
-    const list = PROJECTS.filter((p) => {
+    const list = projects.filter((p) => {
       if (filters.district !== 'any' && p.district !== filters.district) return false;
       if (filters.type !== 'any' && p.typology !== filters.type) return false;
       if (filters.status !== 'any' && p.status !== filters.status) return false;
@@ -70,13 +84,12 @@ export default function ProjectsClient({ lang }) {
     if (filters.sort === 'priceAsc') {
       list.sort((a, b) => (a.priceUsd ?? Infinity) - (b.priceUsd ?? Infinity));
     } else if (filters.sort === 'newest') {
-      // Use array index as proxy for recency: later in array = newer
-      list.sort((a, b) => PROJECTS.indexOf(b) - PROJECTS.indexOf(a));
+      list.sort((a, b) => projects.indexOf(b) - projects.indexOf(a));
     } else {
       list.sort((a, b) => (b.priceUsd ?? -1) - (a.priceUsd ?? -1));
     }
     return list;
-  }, [filters]);
+  }, [filters, projects]);
 
   const reset = () => setFilters({
     district: 'any', budget: 'any', market: 'any', type: 'any',
@@ -85,6 +98,22 @@ export default function ProjectsClient({ lang }) {
   const set = (k, v) => setFilters((f) => ({ ...f, [k]: v }));
 
   const budgetLabel = (b) => (lang === 'ar' ? b.labelAr : lang === 'zh' ? b.labelZh : b.label);
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const activeCount = countActive(filters);
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setMobileOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   return (
     <div className="fade-in">
@@ -99,8 +128,38 @@ export default function ProjectsClient({ lang }) {
       </div>
 
       <div className="container-x">
+        {/* Mobile backdrop */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              className="md:hidden fixed inset-0 z-[120] bg-black/60 backdrop-blur-sm"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setMobileOpen(false)}
+            />
+          )}
+        </AnimatePresence>
         <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-8 md:gap-12 py-15 md:py-30">
-          <aside className="md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-120px)] md:overflow-y-auto pr-1">
+          <aside
+            className={`
+              fixed md:static inset-y-0 right-0 rtl:right-auto rtl:left-0
+              z-[130] md:z-auto w-[86vw] max-w-[380px] md:w-auto md:max-w-none
+              bg-bg md:bg-transparent
+              p-6 md:p-0 pt-20 md:pt-0 overflow-y-auto md:overflow-y-auto
+              border-l rtl:border-l-0 rtl:border-r border-line md:border-0
+              transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)]
+              ${mobileOpen ? 'translate-x-0' : 'translate-x-full rtl:-translate-x-full'}
+              md:translate-x-0 rtl:md:translate-x-0
+              md:sticky md:top-[100px] md:self-start md:max-h-[calc(100vh-120px)] pr-1
+            `}
+          >
+            <button
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close filters"
+              className="md:hidden absolute top-4 right-4 rtl:right-auto rtl:left-4 w-10 h-10 flex items-center justify-center border border-line-strong text-fg hover:text-gold hover:border-gold"
+            >
+              ✕
+            </button>
             <div className="flex justify-between items-baseline mb-6">
               <span className="kicker">{t.projects.filters}</span>
               <button onClick={reset} className="text-[11px] font-mono tracking-[0.12em] text-gold">
@@ -180,20 +239,46 @@ export default function ProjectsClient({ lang }) {
                 </FilterButton>
               ))}
             </FilterGroup>
+
+            {/* Mobile-only: apply button at drawer bottom */}
+            <div className="md:hidden sticky bottom-0 -mx-6 px-6 pt-4 pb-6 bg-bg border-t border-line mt-8">
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="btn btn-gold w-full justify-center"
+              >
+                Show {filtered.length} {t.projects.results}
+              </button>
+            </div>
           </aside>
 
           <div>
-            <div className="flex justify-between items-center mb-8 pb-5 border-b border-line gap-4 flex-wrap">
-              <div className="font-mono text-[13px] text-fg-muted">
-                <span className="text-gold font-medium">{String(filtered.length).padStart(2, '0')}</span>{' '}
-                {t.projects.results}
+            <div className="flex justify-between items-center mb-6 pb-5 border-b border-line gap-3 flex-wrap">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setMobileOpen(true)}
+                  className="md:hidden inline-flex items-center gap-2 px-4 py-2.5 border border-gold text-gold font-mono text-[11px] tracking-[0.14em] uppercase"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M3 6h18M6 12h12M10 18h4" strokeLinecap="round" />
+                  </svg>
+                  {t.projects.filters}
+                  {activeCount > 0 && (
+                    <span className="ml-1 min-w-[18px] h-[18px] px-1 rounded-full bg-gold text-bg text-[10px] flex items-center justify-center font-semibold">
+                      {activeCount}
+                    </span>
+                  )}
+                </button>
+                <div className="font-mono text-[13px] text-fg-muted">
+                  <span className="text-gold font-medium">{String(filtered.length).padStart(2, '0')}</span>{' '}
+                  {t.projects.results}
+                </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[11px] text-fg-dim tracking-[0.14em]">{ext.sortLabel}:</span>
+                <span className="font-mono text-[11px] text-fg-dim tracking-[0.14em] hidden sm:inline">{ext.sortLabel}:</span>
                 <select
                   value={filters.sort}
                   onChange={(e) => set('sort', e.target.value)}
-                  className="bg-bg-raised border border-line px-2 py-1 text-[12px] text-fg-muted"
+                  className="bg-bg-raised border border-line px-2 py-1.5 text-[12px] text-fg-muted"
                 >
                   <option value="priceDesc">{ext.sortPriceDesc}</option>
                   <option value="priceAsc">{ext.sortPriceAsc}</option>

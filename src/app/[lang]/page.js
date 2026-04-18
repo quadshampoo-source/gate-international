@@ -1,19 +1,27 @@
 import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
-import { PROJECTS, DISTRICT_COUNTS, DISTRICT_NAMES_AR, DISTRICT_NAMES_ZH } from '@/lib/projects';
+import { DISTRICT_NAMES_AR, DISTRICT_NAMES_ZH } from '@/lib/projects';
+import { getProjects } from '@/lib/data';
 import ProjectCard from '@/components/project-card';
 import { ShieldIcon, AwardIcon, GlobeIcon, KeyIcon } from '@/components/icons';
 import { FadeIn, ScrollReveal, Counter, Stagger, Parallax } from '@/components/motion';
 
+export const revalidate = 60;
+
 export default async function HomePage({ params }) {
   const { lang } = await params;
   const t = getDict(lang);
-  const featured = PROJECTS.slice(0, 6);
+  const allProjects = await getProjects();
+  const featured = allProjects.slice(0, 6);
+  const districtCounts = allProjects.reduce((acc, p) => {
+    acc[p.district] = (acc[p.district] || 0) + 1;
+    return acc;
+  }, {});
   const districts = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Üsküdar', 'Zekeriyaköy'].map((d) => ({
     name: d,
     nameAr: DISTRICT_NAMES_AR[d],
     nameZh: DISTRICT_NAMES_ZH[d],
-    count: DISTRICT_COUNTS[d] || (d === 'Zekeriyaköy' ? 2 : 0),
+    count: districtCounts[d] || (d === 'Zekeriyaköy' ? 2 : 0),
   }));
 
   const heroImg = 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=2400&q=85';

@@ -7,7 +7,7 @@ import ProjectCard from '@/components/project-card';
 import { PlayIcon, WhatsappIcon } from '@/components/icons';
 import { fmtUsd, localizedName, localizedDistrict, whatsappLink } from '@/lib/utils';
 import { getDict } from '@/lib/i18n';
-import { PROJECTS, badgesFor } from '@/lib/projects';
+import { PROJECTS as staticProjects, badgesFor } from '@/lib/projects';
 
 function hashGradient(id) {
   let h = 0;
@@ -24,12 +24,13 @@ function watchingCount(id) {
   return 8 + (h % 27);
 }
 
-function refNumber(project) {
-  const idx = PROJECTS.findIndex((p) => p.id === project.id);
+function refNumber(project, allProjects) {
+  const list = allProjects && allProjects.length ? allProjects : staticProjects;
+  const idx = list.findIndex((p) => p.id === project.id);
   return `GATE-${String(idx + 1).padStart(3, '0')}`;
 }
 
-export default function DetailClient({ project, lang }) {
+export default function DetailClient({ project, lang, allProjects = [] }) {
   const t = getDict(lang);
   const ext = t.detailExtra;
   const projExt = t.projectsExtra;
@@ -50,10 +51,11 @@ export default function DetailClient({ project, lang }) {
       ]
     : [];
 
-  const similar = PROJECTS.filter((p) => p.id !== project.id && p.district === project.district).slice(0, 3);
-  const enquireMessage = `Hello, I am interested in ${project.name} (Ref: ${refNumber(project)}).`;
+  const pool = allProjects.length ? allProjects : staticProjects;
+  const similar = pool.filter((p) => p.id !== project.id && p.district === project.district).slice(0, 3);
+  const ref = refNumber(project, pool);
+  const enquireMessage = `Hello, I am interested in ${project.name} (Ref: ${ref}).`;
   const watching = watchingCount(project.id);
-  const ref = refNumber(project);
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : `https://gate.example${typeof window !== 'undefined' ? window.location.pathname : ''}`;
   const shareText = `${name} — ${district}`;
