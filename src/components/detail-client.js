@@ -40,7 +40,8 @@ export default function DetailClient({ project, lang, allProjects = [] }) {
   const district = localizedDistrict(project, lang);
   const badges = badgesFor(project);
 
-  const hasImg = !!project.img;
+  const isPlaceholderImg = !project.img || !project.img.trim() || project.img.includes('picsum.photos');
+  const hasImg = !isPlaceholderImg;
   const gallery = hasImg
     ? [
         project.img,
