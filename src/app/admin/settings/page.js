@@ -1,5 +1,6 @@
+import { redirect } from 'next/navigation';
 import AdminFrame from '../_components/frame';
-import { currentUser } from '@/lib/supabase/server';
+import { currentProfile } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { THEMES, DEFAULT_THEME } from '@/lib/theme';
 import { setActiveTheme } from './actions';
@@ -7,7 +8,10 @@ import { setActiveTheme } from './actions';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminSettingsPage({ searchParams }) {
-  const user = await currentUser();
+  const ctx = await currentProfile();
+  if (!ctx) redirect('/admin/login');
+  if (ctx.profile.role !== 'admin') redirect('/admin');
+  const user = ctx.user;
   const sp = await searchParams;
   const client = supabaseAdmin();
   const { data } = await client
@@ -18,7 +22,7 @@ export default async function AdminSettingsPage({ searchParams }) {
   const active = data?.active_theme || DEFAULT_THEME;
 
   return (
-    <AdminFrame active="settings" userEmail={user?.email}>
+    <AdminFrame active="settings" userEmail={user?.email} role="admin">
       <h1>Site Settings</h1>
 
       {sp?.saved && (

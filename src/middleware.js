@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
+const PUBLIC_ADMIN_PATHS = new Set(['/admin/login', '/admin/register']);
+
 export async function middleware(request) {
   let response = NextResponse.next({ request });
 
@@ -9,9 +11,7 @@ export async function middleware(request) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
+        getAll() { return request.cookies.getAll(); },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({ request });
@@ -24,34 +24,39 @@ export async function middleware(request) {
   );
 
   const { pathname } = request.nextUrl;
-  const { data } = await supabase.auth.getUser();
-  const user = data?.user;
 
-  // Protect /admin/* except /admin/login
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
-    if (!user) {
+  // Only gate /admin/*
+  if (!pathname.startsWith('/admin')) return response;
+
+  // Public admin pages
+  if (PUBLIC_ADMIN_PATHS.has(pathname)) {
+    const { data } = await supabase.auth.getUser();
+    if (data?.user) {
+      // Already logged in — skip login/register pages.
       const url = request.nextUrl.clone();
-      url.pathname = '/admin/login';
-      url.searchParams.set('next', pathname);
+      url.pathname = '/admin';
       return NextResponse.redirect(url);
     }
-    const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase();
-    if (adminEmail && user.email?.toLowerCase() !== adminEmail) {
-      return new NextResponse('Forbidden', { status: 403 });
-    }
+    return response;
   }
 
-  // If logged in, skip the login page
-  if (pathname === '/admin/login' && user) {
+  // Everything else under /admin requires login.
+  const { data } = await supabase.auth.getUser();
+  const user = data?.user;
+  if (!user) {
     const url = request.nextUrl.clone();
-    url.pathname = '/admin';
+    url.pathname = '/admin/login';
+    url.searchParams.set('next', pathname);
     return NextResponse.redirect(url);
   }
 
+  // Final role-based gating happens server-side in pages/actions because
+  // middleware cannot cheaply read a DB row without tripping the Edge runtime
+  // limits. Pages call `currentProfile()` and redirect pending users to
+  // /admin/pending or reject forbidden editor requests.
   return response;
 }
 
-// Only run on /admin/* to avoid adding a Supabase auth call to every public page navigation.
 export const config = {
   matcher: ['/admin/:path*'],
 };

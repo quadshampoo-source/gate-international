@@ -102,3 +102,73 @@ drop trigger if exists site_settings_touch_updated_at on public.site_settings;
 create trigger site_settings_touch_updated_at
   before update on public.site_settings
   for each row execute function public.touch_updated_at();
+
+-- ==========================
+-- User profiles + roles
+-- ==========================
+-- role: 'pending' | 'editor' | 'admin'
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text,
+  full_name text,
+  company text,
+  phone text,
+  role text not null default 'pending',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+alter table public.profiles enable row level security;
+
+drop policy if exists "profiles self read" on public.profiles;
+create policy "profiles self read" on public.profiles
+  for select to authenticated using (auth.uid() = id);
+
+-- Self-insert and update happen via service role from server actions.
+
+drop trigger if exists profiles_touch_updated_at on public.profiles;
+create trigger profiles_touch_updated_at
+  before update on public.profiles
+  for each row execute function public.touch_updated_at();
+
+-- Auto-create a profiles row whenever a new auth.users row appears.
+create or replace function public.handle_new_user()
+returns trigger language plpgsql security definer as $$
+begin
+  insert into public.profiles (id, email, full_name, company, phone, role)
+  values (
+    new.id,
+    new.email,
+    coalesce(new.raw_user_meta_data->>'full_name', ''),
+    coalesce(new.raw_user_meta_data->>'company', ''),
+    coalesce(new.raw_user_meta_data->>'phone', ''),
+    'pending'
+  )
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
+
+-- ==========================
+-- Editor ↔ project assignments
+-- ==========================
+create table if not exists public.editor_projects (
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  project_id text not null references public.projects(id) on delete cascade,
+  assigned_at timestamptz default now(),
+  primary key (user_id, project_id)
+);
+
+create index if not exists editor_projects_user_idx on public.editor_projects(user_id);
+create index if not exists editor_projects_project_idx on public.editor_projects(project_id);
+
+alter table public.editor_projects enable row level security;
+
+drop policy if exists "editor sees own assignments" on public.editor_projects;
+create policy "editor sees own assignments" on public.editor_projects
+  for select to authenticated using (auth.uid() = user_id);

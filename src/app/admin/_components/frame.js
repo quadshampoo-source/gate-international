@@ -1,19 +1,31 @@
 import Link from 'next/link';
 import { logout } from '../login/actions';
 
-const NAV = [
+const NAV_ADMIN = [
   { k: 'dashboard', label: 'Dashboard', href: '/admin' },
   { k: 'projects', label: 'Projects', href: '/admin/projects' },
+  { k: 'users', label: 'Users', href: '/admin/users' },
   { k: 'settings', label: 'Site Settings', href: '/admin/settings' },
 ];
 
-export default function AdminFrame({ active, userEmail, children }) {
+const NAV_EDITOR = [
+  { k: 'dashboard', label: 'Dashboard', href: '/admin' },
+  { k: 'projects', label: 'My Projects', href: '/admin/projects' },
+];
+
+export default function AdminFrame({ active, userEmail, role = 'editor', children }) {
+  const nav = role === 'admin' ? NAV_ADMIN : NAV_EDITOR;
   return (
     <>
       <div className="admin-topbar">
         <div className="flex items-center gap-4">
           <div className="admin-brand">GATE <em>·</em> ADMIN</div>
           <Link href="/" className="text-xs text-fg-muted hover:text-gold">← back to site</Link>
+          {role && role !== 'admin' && (
+            <span className="text-[10px] font-mono tracking-[0.16em] text-gold uppercase border border-gold/40 px-2 py-0.5">
+              {role}
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-4 text-xs">
           <span className="text-fg-muted">{userEmail}</span>
@@ -24,7 +36,7 @@ export default function AdminFrame({ active, userEmail, children }) {
       </div>
       <div className="admin-grid">
         <aside className="admin-side">
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <Link key={n.k} href={n.href} className={active === n.k ? 'active' : ''}>
               {n.label}
             </Link>

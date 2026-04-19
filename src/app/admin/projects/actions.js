@@ -3,6 +3,21 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { currentProfile } from '@/lib/supabase/server';
+
+async function requireProjectAccess(projectId) {
+  const ctx = await currentProfile();
+  if (!ctx) redirect('/admin/login');
+  if (ctx.profile.role === 'admin') return ctx;
+  if (ctx.profile.role === 'editor' && ctx.assignedProjectIds.includes(projectId)) return ctx;
+  redirect('/admin/projects');
+}
+
+async function requireAdmin() {
+  const ctx = await currentProfile();
+  if (!ctx || ctx.profile.role !== 'admin') redirect('/admin');
+  return ctx;
+}
 
 function parseJsonOrNull(s) {
   if (!s || !s.trim()) return null;
@@ -65,6 +80,7 @@ function refreshPaths() {
 }
 
 export async function createProject(formData) {
+  await requireAdmin();
   const row = payloadFrom(formData);
   if (!row.id || !row.name || !row.district) {
     redirect('/admin/projects/new?error=missing');
@@ -82,6 +98,7 @@ export async function createProject(formData) {
 export async function updateProject(formData) {
   const row = payloadFrom(formData);
   if (!row.id) redirect('/admin/projects');
+  await requireProjectAccess(row.id);
   const supabase = supabaseAdmin();
   const { error } = await supabase.from('projects').update(row).eq('id', row.id);
   if (error) {
@@ -93,6 +110,7 @@ export async function updateProject(formData) {
 }
 
 export async function deleteProject(formData) {
+  await requireAdmin();
   const id = String(formData.get('id') || '');
   if (!id) redirect('/admin/projects');
   const supabase = supabaseAdmin();
