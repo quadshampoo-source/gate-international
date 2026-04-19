@@ -74,3 +74,31 @@ drop trigger if exists projects_touch_updated_at on public.projects;
 create trigger projects_touch_updated_at
   before update on public.projects
   for each row execute function public.touch_updated_at();
+
+-- ==========================
+-- Site settings (single row)
+-- ==========================
+create table if not exists public.site_settings (
+  id int primary key default 1,
+  active_theme text not null default 'classic',
+  brand_tagline_override text,
+  updated_at timestamptz default now(),
+  constraint site_settings_singleton check (id = 1)
+);
+
+insert into public.site_settings (id, active_theme)
+  values (1, 'classic')
+  on conflict (id) do nothing;
+
+alter table public.site_settings enable row level security;
+
+drop policy if exists "site_settings public read" on public.site_settings;
+create policy "site_settings public read" on public.site_settings
+  for select
+  to anon, authenticated
+  using (true);
+
+drop trigger if exists site_settings_touch_updated_at on public.site_settings;
+create trigger site_settings_touch_updated_at
+  before update on public.site_settings
+  for each row execute function public.touch_updated_at();

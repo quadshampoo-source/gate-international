@@ -4,6 +4,7 @@ import { logout } from '../login/actions';
 const NAV = [
   { k: 'dashboard', label: 'Dashboard', href: '/admin' },
   { k: 'projects', label: 'Projects', href: '/admin/projects' },
+  { k: 'settings', label: 'Site Settings', href: '/admin/settings' },
 ];
 
 export default function AdminFrame({ active, userEmail, children }) {
