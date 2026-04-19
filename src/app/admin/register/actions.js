@@ -1,7 +1,16 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { sendRegistrationNotice } from '@/lib/email';
+
+async function baseUrl() {
+  const h = await headers();
+  const host = h.get('x-forwarded-host') || h.get('host');
+  const proto = h.get('x-forwarded-proto') || 'https';
+  return host ? `${proto}://${host}` : 'http://localhost:3000';
+}
 
 export async function register(formData) {
   const email = String(formData.get('email') || '').trim().toLowerCase();
@@ -19,9 +28,6 @@ export async function register(formData) {
 
   const admin = supabaseAdmin();
 
-  // Create the user with email confirmed so they can sign in immediately.
-  // Role on the profile row defaults to 'pending' — they still cannot access
-  // admin tools until the superadmin approves them.
   const { data, error } = await admin.auth.admin.createUser({
     email,
     password,
@@ -33,8 +39,6 @@ export async function register(formData) {
     redirect(`/admin/register?error=${encodeURIComponent(error.message)}`);
   }
 
-  // Trigger should insert the profile row. Upsert defensively in case the
-  // trigger hasn't run yet or metadata didn't flow through.
   if (data?.user?.id) {
     await admin
       .from('profiles')
@@ -42,6 +46,17 @@ export async function register(formData) {
         { id: data.user.id, email, full_name, company, phone, role: 'pending' },
         { onConflict: 'id' }
       );
+  }
+
+  // Notify the admin of the new application.
+  const adminTo = process.env.ADMIN_EMAIL || process.env.GMAIL_USER;
+  if (adminTo) {
+    const dashboardUrl = `${await baseUrl()}/admin/users`;
+    await sendRegistrationNotice({
+      adminTo,
+      applicant: { email, full_name, company, phone },
+      dashboardUrl,
+    });
   }
 
   redirect('/admin/register?success=1');
