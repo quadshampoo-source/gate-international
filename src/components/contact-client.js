@@ -31,7 +31,7 @@ export default function ContactClient({ lang }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 pb-30">
           <div>
             <div className="flex flex-col gap-px bg-line border border-line">
-              <a href={whatsappLink('Hello, I would like to enquire.')} target="_blank" rel="noreferrer" className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised">
+              <a href={whatsappLink('Hello, I would like to enquire.', lang)} target="_blank" rel="noreferrer" className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised">
                 <div className="w-11 h-11 flex items-center justify-center text-bg flex-shrink-0" style={{ background: '#25D366', borderColor: '#25D366' }}>
                   <WhatsappIcon />
                 </div>

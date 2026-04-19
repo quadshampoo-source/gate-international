@@ -278,7 +278,7 @@ export default function DetailClient({ project, lang, allProjects = [] }) {
                 </div>
               </div>
               <a
-                href={whatsappLink(enquireMessage)}
+                href={whatsappLink(enquireMessage, lang)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-gold btn-arrow w-full justify-center mb-2.5"

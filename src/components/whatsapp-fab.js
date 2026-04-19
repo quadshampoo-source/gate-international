@@ -2,13 +2,15 @@
 
 import { motion } from 'framer-motion';
 import { WhatsappIcon } from './icons';
-import { whatsappLink } from '@/lib/utils';
+import { whatsappLink, WHATSAPP_DEFAULT_MESSAGES } from '@/lib/utils';
 
-export default function WhatsappFab({ message }) {
+export default function WhatsappFab({ lang = 'en', message }) {
+  const msg = message ?? WHATSAPP_DEFAULT_MESSAGES[lang] ?? WHATSAPP_DEFAULT_MESSAGES.en;
+  const href = whatsappLink(msg, lang);
   return (
     <motion.a
       className="wa-fab"
-      href={whatsappLink(message)}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contact on WhatsApp"

@@ -256,7 +256,7 @@ export default async function CitizenshipPage({ params }) {
               </form>
               <div className="flex flex-wrap justify-center gap-3">
                 <Link
-                  href={whatsappLink('Hello, I would like a Turkish citizenship consultation.')}
+                  href={whatsappLink('Hello, I would like a Turkish citizenship consultation.', lang)}
                   className="btn btn-gold btn-arrow shadow-[0_10px_30px_rgba(201,168,76,0.25)]"
                 >
                   {t.ctaBtn}

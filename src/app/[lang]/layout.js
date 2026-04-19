@@ -35,7 +35,7 @@ export default async function LangLayout({ children, params }) {
           <PageTransition>{children}</PageTransition>
         </main>
         <Footer lang={lang} />
-        <WhatsappFab message="Hello, I would like to enquire about Istanbul properties." />
+        <WhatsappFab lang={lang} />
       </body>
     </html>
   );

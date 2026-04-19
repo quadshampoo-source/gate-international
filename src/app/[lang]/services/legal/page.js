@@ -176,7 +176,7 @@ export default async function LegalPage({ params }) {
               <p className="text-fg-muted mb-10 text-[16px] max-w-[520px] mx-auto">{t.ctaSub}</p>
               <div className="flex flex-wrap justify-center gap-3">
                 <Link
-                  href={whatsappLink('Hello, I would like a legal consultation.')}
+                  href={whatsappLink('Hello, I would like a legal consultation.', lang)}
                   className="btn btn-gold btn-arrow shadow-[0_10px_30px_rgba(201,168,76,0.25)]"
                 >
                   {t.ctaBtn}
