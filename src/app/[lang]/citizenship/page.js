@@ -1,140 +1,272 @@
 import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
 import { whatsappLink } from '@/lib/utils';
+import { ScrollReveal, Counter, FadeIn } from '@/components/motion';
+import BlurText from '@/components/cinematic/blur-text';
+import Accordion from '@/components/cinematic/accordion';
+import OrbBackdrop from '@/components/cinematic/orb-backdrop';
+import { ShieldIcon, AwardIcon, GlobeIcon, CheckIcon } from '@/components/icons';
+
+export const revalidate = 60;
+
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  const t = getDict(lang).citizenshipV2;
+  return { title: `${t.heroTitle} — Gate International`, description: t.heroSub };
+}
+
+const STATS = [
+  { value: 250, suffix: '+', label: 'Applications supported' },
+  { value: 10, suffix: '+', label: 'Years experience' },
+  { value: '6-9', label: 'Months timeline', raw: true },
+  { value: 98, suffix: '%', label: 'Success rate' },
+];
+
+const STEPS = [
+  { n: '01', icon: '🏠', title: 'Choose a Qualifying Property', body: 'Select real estate meeting the $400K threshold that fits your investment goals — curated shortlist, yield analysis, citizenship verification.' },
+  { n: '02', icon: '📋', title: 'Complete the Purchase', body: 'Title deed transfer, SPK valuation report, and transaction executed under Turkish legal framework with full escrow protection.' },
+  { n: '03', icon: '📄', title: 'Prepare Application', body: 'Document compilation, sworn translations, biometric photos, and submission to the Ministry of Interior handled end-to-end.' },
+  { n: '04', icon: '🇹🇷', title: 'Receive Citizenship', body: 'Application review and approval — Turkish passport issued for the applicant, spouse and children under 18. Visa-free travel to 110+ countries.' },
+];
+
+const WHY = [
+  { icon: <ShieldIcon />, title: 'Eligible Property Guidance', body: 'Every project we represent above $400K is pre-verified for citizenship eligibility.' },
+  { icon: <GlobeIcon />, title: 'Local Market Expertise', body: 'Sixteen years in Istanbul prime and Bodrum ultra-luxury markets.' },
+  { icon: <AwardIcon />, title: 'End-to-End Support', body: 'Property selection, legal, banking, immigration — one director, one process.' },
+  { icon: <CheckIcon />, title: 'Proven Track Record', body: '250+ families successfully moved through our citizenship desk.' },
+];
+
+const FAQ = [
+  { q: 'What is the minimum investment?', a: '$400,000 — it can be one property or several combined, purchased from Turkish sellers.' },
+  { q: 'Can my family be included?', a: 'Yes. Spouse and children under 18 are included on the same application at no additional investment cost.' },
+  { q: 'How long does it take?', a: 'Typically 6 to 9 months end-to-end: 2 months transaction, 2-3 months document prep, 2-4 months Ministry review.' },
+  { q: 'Do I need to live in Turkey?', a: 'No. There is no residency requirement — you are free to live anywhere and visit when you wish.' },
+  { q: 'Can I sell the property later?', a: 'Yes, after a mandatory 3-year holding period registered on the title deed.' },
+];
 
 export default async function CitizenshipPage({ params }) {
   const { lang } = await params;
-  const t = getDict(lang);
-  const c = t.citizenship;
+  const t = getDict(lang).citizenshipV2;
+  const badges = [t.b1, t.b2, t.b3, t.b4];
 
   return (
     <div className="fade-in">
-      <section className="pt-[160px] pb-15 border-b border-line">
-        <div className="container-x">
-          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-10 items-end">
-            <div>
-              <span className="kicker">{c.kicker}</span>
-              <h1 className="font-serif text-[clamp(48px,6.5vw,96px)] leading-[1.02] tracking-[-0.025em] my-4">
-                {c.title}
-              </h1>
-              <p className="text-fg-muted text-[17px] max-w-[640px]">{c.sub}</p>
-            </div>
-            <div className="bg-gold/10 border border-gold/40 p-8 text-center">
-              <div className="font-serif text-[72px] text-gold leading-none tracking-[-0.02em]">
-                $400<span className="font-mono text-[20px] align-top">K</span>
-              </div>
-              <div className="font-mono text-[10px] tracking-[0.18em] text-gold mt-3">MINIMUM INVESTMENT</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 md:py-30">
-        <div className="container-x">
-          <div className="mb-10">
-            <span className="kicker block mb-3">№ 01 — TIMELINE</span>
-            <h2 className="section-title">{c.timelineTitle}</h2>
-          </div>
-          <ol className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-x-10 md:gap-x-16">
-            {c.steps.map((s, i) => (
-              <div key={i} className="contents">
-                <div className="flex md:flex-col items-baseline md:items-start gap-4 md:gap-2 mb-2 md:mb-0 relative">
-                  <div className="font-serif text-gold text-[40px] md:text-[56px] leading-none tracking-[-0.02em]">
-                    {String(i + 1).padStart(2, '0')}
-                  </div>
-                  {i < c.steps.length - 1 && (
-                    <div className="hidden md:block w-px h-full bg-gold/30 ml-7 flex-1" />
-                  )}
-                </div>
-                <div className="pb-10 md:pb-12 border-b border-line last:border-b-0">
-                  <div className="font-serif text-[22px] md:text-[26px] mb-2 tracking-[-0.01em]">{s.t}</div>
-                  <p className="text-fg-muted text-[14px] leading-relaxed max-w-[600px]">{s.d}</p>
-                </div>
-              </div>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section className="bg-bg-sunken border-y border-line py-20 md:py-30">
-        <div className="container-x">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
-            <div>
-              <span className="kicker block mb-3">№ 02 — DOCUMENTS</span>
-              <h3 className="font-serif text-[32px] mb-6">{c.docsTitle}</h3>
-              <ul className="space-y-3">
-                {c.docs.map((d, i) => (
-                  <li key={i} className="flex items-start gap-3 text-fg-muted text-[15px] leading-relaxed">
-                    <span className="text-gold font-mono text-[11px] tracking-wider mt-1 flex-shrink-0">
-                      № {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span>{d}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <span className="kicker block mb-3">№ 03 — FAMILY</span>
-              <h3 className="font-serif text-[32px] mb-6">{c.familyTitle}</h3>
-              <p className="text-fg-muted text-[15px] leading-loose max-w-[540px]">{c.familyBody}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 md:py-30">
-        <div className="container-x">
-          <div className="mb-10">
-            <span className="kicker block mb-3">№ 04 — BENEFITS</span>
-            <h2 className="section-title">{c.rightsTitle}</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px bg-line border border-line">
-            {c.rights.map((r, i) => (
-              <div key={i} className="bg-bg p-7 min-h-[140px] flex items-start gap-4">
-                <span className="font-serif text-gold text-[24px] leading-none">✓</span>
-                <span className="font-serif text-[17px] leading-snug">{r}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-bg-sunken border-y border-line py-20 md:py-30">
-        <div className="container-x">
-          <div className="mb-10">
-            <span className="kicker block mb-3">№ 05 — FAQ</span>
-            <h2 className="section-title">{c.faqTitle}</h2>
-          </div>
-          <div className="space-y-px bg-line border border-line max-w-[880px]">
-            {c.faqs.map((f, i) => (
-              <details key={i} className="bg-bg p-6 group">
-                <summary className="cursor-pointer flex justify-between items-start gap-4">
-                  <span className="font-serif text-[18px] leading-snug flex-1">{f.q}</span>
-                  <span className="text-gold font-serif text-[24px] leading-none transition-transform group-open:rotate-45">+</span>
-                </summary>
-                <p className="text-fg-muted text-[14px] leading-relaxed mt-4 pr-6">{f.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="concierge bg-surface py-20 border-t border-line"
-        style={{ backgroundImage: 'radial-gradient(ellipse at top right, rgba(201,168,76,0.08), transparent 50%)' }}>
-        <div className="container-x relative z-[1] max-w-[760px]">
-          <span className="kicker">№ 06 — NEXT STEP</span>
-          <h2 className="section-title mt-5 mb-6">{c.consultCta}</h2>
-          <form className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 max-w-[560px] mb-6">
-            <input
-              type="email"
-              placeholder={c.email}
-              className="px-4 py-3 bg-bg-raised border border-line text-fg placeholder-fg-dim font-serif text-[15px]"
+      {/* HERO */}
+      <section className="relative min-h-[80vh] flex items-center overflow-hidden pt-28 pb-20">
+        <OrbBackdrop intensity={0.6} />
+        <div
+          className="absolute inset-0 -z-0"
+          style={{
+            background:
+              'radial-gradient(ellipse at top, rgba(201,168,76,0.08), transparent 60%), linear-gradient(180deg, rgb(var(--c-bg-sunken)) 0%, rgb(var(--c-bg)) 100%)',
+          }}
+        />
+        <div className="container-x relative z-10">
+          <div className="max-w-[860px]">
+            <FadeIn delay={0.1}>
+              <span className="kicker">TURKISH CITIZENSHIP · 2026</span>
+            </FadeIn>
+            <BlurText
+              as="h1"
+              text={t.heroTitle}
+              className="font-serif text-[clamp(40px,6.5vw,84px)] leading-[1.02] tracking-[-0.03em] my-6"
+              delay={0.1}
             />
-            <button type="button" className="btn btn-outline">{c.pdfCta}</button>
-          </form>
-          <Link href={whatsappLink('Hello, I would like a Turkish citizenship consultation.')} className="btn btn-gold btn-arrow">
-            {c.consultCta}
-          </Link>
+            <FadeIn delay={0.9}>
+              <p className="text-[17px] md:text-[20px] text-fg/85 max-w-[640px] leading-relaxed mb-10">
+                {t.heroSub}
+              </p>
+            </FadeIn>
+            <div className="flex flex-wrap gap-2.5">
+              {badges.map((b, i) => (
+                <FadeIn key={i} delay={1.1 + i * 0.1}>
+                  <span
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-bg-raised/50 text-[12px] font-mono tracking-[0.12em] uppercase"
+                    style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
+                  >
+                    <span className="text-gold">✓</span>
+                    {b}
+                  </span>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section className="relative py-20">
+        <OrbBackdrop hue={20} intensity={0.3} />
+        <div className="container-x relative z-10">
+          <ScrollReveal>
+            <div
+              className="backdrop-blur-2xl bg-bg-raised/50 rounded-[28px] md:rounded-[36px] p-8 md:p-14 shadow-[0_40px_100px_rgba(0,0,0,0.4)]"
+              style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
+            >
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                {STATS.map((s, i) => (
+                  <div key={i} className="text-center">
+                    <div className="font-serif text-[44px] md:text-[60px] leading-none tracking-[-0.03em] text-fg">
+                      {s.raw ? (
+                        s.value
+                      ) : (
+                        <>
+                          <Counter to={s.value} />
+                          {s.suffix && <span className="text-gold">{s.suffix}</span>}
+                        </>
+                      )}
+                    </div>
+                    <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-fg-muted mt-3">
+                      {s.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* PROCESS */}
+      <section className="relative py-20 md:py-30">
+        <OrbBackdrop hue={-15} />
+        <div className="container-x relative z-10">
+          <ScrollReveal>
+            <div className="mb-15">
+              <span className="kicker block mb-4">№ 01 — PROCESS</span>
+              <h2 className="section-title">{t.processTitle}</h2>
+            </div>
+          </ScrollReveal>
+          <div className="space-y-6">
+            {STEPS.map((s, i) => (
+              <ScrollReveal key={i} delay={i * 0.08}>
+                <div
+                  className="grid grid-cols-[auto_1fr] md:grid-cols-[200px_1fr] gap-6 md:gap-12 items-start backdrop-blur-xl bg-bg-raised/40 p-6 md:p-10 rounded-[24px]"
+                  style={{ border: '0.5px solid rgba(255,255,255,0.12)' }}
+                >
+                  <div className="flex items-center gap-4 md:block">
+                    <div className="font-serif text-[56px] md:text-[96px] text-gold leading-none tracking-[-0.04em]">
+                      {s.n}
+                    </div>
+                    <div className="text-4xl md:text-5xl md:mt-4">{s.icon}</div>
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-[24px] md:text-[32px] leading-tight tracking-[-0.01em] mb-3">
+                      {s.title}
+                    </h3>
+                    <p className="text-fg-muted text-[15px] md:text-[16px] leading-relaxed max-w-[560px]">
+                      {s.body}
+                    </p>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WHY */}
+      <section className="relative py-20 md:py-30">
+        <OrbBackdrop hue={30} intensity={0.4} />
+        <div className="container-x relative z-10">
+          <ScrollReveal>
+            <div className="mb-15">
+              <span className="kicker block mb-4">№ 02 — DIFFERENCE</span>
+              <h2 className="section-title">{t.whyTitle}</h2>
+            </div>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+            {WHY.map((w, i) => (
+              <ScrollReveal key={i} delay={i * 0.1}>
+                <div
+                  className="group backdrop-blur-xl bg-bg-raised/40 p-7 md:p-9 rounded-[22px] h-full hover:bg-bg-raised/60 transition-all hover:-translate-y-1"
+                  style={{ border: '0.5px solid rgba(255,255,255,0.12)' }}
+                >
+                  <div className="w-12 h-12 rounded-2xl backdrop-blur-lg bg-gold/15 border border-gold/30 flex items-center justify-center text-gold mb-5 group-hover:scale-110 transition-transform">
+                    {w.icon}
+                  </div>
+                  <h3 className="font-serif text-[22px] mb-3 tracking-[-0.01em]">{w.title}</h3>
+                  <p className="text-fg-muted text-[14px] leading-relaxed">{w.body}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="relative py-20 md:py-30">
+        <OrbBackdrop hue={10} intensity={0.3} />
+        <div className="container-x relative z-10 max-w-[880px]">
+          <ScrollReveal>
+            <div className="mb-12 text-center">
+              <span className="kicker block mb-4">№ 03 — FAQ</span>
+              <h2 className="section-title">{t.faqTitle}</h2>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
+            <Accordion items={FAQ} />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="relative py-20 md:py-28">
+        <OrbBackdrop hue={40} intensity={0.7} />
+        <div className="container-x relative z-10">
+          <ScrollReveal>
+            <div
+              className="backdrop-blur-2xl bg-surface/60 p-10 md:p-16 rounded-[32px] max-w-[960px] mx-auto text-center shadow-[0_50px_120px_rgba(0,0,0,0.5)]"
+              style={{ border: '0.5px solid rgba(255,255,255,0.2)' }}
+            >
+              <h2 className="font-serif text-[clamp(32px,5vw,60px)] leading-[1.05] tracking-[-0.02em] mb-5">
+                {t.ctaTitle}
+              </h2>
+              <p className="text-fg-muted mb-10 text-[16px]">{t.ctaSub}</p>
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-[600px] mx-auto mb-6">
+                <input
+                  type="text"
+                  placeholder="Full name"
+                  className="px-5 py-4 bg-bg-raised/60 backdrop-blur rounded-xl text-fg placeholder-fg-dim font-serif text-[15px]"
+                  style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
+                />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="px-5 py-4 bg-bg-raised/60 backdrop-blur rounded-xl text-fg placeholder-fg-dim font-serif text-[15px]"
+                  style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone · country code"
+                  className="px-5 py-4 bg-bg-raised/60 backdrop-blur rounded-xl text-fg placeholder-fg-dim font-serif text-[15px]"
+                  style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
+                />
+                <select
+                  className="px-5 py-4 bg-bg-raised/60 backdrop-blur rounded-xl text-fg font-serif text-[15px]"
+                  style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
+                  defaultValue=""
+                >
+                  <option value="" className="bg-bg">Indicative budget</option>
+                  <option value="400-700k" className="bg-bg">$400K — $700K</option>
+                  <option value="700k-1m" className="bg-bg">$700K — $1M</option>
+                  <option value="1-3m" className="bg-bg">$1M — $3M</option>
+                  <option value="3m+" className="bg-bg">$3M+</option>
+                </select>
+              </form>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link
+                  href={whatsappLink('Hello, I would like a Turkish citizenship consultation.')}
+                  className="btn btn-gold btn-arrow shadow-[0_10px_30px_rgba(201,168,76,0.25)]"
+                >
+                  {t.ctaBtn}
+                </Link>
+                <Link href={`/${lang}/contact`} className="btn btn-outline">
+                  Other contact options
+                </Link>
+              </div>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
     </div>
