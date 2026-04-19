@@ -502,6 +502,35 @@ export const PROJECTS = [
     chinaScore: 2, arabScore: 3,
   },
 
+  // --- Çekmeköy (Asian side) ---
+  {
+    id: 'ormankoy-cekmekoy',
+    name: 'Ormanköy Çekmeköy', nameAr: 'أورمان كوي تشكمه كوي', nameZh: 'Ormanköy Çekmeköy',
+    district: 'Çekmeköy', districtAr: 'تشكمه كوي', districtZh: '切克梅柯伊',
+    developer: 'DAP Yapı + Eltes İnşaat · Emlak Konut GYO',
+    priceUsd: 420000, bedrooms: 3, area: 175, typology: 'Apartment', market: 'both', view: 'Forest',
+    delivery: 'Ready', status: 'delivered', category: 'nature', metro: false,
+    img: '', vimeoId: '',
+    totalUnits: 1000, blocks: null, landArea: 220000,
+    unitTypes: ['1+1', '2+1', '2.5+1', '3+1', '3.5+1', '4+1', '5+1 Duplex', 'Villa Bahçe Dubleks', 'Teras Loft', 'Çatı Teras Dubleks'],
+    priceTable: [
+      { type: '1+1 (starting)', priceUsd: 350000 },
+      { type: '2+1', priceUsd: 420000 },
+      { type: '3+1', priceUsd: 550000 },
+      { type: '4+1', priceUsd: 750000 },
+      { type: '5+1 Duplex', priceUsd: 1100000 },
+    ],
+    distances: { airport_km: 35, hospital_km: 5, school_km: 3, mall_km: 4 },
+    reasons: [
+      'Türkiye\'nin ilk "Sağlıklı Ev" konsepti · 80.000 m² orman, 20.000 bitki',
+      '200 dönüm arsa · %90\'ı yeşil alan',
+      '1.000 konut (2 etap) + 70 ticari · Emlak Konut GYO güvencesi',
+      'İskandinav + Türk mimarisi · yatay mimari · villa bahçe dubleks seçenekleri',
+      '3 köprüye 15-20 dk · Istanbul Havalimanı & Sabiha Gökçen eşit mesafe',
+    ],
+    chinaScore: 3, arabScore: 3,
+  },
+
   // --- Bursa portfolio (11) ---
   {
     id: 'downtown-bursa',
@@ -734,6 +763,7 @@ export const DISTRICTS = [
   'Üsküdar',
   'Göktürk',
   'Güneşli',
+  'Çekmeköy',
   'Bodrum',
   'Bursa',
 ];
@@ -760,7 +790,7 @@ export const BODRUM_SUB_DISTRICTS = [
 ];
 
 export const REGIONS = [
-  { key: 'istanbul', label: 'Istanbul', districts: ['Maslak', 'Beşiktaş', 'Levent', 'Beyoğlu', 'Kağıthane', 'Şişli', 'Ataşehir', 'Sariyer', 'Üsküdar', 'Göktürk', 'Güneşli'] },
+  { key: 'istanbul', label: 'Istanbul', districts: ['Maslak', 'Beşiktaş', 'Levent', 'Beyoğlu', 'Kağıthane', 'Şişli', 'Ataşehir', 'Sariyer', 'Üsküdar', 'Göktürk', 'Güneşli', 'Çekmeköy'] },
   { key: 'bodrum', label: 'Bodrum', districts: ['Bodrum'] },
   { key: 'bursa', label: 'Bursa', districts: ['Bursa'] },
 ];
@@ -833,6 +863,7 @@ export const DISTRICT_NAMES_AR = {
   'Güneşli': 'جونشلي',
   Bodrum: 'بودروم',
   Bursa: 'بورصة',
+  'Çekmeköy': 'تشكمه كوي',
 };
 export const DISTRICT_NAMES_ZH = {
   Sariyer: '萨里耳',
@@ -849,6 +880,7 @@ export const DISTRICT_NAMES_ZH = {
   'Güneşli': '居内什利',
   Bodrum: '博德鲁姆',
   Bursa: '布尔萨',
+  'Çekmeköy': '切克梅柯伊',
 };
 
 export const DEVELOPERS = [
