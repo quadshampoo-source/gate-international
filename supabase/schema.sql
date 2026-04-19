@@ -10,7 +10,9 @@ create table if not exists public.projects (
   district text not null,
   district_ar text,
   district_zh text,
+  sub_district text,
   developer text,
+  architect text,
   price_usd bigint,
   bedrooms int,
   area int,
@@ -41,6 +43,11 @@ create index if not exists projects_district_idx on public.projects(district);
 create index if not exists projects_status_idx on public.projects(status);
 create index if not exists projects_category_idx on public.projects(category);
 create index if not exists projects_sort_idx on public.projects(sort_index);
+create index if not exists projects_sub_district_idx on public.projects(sub_district);
+
+-- If the table existed before these columns were added, this no-ops; otherwise it catches older databases.
+alter table public.projects add column if not exists sub_district text;
+alter table public.projects add column if not exists architect text;
 
 -- RLS: public can read; writes only for service role (used from server actions).
 alter table public.projects enable row level security;

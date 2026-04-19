@@ -107,7 +107,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
         {!isNew && deleteAction && (
           <form action={deleteAction} className="ml-auto">
             <input type="hidden" name="id" value={project.id} />
-            <button type="submit" className="admin-btn danger" onClick={() => true}>Delete</button>
+            <button type="submit" className="admin-btn danger">Delete</button>
           </form>
         )}
       </div>
