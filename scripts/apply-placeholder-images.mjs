@@ -74,6 +74,9 @@ const QUERY = {
   aegean_misc: 'bodrum,white,villa,mediterranean',
   commercial_district: 'istanbul,business,commercial,district',
   asian_modern: 'istanbul,asian,side,modern,residential',
+  bursa_city: 'bursa,turkey,ottoman,city',
+  bursa_uludag: 'uludag,bursa,mountain,ski',
+  bursa_mudanya: 'mudanya,marmara,sea,coast',
 };
 
 function themeFor(p) {
@@ -86,6 +89,10 @@ function themeFor(p) {
     if (sd === 'turgutreis') return 'aegean_turgutreis';
     if (sd === 'torba') return 'aegean_torba';
     return 'aegean_misc';
+  }
+  if (d === 'bursa') {
+    if (sd === 'mudanya') return 'bursa_mudanya';
+    return 'bursa_city';
   }
   if (d === 'göktürk') return 'forest_green';
   if (d === 'sariyer' && /forest|green/i.test(p.view || '')) return 'forest_green';

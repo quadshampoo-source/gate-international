@@ -14,12 +14,15 @@ export default async function HomeClassic({ lang }) {
     acc[p.district] = (acc[p.district] || 0) + 1;
     return acc;
   }, {});
-  const districts = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Üsküdar', 'Bodrum'].map((d) => ({
+  const districts = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Bodrum', 'Bursa'].map((d) => ({
     name: d,
     nameAr: DISTRICT_NAMES_AR[d],
     nameZh: DISTRICT_NAMES_ZH[d],
     count: districtCounts[d] || 0,
-    href: d === 'Bodrum' ? `/${lang}/districts/bodrum` : `/${lang}/projects?district=${encodeURIComponent(d)}`,
+    href:
+      d === 'Bodrum' ? `/${lang}/districts/bodrum` :
+      d === 'Bursa' ? `/${lang}/districts/bursa` :
+      `/${lang}/projects?district=${encodeURIComponent(d)}`,
   }));
 
   const heroImg = 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=2400&q=85';

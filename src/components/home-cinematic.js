@@ -10,11 +10,14 @@ export default async function HomeCinematic({ lang }) {
   const all = await getProjects();
   const featured = all.slice(0, 6);
 
-  const districts = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Üsküdar', 'Bodrum'];
+  const districts = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Bodrum', 'Bursa'];
   const counts = districts.map((d) => ({
     name: d,
     count: all.filter((p) => p.district === d).length,
-    href: d === 'Bodrum' ? `/${lang}/districts/bodrum` : `/${lang}/projects?district=${encodeURIComponent(d)}`,
+    href:
+      d === 'Bodrum' ? `/${lang}/districts/bodrum` :
+      d === 'Bursa' ? `/${lang}/districts/bursa` :
+      `/${lang}/projects?district=${encodeURIComponent(d)}`,
   }));
 
   return (
