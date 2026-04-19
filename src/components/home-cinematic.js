@@ -21,6 +21,21 @@ export default async function HomeCinematic({ lang }) {
     <div className="fade-in relative overflow-hidden">
       <GlassHero lang={lang} t={t} />
 
+      {/* Mobile-only finder CTA strip */}
+      <section className="md:hidden py-6 border-y border-gold/15 bg-bg-raised/40 backdrop-blur-sm">
+        <div className="container-x">
+          <Link
+            href={`/${lang}/finder`}
+            className="flex items-center justify-between gap-4 text-[13px]"
+          >
+            <span className="font-mono tracking-[0.14em] uppercase text-gold">
+              {t.home.finderCta}
+            </span>
+            <span className="font-serif text-gold">→</span>
+          </Link>
+        </div>
+      </section>
+
       {/* Featured — glass card grid */}
       <section className="relative py-20 md:py-30">
         <OrbBackdrop />
