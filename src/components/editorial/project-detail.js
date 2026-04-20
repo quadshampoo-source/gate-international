@@ -24,10 +24,18 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
   const district = districtLabel(project.district, lang);
   const video = resolveVideo(project);
 
-  const coverImage = (Array.isArray(project.gallery) && project.gallery[0]) || project.img || null;
-  const galleryImages = (Array.isArray(project.gallery) && project.gallery.length > 0)
-    ? project.gallery
-    : (project.img ? [project.img] : []);
+  // Split media: exterior shots → hero, interior shots → gallery.
+  // Legacy single `gallery` column falls back to exterior so existing rows
+  // don't show a blank hero before an editor migrates them.
+  const exterior = (Array.isArray(project.exteriorImages) && project.exteriorImages.length > 0)
+    ? project.exteriorImages
+    : (Array.isArray(project.gallery) && project.gallery.length > 0
+      ? project.gallery
+      : (project.img ? [project.img] : []));
+  const interior = (Array.isArray(project.interiorImages) && project.interiorImages.length > 0)
+    ? project.interiorImages
+    : [];
+  const coverImage = exterior[0] || project.img || null;
 
   const priceFrom = project.priceUsd ?? project.price_usd;
   const tagline = priceFrom
@@ -54,18 +62,20 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
   return (
     <div style={{ background: 'rgb(var(--c-bg))', color: 'rgb(var(--c-fg))' }}>
       <HeroSlider
-        images={galleryImages.length ? galleryImages : (coverImage ? [coverImage] : [])}
-        kicker="OVERVIEW"
+        images={exterior.length ? exterior : (coverImage ? [coverImage] : [])}
+        kicker="EXTERIOR"
         title={name}
         gradientSeed={project.id}
       />
 
+      {/* Overview is text-only now; the exterior slider above already
+          carries the hero imagery. Passing `image={null}` folds the
+          layout into a single column. */}
       <OverviewSticky
         kicker="№ 02 — OVERVIEW"
         title={d.overviewTitle}
         paragraphs={overviewParagraphs}
-        image={galleryImages[1] || coverImage}
-        alt={name}
+        image={null}
       />
 
       <SpecsHorizontal
@@ -74,12 +84,12 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
         items={specItems}
       />
 
-      {galleryImages.length > 0 && <GalleryScroll images={galleryImages} projectName={name} />}
+      {interior.length > 0 && <GalleryScroll images={interior} projectName={name} />}
 
       {video && (
         <VideoFacade
           video={video}
-          poster={coverImage || galleryImages[2]}
+          poster={coverImage || interior[0]}
           title={`${name} — video tour`}
         />
       )}

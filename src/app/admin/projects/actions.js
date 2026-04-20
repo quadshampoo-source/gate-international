@@ -48,8 +48,23 @@ function parseJsonOrNull(s) {
 function payloadFrom(formData) {
   const unitTypesCsv = String(formData.get('unit_types_csv') || '').trim();
   const reasonsLines = String(formData.get('reasons_lines') || '').trim();
-  const galleryLines = String(formData.get('gallery_lines') || '').trim();
-  const galleryUrls = galleryLines ? galleryLines.split('\n').map((s) => s.trim()).filter(Boolean) : null;
+  const parseLines = (name) => {
+    const raw = String(formData.get(name) || '').trim();
+    return raw ? raw.split('\n').map((s) => s.trim()).filter(Boolean) : null;
+  };
+  const exteriorUrls = parseLines('exterior_lines');
+  const interiorUrls = parseLines('interior_lines');
+  // `gallery_lines` still accepted from older form revisions — behave as
+  // exterior when present so migrations are lossless.
+  const legacyGallery = parseLines('gallery_lines');
+  const combinedExterior = exteriorUrls || legacyGallery;
+  // Unified gallery column = exterior + interior, for any consumer that
+  // hasn't learned the new split yet.
+  const mergedGallery = [
+    ...(combinedExterior || []),
+    ...(interiorUrls || []),
+  ];
+  const galleryUrls = mergedGallery.length ? mergedGallery : null;
   const num = (k) => {
     const v = formData.get(k);
     if (v === null || v === '') return null;
@@ -81,8 +96,8 @@ function payloadFrom(formData) {
     status: str('status'),
     category: str('category'),
     metro: formData.get('metro') === 'on',
-    // Cover photo = first gallery image (falls back to any existing img field).
-    img: (galleryUrls && galleryUrls[0]) || str('img') || '',
+    // Cover photo — prefer first exterior shot, then any gallery, then legacy img.
+    img: (combinedExterior && combinedExterior[0]) || (galleryUrls && galleryUrls[0]) || str('img') || '',
     vimeo_id: str('vimeo_id') || '',
     youtube_url: str('youtube_url') || '',
     total_units: num('total_units'),
@@ -94,6 +109,8 @@ function payloadFrom(formData) {
     distances: parseJsonOrNull(String(formData.get('distances') || '')),
     reasons: reasonsLines ? reasonsLines.split('\n').map((s) => s.trim()).filter(Boolean) : null,
     gallery: galleryUrls,
+    exterior_images: combinedExterior,
+    interior_images: interiorUrls,
     china_score: num('china_score'),
     arab_score: num('arab_score'),
   };

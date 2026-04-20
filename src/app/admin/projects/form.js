@@ -83,16 +83,30 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       </Row>
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Media</h3>
-      <Row label="Gallery & cover photo">
+
+      <Row label="Exterior images (Dış görünüm)">
         <GalleryUpload
+          name="exterior_lines"
           initialUrls={
-            Array.isArray(project?.gallery) && project.gallery.length > 0
-              ? project.gallery
-              : (project.img ? [project.img] : [])
+            Array.isArray(project?.exterior_images) && project.exterior_images.length > 0
+              ? project.exterior_images
+              : (Array.isArray(project?.gallery) && project.gallery.length > 0
+                ? project.gallery
+                : (project.img ? [project.img] : []))
           }
         />
         <p className="text-[11px] text-fg-dim mt-3">
-          İlk görsel otomatik kapak fotoğrafıdır. Sürükleyerek sıralamayı değiştirebilirsin. Max 12 görsel.
+          Cephe render, site planı, peyzaj, bina genel görünümü. İlk görsel kapak fotoğrafı olur ve hero slider'a düşer. Max 12 görsel.
+        </p>
+      </Row>
+
+      <Row label="Interior images (İç mekan)">
+        <GalleryUpload
+          name="interior_lines"
+          initialUrls={Array.isArray(project?.interior_images) ? project.interior_images : []}
+        />
+        <p className="text-[11px] text-fg-dim mt-3">
+          Salon, mutfak, yatak odası, banyo, balkon, iç mekan detayları. "Interior studies" bölümüne düşer; boş bırakırsan o section gizlenir. Max 12 görsel.
         </p>
       </Row>
       <Row label="Vimeo ID">

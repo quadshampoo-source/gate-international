@@ -209,8 +209,8 @@ export default function ProjectSlider({
                   background: active
                     ? '#C9A84C'
                     : variant === 'dark'
-                      ? 'rgba(255,255,255,0.25)'
-                      : 'rgba(0,0,0,0.15)',
+                      ? 'rgba(255,255,255,0.3)'
+                      : 'rgba(0,0,0,0.25)',
                   transition: 'all 0.3s ease',
                 }}
               >

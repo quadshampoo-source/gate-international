@@ -28,7 +28,9 @@ export default function HeroSlider({ images = [], kicker = 'OVERVIEW', title, gr
   return (
     <section className="pt-28 md:pt-32 pb-6 md:pb-10">
       <div className="container-x">
-        <ProjectSlider slides={slides} variant="dark" />
+        {/* Dots render over the page background (theme-responsive), not
+            the slide image — variant "auto" keeps passive dots visible. */}
+        <ProjectSlider slides={slides} variant="auto" />
       </div>
     </section>
   );

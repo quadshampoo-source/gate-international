@@ -33,6 +33,8 @@ function fromRow(r) {
     vimeoId: r.vimeo_id || '',
     youtubeUrl: r.youtube_url || '',
     gallery: r.gallery,
+    exteriorImages: r.exterior_images,
+    interiorImages: r.interior_images,
     totalUnits: r.total_units,
     blocks: r.blocks,
     landArea: r.land_area,

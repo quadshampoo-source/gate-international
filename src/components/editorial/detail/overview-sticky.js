@@ -17,11 +17,15 @@ export default function OverviewSticky({ kicker, title, paragraphs = [], image, 
   const tail = paragraphs.slice(2);
   const hasTail = tail.length > 0;
 
+  const hasImage = !!image;
   return (
     <section className="py-20 md:py-32" style={{ background: 'rgb(var(--c-bg-raised))' }}>
       <div className="container-x">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-start">
-          <FadeUp className="md:pr-6 lg:pr-10 max-w-[640px]">
+        <div className={hasImage
+          ? 'grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-start'
+          : 'max-w-[720px] mx-auto'
+        }>
+          <FadeUp className={hasImage ? 'md:pr-6 lg:pr-10 max-w-[640px]' : 'max-w-[640px] mx-auto'}>
             {kicker && (
               <div
                 className="font-mono mb-5"
@@ -96,26 +100,21 @@ export default function OverviewSticky({ kicker, title, paragraphs = [], image, 
             )}
           </FadeUp>
 
-          <FadeUp
-            delay={0.1}
-            className="md:sticky overflow-hidden rounded-[16px] w-full aspect-[4/5]"
-            style={{ top: 96 }}
-          >
-            {image ? (
-              // eslint-disable-next-line @next/next/no-img-element
+          {hasImage && (
+            <FadeUp
+              delay={0.1}
+              className="md:sticky overflow-hidden rounded-[16px] w-full aspect-[4/5]"
+              style={{ top: 96 }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={image}
                 alt={alt || ''}
                 loading="lazy"
                 className="w-full h-full object-cover"
               />
-            ) : (
-              <div
-                className="w-full h-full"
-                style={{ background: 'linear-gradient(135deg, #273C46 0%, #0B1418 100%)' }}
-              />
-            )}
-          </FadeUp>
+            </FadeUp>
+          )}
         </div>
       </div>
     </section>
