@@ -7,6 +7,7 @@ import { resolveVideo } from '@/lib/video';
 import HeroSlider from '@/components/editorial/detail/hero-slider';
 import OverviewSticky from '@/components/editorial/detail/overview-sticky';
 import SpecsHorizontal from '@/components/editorial/detail/specs-horizontal';
+import AvailableOptions from '@/components/editorial/detail/available-options';
 import ImageSection from '@/components/editorial/detail/image-section';
 import VideoFacade from '@/components/editorial/detail/video-facade';
 import LocationMap from '@/components/editorial/detail/location-map';
@@ -50,19 +51,27 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
     d.overviewP2,
   ];
 
-  // Specs cards — push the figures we actually have, cap at four.
+  // Specs cards — push the figures we actually have.
   const specItems = [];
   const asSpecValue = (v) => {
     if (v == null || v === '') return null;
     const n = Number(v);
     return Number.isFinite(n) ? n : String(v);
   };
+  const deliveryLabel = (() => {
+    if (project.deliveryStatus === 'DELIVERED') return 'Delivered';
+    if (project.deliveryMonth && project.deliveryYear) {
+      return `${String(project.deliveryMonth).padStart(2, '0')}/${project.deliveryYear}`;
+    }
+    return project.delivery || null;
+  })();
   if (project.area) specItems.push({ label: d.area, value: Number(project.area), suffix: ' m²' });
   if (project.bedrooms) specItems.push({ label: d.bedrooms, value: asSpecValue(project.bedrooms) });
   if (project.bathrooms) specItems.push({ label: d.bathrooms, value: asSpecValue(project.bathrooms) });
+  if (project.propertyType) specItems.push({ label: 'Type', value: String(project.propertyType) });
+  if (deliveryLabel) specItems.push({ label: d.delivery, value: deliveryLabel });
   if (project.blocks) specItems.push({ label: t.detailExtra.blocks, value: Number(project.blocks) });
-  if (project.totalUnits && specItems.length < 4) specItems.push({ label: t.detailExtra.totalUnits, value: Number(project.totalUnits) });
-  if (specItems.length < 4 && project.delivery) specItems.push({ label: d.delivery, value: project.delivery });
+  if (project.totalUnits) specItems.push({ label: t.detailExtra.totalUnits, value: Number(project.totalUnits) });
 
   // Hero stays a clean cover — just the first shot. The full Exterior
   // gallery is a dedicated labelled section further down the page.
@@ -71,12 +80,15 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
   // Dynamic numbering — emotion first (visuals), then logic (facts), then
   // action (CTA). Sections collapse out of the count when their data is
   // absent so the sequence stays consistent.
+  const hasOptions = Array.isArray(project.options) && project.options.some((o) => o && (o.type || o.size || o.price));
+
   const pad = (n) => String(n).padStart(2, '0');
   let n = 1;
   const nOverview = ++n;
   const nExterior = exterior.length ? ++n : null;
   const nInterior = interior.length ? ++n : null;
   const nSpecs = ++n;
+  const nOptions = hasOptions ? ++n : null;
   const nVideo = video ? ++n : null;
   const nLocation = ++n;
 
@@ -127,6 +139,14 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
         heading={<>Facts &amp; <em className="italic">figures.</em></>}
         items={specItems}
       />
+
+      {hasOptions && (
+        <AvailableOptions
+          kicker={`№ ${pad(nOptions)} — OPTIONS`}
+          heading={<>Available <em className="italic">options.</em></>}
+          options={project.options}
+        />
+      )}
 
       {video && (
         <VideoFacade
