@@ -93,7 +93,24 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           <span className="text-[11px] text-fg-dim">Max 10 MB · JPEG/PNG/WebP. Overrides Image URL.</span>
         </div>
       </Row>
-      <Row label="Vimeo ID"><input name="vimeo_id" defaultValue={v('vimeo_id')} className="admin-input font-mono" /></Row>
+      <Row label="Vimeo ID">
+        <input
+          name="vimeo_id"
+          defaultValue={v('vimeo_id')}
+          className="admin-input font-mono"
+          placeholder="1234567890 — numeric Vimeo video ID"
+        />
+      </Row>
+      <Row label="Gallery image URLs (one per line)">
+        <textarea
+          name="gallery_lines"
+          defaultValue={Array.isArray(project?.gallery) ? project.gallery.join('\n') : ''}
+          rows={6}
+          className="admin-input font-mono text-[12px]"
+          style={{ resize: 'vertical' }}
+          placeholder={'https://example.com/photo-1.jpg\nhttps://example.com/photo-2.jpg'}
+        />
+      </Row>
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Project scale</h3>
       <Row label="Total units"><input name="total_units" type="number" defaultValue={v('total_units')} className="admin-input w-40" /></Row>

@@ -48,6 +48,7 @@ function parseJsonOrNull(s) {
 function payloadFrom(formData) {
   const unitTypesCsv = String(formData.get('unit_types_csv') || '').trim();
   const reasonsLines = String(formData.get('reasons_lines') || '').trim();
+  const galleryLines = String(formData.get('gallery_lines') || '').trim();
   const num = (k) => {
     const v = formData.get(k);
     if (v === null || v === '') return null;
@@ -89,6 +90,7 @@ function payloadFrom(formData) {
     price_table: parseJsonOrNull(String(formData.get('price_table') || '')),
     distances: parseJsonOrNull(String(formData.get('distances') || '')),
     reasons: reasonsLines ? reasonsLines.split('\n').map((s) => s.trim()).filter(Boolean) : null,
+    gallery: galleryLines ? galleryLines.split('\n').map((s) => s.trim()).filter(Boolean) : null,
     china_score: num('china_score'),
     arab_score: num('arab_score'),
   };

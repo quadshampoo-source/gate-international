@@ -88,6 +88,7 @@ export default function Header({ lang, theme }) {
               ))}
             </div>
             <div className="flex items-center gap-1.5 ml-1 md:ml-0">
+              <ThemeToggle />
               <LangDropdown lang={lang} />
               <Link
                 href={`/${lang}/contact`}

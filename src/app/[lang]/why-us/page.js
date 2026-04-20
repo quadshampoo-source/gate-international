@@ -34,7 +34,7 @@ export default async function WhyUsPage({ params }) {
       <section className="pt-[160px] pb-15 border-b border-line">
         <div className="container-x">
           <span className="kicker">{w.kicker}</span>
-          <h1 className="font-serif text-[clamp(48px,6.5vw,96px)] leading-[1.02] tracking-[-0.025em] my-4 text-gold">
+          <h1 className="font-serif text-[clamp(48px,6.5vw,96px)] leading-[1.02] tracking-[-0.025em] my-4 text-fg">
             {w.title}
           </h1>
           <p className="text-fg-muted text-[17px] max-w-[640px]">{w.sub}</p>

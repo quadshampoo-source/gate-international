@@ -48,7 +48,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-const NO_FLASH_SCRIPT = `(function(){try{var t=localStorage.getItem('gate-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t)}else{document.documentElement.setAttribute('data-theme','dark')}}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();`;
+// Priority: localStorage > prefers-color-scheme > 'light' (new default).
+const NO_FLASH_SCRIPT = `(function(){try{var t=localStorage.getItem('gate-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
 
 export default async function LangLayout({ children, params }) {
   const { lang } = await params;
@@ -57,7 +58,7 @@ export default async function LangLayout({ children, params }) {
   const [team, theme] = await Promise.all([getTeam(), getActiveTheme()]);
   const bodyClass = theme === 'editorial' ? 'theme-editorial' : '';
   return (
-    <html lang={lang} dir={dir} data-theme="dark" data-active-theme={theme}>
+    <html lang={lang} dir={dir} data-theme="light" data-active-theme={theme}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: NO_FLASH_SCRIPT }} />
       </head>

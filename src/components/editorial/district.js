@@ -28,13 +28,13 @@ function Tile({ project, lang, index }) {
       <div className="editorial-grain" />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 55%, rgba(5,26,36,0.65) 100%)' }} />
       <div
-        className="absolute bottom-5 start-5 font-mono text-[10px] tracking-[0.18em] uppercase px-3 py-1.5 rounded-full"
+        className="absolute top-5 start-5 font-mono text-[10px] tracking-[0.18em] uppercase px-3 py-1.5 rounded-full"
         style={{ background: 'rgba(255,255,255,0.85)', color: '#051A24', backdropFilter: 'blur(8px)' }}
       >
         № {String(index + 1).padStart(2, '0')}
       </div>
       <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-        <div className="font-editorial text-[22px] leading-[1.1]">{localizedName(project, lang)}</div>
+        <div className="font-editorial text-[22px] leading-[1.1] line-clamp-2 break-words">{localizedName(project, lang)}</div>
       </div>
     </Link>
   );

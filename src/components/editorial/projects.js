@@ -42,14 +42,14 @@ function Tile({ project, lang, index, wide }) {
         </div>
       )}
       <div
-        className="absolute bottom-5 start-5 font-mono text-[10px] tracking-[0.18em] uppercase px-3 py-1.5 rounded-full"
+        className="absolute top-5 start-5 font-mono text-[10px] tracking-[0.18em] uppercase px-3 py-1.5 rounded-full"
         style={{ background: 'rgba(255,255,255,0.85)', color: '#051A24', backdropFilter: 'blur(8px)' }}
       >
         № {String(index + 1).padStart(2, '0')}
       </div>
       <div className="absolute inset-x-0 bottom-0 p-6 md:p-7 text-white">
-        <div className="font-editorial text-[22px] md:text-[26px] leading-[1.1] tracking-[-0.01em]">{name}</div>
-        <div className="font-mono text-[10px] tracking-[0.16em] uppercase opacity-80 mt-2">{district}</div>
+        <div className="font-editorial text-[22px] md:text-[26px] leading-[1.1] tracking-[-0.01em] line-clamp-2 break-words">{name}</div>
+        <div className="font-mono text-[10px] tracking-[0.16em] uppercase opacity-80 mt-2 truncate">{district}</div>
       </div>
     </Link>
   );

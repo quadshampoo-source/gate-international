@@ -4,6 +4,7 @@ import { localizedName, whatsappLink, WHATSAPP_DEFAULT_MESSAGES, fmtUsd } from '
 import { districtLabel } from '@/lib/districts';
 import { FadeIn, ScrollReveal, Stagger } from '@/components/motion';
 import EditorialTileBg from '@/components/editorial/tile-bg';
+import LightboxGallery from '@/components/editorial/lightbox-gallery';
 
 function renderTitle(title) {
   if (!title || typeof title !== 'string') return title;
@@ -28,13 +29,13 @@ function SimilarTile({ project, lang, index }) {
       <div className="editorial-grain" />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 55%, rgba(5,26,36,0.65) 100%)' }} />
       <div
-        className="absolute bottom-5 start-5 font-mono text-[10px] tracking-[0.18em] uppercase px-3 py-1.5 rounded-full"
+        className="absolute top-5 start-5 font-mono text-[10px] tracking-[0.18em] uppercase px-3 py-1.5 rounded-full"
         style={{ background: 'rgba(255,255,255,0.85)', color: '#051A24', backdropFilter: 'blur(8px)' }}
       >
         № {String(index + 1).padStart(2, '0')}
       </div>
       <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-        <div className="font-editorial text-[22px] leading-[1.1]">{localizedName(project, lang)}</div>
+        <div className="font-editorial text-[22px] leading-[1.1] line-clamp-2 break-words">{localizedName(project, lang)}</div>
       </div>
     </Link>
   );
@@ -61,6 +62,14 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
   const waHref = whatsappLink(waMsg, lang);
 
   const priceFrom = project.price_usd ?? project.priceUsd;
+  const hasVideo = !!project.vimeo_id;
+  const hasGallery = Array.isArray(project.gallery) && project.gallery.length > 0;
+  const pad = (n) => String(n).padStart(2, '0');
+  let n = 1; // Overview is always 01.
+  const nVideo = hasVideo ? ++n : null;
+  const nGallery = hasGallery ? ++n : null;
+  const nSpecs = ++n;
+  const nSimilar = similar.length > 0 ? ++n : null;
 
   return (
     <div className="fade-in" style={{ background: '#FFFFFF', color: '#051A24' }}>
@@ -137,6 +146,7 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
             <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-4">
               № 01 — {d.overview}
             </div>
+            {/* sections follow: video, gallery, specs, similar — numbering pad(n) */}
             <h2 className="font-editorial text-[32px] md:text-[48px] leading-[1.1] tracking-[-0.02em] text-[#051A24] mb-8">
               {renderTitle(d.overviewTitle)}
             </h2>
@@ -150,12 +160,65 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
         </div>
       </section>
 
+      {/* Video tour — Vimeo iframe, only if vimeo_id is set */}
+      {project.vimeo_id && (
+        <section className="py-16 md:py-20 bg-white">
+          <div className="container-x max-w-[1080px]">
+            <ScrollReveal>
+              <div className="mb-8 md:mb-10">
+                <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">
+                  № {pad(nVideo)} — {d.videoTour}
+                </div>
+                <h2 className="font-editorial text-[32px] md:text-[44px] leading-[1.1] tracking-[-0.02em] text-[#051A24]">
+                  Watch the <em className="italic">residence.</em>
+                </h2>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <div
+                className="relative rounded-[22px] overflow-hidden aspect-video"
+                style={{ background: '#051A24', boxShadow: '0 30px 80px rgba(5,26,36,0.12)' }}
+              >
+                <iframe
+                  src={`https://player.vimeo.com/video/${project.vimeo_id}?title=0&byline=0&portrait=0`}
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                  title={`${name} — video tour`}
+                />
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
+      {/* Gallery — lightbox on click, only if gallery has images */}
+      {Array.isArray(project.gallery) && project.gallery.length > 0 && (
+        <section className="py-16 md:py-20" style={{ background: '#F6FCFF' }}>
+          <div className="container-x">
+            <ScrollReveal>
+              <div className="mb-8 md:mb-10 max-w-[780px]">
+                <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">
+                  № {pad(nGallery)} — {d.gallery}
+                </div>
+                <h2 className="font-editorial text-[32px] md:text-[44px] leading-[1.1] tracking-[-0.02em] text-[#051A24]">
+                  {renderTitle(d.galleryTitle)}
+                </h2>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <LightboxGallery images={project.gallery} />
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
       {/* Specs */}
       <section className="py-20 md:py-28 bg-white">
         <div className="container-x">
           <ScrollReveal>
             <div className="mb-10 max-w-[780px]">
-              <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">№ 02 — {d.specs}</div>
+              <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">№ {pad(nSpecs)} — {d.specs}</div>
               <h2 className="font-editorial text-[40px] md:text-[56px] leading-[1.05] tracking-[-0.02em] text-[#051A24]">
                 Facts & <em className="italic">figures.</em>
               </h2>
@@ -186,7 +249,7 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
           <div className="container-x">
             <ScrollReveal>
               <div className="mb-10 md:mb-14 max-w-[780px]">
-                <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">№ 03 — {d.similar}</div>
+                <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">№ {pad(nSimilar)} — {d.similar}</div>
                 <h2 className="font-editorial text-[40px] md:text-[56px] leading-[1.05] tracking-[-0.02em] text-[#051A24]">
                   {renderTitle(d.similarTitle.replace('{district}', district))}
                 </h2>
