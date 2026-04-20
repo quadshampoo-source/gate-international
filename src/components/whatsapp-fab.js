@@ -47,7 +47,13 @@ export default function WhatsappFab({ lang = 'en', team = [] }) {
           flex-direction: column;
           align-items: flex-end;
           gap: 12px;
+          /* Container itself must not eat clicks — only the button and the
+             open popup should be hit-targets. Flex gap + an opacity-0 popup
+             child can otherwise cover 320x488 of the bottom-right corner. */
+          pointer-events: none;
         }
+        .wa-button { pointer-events: auto; }
+        .wa-widget.open .wa-popup { pointer-events: auto; }
         /* Lift above the Enquire sticky bar when it's on screen. */
         body:has(.cta-sticky.visible) .wa-widget { bottom: 88px; }
         html[dir="rtl"] .wa-widget { right: auto; left: 24px; align-items: flex-start; }

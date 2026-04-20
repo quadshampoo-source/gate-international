@@ -85,8 +85,11 @@ export default function Header({ lang, theme }) {
         </div>
         <div
           className={`fixed inset-x-0 top-[88px] bottom-0 z-[100] px-8 py-10 flex flex-col overflow-y-auto transition-transform duration-300 ${
-            mobileOpen ? 'translate-x-0' : 'translate-x-full rtl:-translate-x-full'
+            mobileOpen
+              ? 'translate-x-0 pointer-events-auto'
+              : 'translate-x-full rtl:-translate-x-full pointer-events-none'
           }`}
+          aria-hidden={!mobileOpen}
           style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(20px)' }}
         >
           <Link
@@ -142,8 +145,11 @@ export default function Header({ lang, theme }) {
 
       <div
         className={`fixed inset-x-0 top-[66px] bottom-0 bg-bg z-[90] px-8 py-10 flex flex-col overflow-y-auto transition-transform duration-300 ${
-          mobileOpen ? 'translate-x-0' : 'translate-x-full rtl:-translate-x-full'
+          mobileOpen
+            ? 'translate-x-0 pointer-events-auto'
+            : 'translate-x-full rtl:-translate-x-full pointer-events-none'
         }`}
+        aria-hidden={!mobileOpen}
       >
         <Link
           href={`/${lang}/contact`}
