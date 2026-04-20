@@ -24,25 +24,46 @@ export default function ResetPasswordPage() {
     const supabase = supabaseBrowser();
     let mounted = true;
 
-    // detectSessionInUrl runs on client init; give it a tick to consume the
-    // hash/code, then check.
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      if (data.session) setReady(true);
-    });
+    // Three ways the recovery session can be established:
+    //   1. Fragment tokens (#access_token=…&type=recovery) — legacy/dashboard.
+    //      detectSessionInUrl in the browser client picks these up.
+    //   2. PKCE code (?code=…) — Supabase verify endpoint redirects here.
+    //      Also handled by detectSessionInUrl.
+    //   3. Hashed token (?token_hash=…&type=recovery) — comes from admin-
+    //      generated links that bypass the verify endpoint. We call
+    //      verifyOtp ourselves.
+    const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+    const tokenHash = params.get('token_hash');
+    const otpType = params.get('type');
+
+    if (tokenHash && otpType) {
+      supabase.auth.verifyOtp({ token_hash: tokenHash, type: otpType }).then(({ error }) => {
+        if (!mounted) return;
+        if (error) setLinkError(error.message || 'This reset link is invalid or has expired.');
+        else setReady(true);
+      });
+    } else {
+      // detectSessionInUrl runs on client init; give it a tick to consume the
+      // hash/code, then check.
+      supabase.auth.getSession().then(({ data }) => {
+        if (!mounted) return;
+        if (data.session) setReady(true);
+      });
+    }
 
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (!mounted) return;
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') setReady(true);
     });
 
-    // If after 2s we still have no session and no hash/code in the URL, the
-    // link was consumed elsewhere or expired. Surface a clear error.
+    // If after 2s we still have no session and no recovery params in the URL,
+    // the link was consumed elsewhere or expired. Surface a clear error.
     const timeout = setTimeout(() => {
       if (!mounted || ready) return;
       const hasHash = typeof window !== 'undefined' && window.location.hash.includes('access_token');
-      const hasCode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('code');
-      if (!hasHash && !hasCode) {
+      const hasCode = params.has('code');
+      const hasTokenHash = params.has('token_hash');
+      if (!hasHash && !hasCode && !hasTokenHash) {
         setLinkError('This reset link is invalid or has already been used. Please request a new one.');
       }
     }, 2000);
