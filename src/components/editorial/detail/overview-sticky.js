@@ -3,23 +3,48 @@
 import { useState } from 'react';
 import FadeUp from '@/components/editorial/detail/fade-up';
 
-// Text left, pinned image right. Apple-style typography rhythm:
-//   section label   · 12 px · 0.15em tracking · uppercase · gold
-//   section heading · clamp(28, 5vw, 48) · serif · weight 400 · line-height 1.1
-//   body text       · clamp(16, 2.5vw, 18) · sans · line-height 1.7 · ink @75%
-//   measure         · max 640 px so lines stay comfortable on wide viewports
-// Paragraph gap is 24 px (space-y-6). When more than two paragraphs are
-// passed, the remainder hides behind a "Read more" toggle with a max-height
-// transition; honours prefers-reduced-motion via the FadeUp wrapper.
+// Text left, optional pinned image right. Typography:
+//   section label   · 12 px · 0.15em · uppercase · gold
+//   section heading · clamp(28, 5vw, 48) · serif 400 · LH 1.1
+//   lead paragraph  · clamp(18, 2.8vw, 22) · sans · LH 1.55 · full ink
+//   body paragraphs · clamp(15, 2.2vw, 17) · sans · LH 1.75 · ink @65%
+//   measure         · max 640 px
+//
+// Only the lead (first) paragraph shows by default. Everything else hides
+// behind a "Read more" toggle, and on expand the hidden paragraphs
+// fade-up one after another (150 ms stagger). Reduced-motion skips the
+// stagger (paragraphs appear instantly).
 export default function OverviewSticky({ kicker, title, paragraphs = [], image, alt }) {
   const [expanded, setExpanded] = useState(false);
-  const head = paragraphs.slice(0, 2);
-  const tail = paragraphs.slice(2);
+  const [lead, ...tail] = paragraphs;
   const hasTail = tail.length > 0;
-
   const hasImage = !!image;
+
   return (
     <section className="py-20 md:py-32" style={{ background: 'rgb(var(--c-bg-raised))' }}>
+      <style>{`
+        @keyframes overviewFadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .overview-tail p {
+          opacity: 0;
+          transform: translateY(16px);
+          will-change: opacity, transform;
+        }
+        .overview-tail.expanded p {
+          animation: overviewFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .overview-tail.expanded p:nth-child(1) { animation-delay: 0ms; }
+        .overview-tail.expanded p:nth-child(2) { animation-delay: 150ms; }
+        .overview-tail.expanded p:nth-child(3) { animation-delay: 300ms; }
+        .overview-tail.expanded p:nth-child(4) { animation-delay: 450ms; }
+        .overview-tail.expanded p:nth-child(n+5) { animation-delay: 600ms; }
+        @media (prefers-reduced-motion: reduce) {
+          .overview-tail p { opacity: 1; transform: none; animation: none; }
+        }
+      `}</style>
+
       <div className="container-x">
         <div className={hasImage
           ? 'grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-start'
@@ -52,51 +77,75 @@ export default function OverviewSticky({ kicker, title, paragraphs = [], image, 
                 {title}
               </h2>
             )}
-            <div
-              className="space-y-6"
-              style={{
-                fontSize: 'clamp(16px, 2.5vw, 18px)',
-                lineHeight: 1.7,
-                color: 'rgb(var(--c-fg) / 0.75)',
-              }}
-            >
-              {head.map((p, i) => <p key={i}>{p}</p>)}
-              <div
-                className="overflow-hidden transition-[max-height] duration-[600ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-                style={{ maxHeight: hasTail && expanded ? '2000px' : '0px' }}
-                aria-hidden={!expanded}
-              >
-                <div className="space-y-6 pt-6">
-                  {tail.map((p, i) => <p key={i}>{p}</p>)}
-                </div>
-              </div>
-            </div>
-            {hasTail && (
-              <button
-                type="button"
-                onClick={() => setExpanded((v) => !v)}
-                aria-expanded={expanded}
-                className="mt-6 inline-flex items-center gap-2 font-mono"
+
+            {/* Lead paragraph — always visible, larger, full ink */}
+            {lead && (
+              <p
                 style={{
-                  fontSize: 12,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  color: '#C9A84C',
+                  fontSize: 'clamp(18px, 2.8vw, 22px)',
+                  lineHeight: 1.55,
+                  color: 'rgb(var(--c-fg))',
+                  marginBottom: 0,
+                  letterSpacing: '-0.005em',
                 }}
               >
-                {expanded ? 'Show less' : 'Read more'}
-                <span
-                  aria-hidden
+                {lead}
+              </p>
+            )}
+
+            {/* Tail paragraphs — behind "Read more" with staggered fade-up */}
+            {hasTail && (
+              <>
+                <div
+                  className={`overview-tail overflow-hidden${expanded ? ' expanded' : ''}`}
                   style={{
-                    transform: expanded ? 'rotate(180deg)' : 'rotate(0)',
-                    transition: 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                    maxHeight: expanded ? '2000px' : '0px',
+                    transition: 'max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                  aria-hidden={!expanded}
+                >
+                  <div className="space-y-5 pt-6">
+                    {tail.map((p, i) => (
+                      <p
+                        key={i}
+                        style={{
+                          fontSize: 'clamp(15px, 2.2vw, 17px)',
+                          lineHeight: 1.75,
+                          color: 'rgb(var(--c-fg) / 0.65)',
+                        }}
+                      >
+                        {p}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setExpanded((v) => !v)}
+                  aria-expanded={expanded}
+                  className="mt-4 inline-flex items-center gap-1.5 font-medium hover:opacity-70 transition-opacity"
+                  style={{
+                    fontSize: 14,
+                    letterSpacing: '0.02em',
+                    color: '#C9A84C',
+                    padding: '8px 0',
                   }}
                 >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6">
-                    <path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </button>
+                  {expanded ? 'Show less' : 'Read more'}
+                  <span
+                    aria-hidden
+                    style={{
+                      transform: expanded ? 'rotate(180deg)' : 'rotate(0)',
+                      transition: 'transform 0.3s ease',
+                      display: 'inline-flex',
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </span>
+                </button>
+              </>
             )}
           </FadeUp>
 
