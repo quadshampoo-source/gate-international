@@ -162,7 +162,7 @@ export default function DetailClient({ project, lang, allProjects = [] }) {
               <h3 className="font-serif text-[32px] mt-3 mb-8">{t.detail.specs}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-line border border-line">
                 <Spec label={t.detail.bedrooms} value={project.bedrooms} />
-                <Spec label={t.detail.bathrooms} value={Math.max(2, project.bedrooms)} />
+                <Spec label={t.detail.bathrooms} value={project.bathrooms || Math.max(2, Number(project.bedrooms) || 2)} />
                 <Spec label={t.detail.area} value={`${project.area} m²`} />
                 <Spec label={t.detail.terrace} value={`${Math.round(project.area * 0.22)} m²`} />
                 <Spec label={t.detail.orientation} value="SE · Bosphorus" />

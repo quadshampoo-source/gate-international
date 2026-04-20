@@ -76,6 +76,8 @@ function payloadFrom(formData) {
     return v == null || v === '' ? null : String(v);
   };
 
+  const options = parseJsonOrNull(String(formData.get('options_json') || ''));
+
   return {
     id: String(formData.get('id') || '').trim().toLowerCase(),
     sort_index: num('sort_index') ?? 0,
@@ -87,7 +89,13 @@ function payloadFrom(formData) {
     district_zh: str('district_zh'),
     developer: str('developer'),
     price_usd: num('price_usd'),
-    bedrooms: num('bedrooms'),
+    bedrooms: str('bedrooms'),
+    bathrooms: str('bathrooms'),
+    property_type: str('property_type'),
+    delivery_month: num('delivery_month'),
+    delivery_year: num('delivery_year'),
+    delivery_status: str('delivery_status'),
+    options: Array.isArray(options) ? options : [],
     area: num('area'),
     typology: str('typology'),
     market: str('market'),

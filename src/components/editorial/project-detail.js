@@ -52,9 +52,14 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
 
   // Specs cards — push the figures we actually have, cap at four.
   const specItems = [];
+  const asSpecValue = (v) => {
+    if (v == null || v === '') return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : String(v);
+  };
   if (project.area) specItems.push({ label: d.area, value: Number(project.area), suffix: ' m²' });
-  if (project.bedrooms) specItems.push({ label: d.bedrooms, value: Number(project.bedrooms) });
-  if (project.bathrooms) specItems.push({ label: d.bathrooms, value: Number(project.bathrooms) });
+  if (project.bedrooms) specItems.push({ label: d.bedrooms, value: asSpecValue(project.bedrooms) });
+  if (project.bathrooms) specItems.push({ label: d.bathrooms, value: asSpecValue(project.bathrooms) });
   if (project.blocks) specItems.push({ label: t.detailExtra.blocks, value: Number(project.blocks) });
   if (project.totalUnits && specItems.length < 4) specItems.push({ label: t.detailExtra.totalUnits, value: Number(project.totalUnits) });
   if (specItems.length < 4 && project.delivery) specItems.push({ label: d.delivery, value: project.delivery });

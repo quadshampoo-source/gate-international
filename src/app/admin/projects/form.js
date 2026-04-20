@@ -1,5 +1,7 @@
 import { DISTRICTS, TYPOLOGIES, CATEGORIES } from '@/lib/projects';
 import GalleryUpload from '@/components/admin/gallery-upload';
+import SpecsPicker from './_components/specs-picker';
+import OptionsEditor from './_components/options-editor';
 
 export default function ProjectForm({ action, project = {}, isNew = false, deleteAction }) {
   const v = (k, fallback = '') => project[k] ?? fallback;
@@ -35,11 +37,20 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       <Row label="District (ZH)"><input name="district_zh" defaultValue={v('district_zh')} className="admin-input" /></Row>
       <Row label="Developer"><input name="developer" defaultValue={v('developer')} className="admin-input" /></Row>
 
+      <h3 className="font-serif text-[22px] mt-8 mb-4">Property Specs</h3>
+      <SpecsPicker
+        initialBedrooms={v('bedrooms')}
+        initialBathrooms={v('bathrooms')}
+        initialPropertyType={v('property_type') || v('typology')}
+        initialDeliveryMonth={v('delivery_month')}
+        initialDeliveryYear={v('delivery_year')}
+        initialDeliveryStatus={v('delivery_status')}
+      />
+
       <h3 className="font-serif text-[22px] mt-8 mb-4">Pricing & spec</h3>
       <Row label="Price USD"><input name="price_usd" type="number" defaultValue={v('price_usd')} className="admin-input" /></Row>
-      <Row label="Bedrooms"><input name="bedrooms" type="number" defaultValue={v('bedrooms')} className="admin-input w-32" /></Row>
       <Row label="Area (m²)"><input name="area" type="number" defaultValue={v('area')} className="admin-input w-32" /></Row>
-      <Row label="Typology">
+      <Row label="Typology (legacy)">
         <select name="typology" defaultValue={v('typology')} className="admin-select">
           <option value="">—</option>
           {TYPOLOGIES.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -74,7 +85,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           <option value="Sea of Marmara">Sea of Marmara</option>
         </select>
       </Row>
-      <Row label="Delivery"><input name="delivery" defaultValue={v('delivery')} className="admin-input" /></Row>
+      <Row label="Delivery (legacy text)"><input name="delivery" defaultValue={v('delivery')} className="admin-input" placeholder="Use Property Specs → Delivery Date instead" /></Row>
       <Row label="Metro">
         <label className="flex items-center gap-2">
           <input name="metro" type="checkbox" defaultChecked={!!project.metro} className="w-4 h-4 accent-gold" />
@@ -138,6 +149,9 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       <h3 className="font-serif text-[22px] mt-8 mb-4">Scores</h3>
       <Row label="China score (1–5)"><input name="china_score" type="number" min="1" max="5" defaultValue={v('china_score')} className="admin-input w-24" /></Row>
       <Row label="Arab score (1–5)"><input name="arab_score" type="number" min="1" max="5" defaultValue={v('arab_score')} className="admin-input w-24" /></Row>
+
+      <h3 className="font-serif text-[22px] mt-8 mb-4">Available Options</h3>
+      <OptionsEditor initialOptions={Array.isArray(project.options) ? project.options : []} />
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Rich fields (JSON)</h3>
       <Row label="Price table"><textarea name="price_table" defaultValue={jsonVal('price_table')} rows="4" className="admin-textarea font-mono text-[12px]" placeholder='[{"type":"2+1","priceUsd":450000}]' /></Row>
