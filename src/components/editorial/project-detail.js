@@ -5,6 +5,7 @@ import { districtLabel } from '@/lib/districts';
 import { FadeIn, ScrollReveal, Stagger } from '@/components/motion';
 import EditorialTileBg from '@/components/editorial/tile-bg';
 import LightboxGallery from '@/components/editorial/lightbox-gallery';
+import { resolveVideo } from '@/lib/video';
 
 function renderTitle(title) {
   if (!title || typeof title !== 'string') return title;
@@ -62,8 +63,8 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
   const waHref = whatsappLink(waMsg, lang);
 
   const priceFrom = project.priceUsd ?? project.price_usd;
-  const vimeoId = project.vimeoId ?? project.vimeo_id;
-  const hasVideo = !!vimeoId;
+  const video = resolveVideo(project);
+  const hasVideo = !!video;
   const hasGallery = Array.isArray(project.gallery) && project.gallery.length > 0;
   const distances = project.distances;
   const hasDistances = distances && typeof distances === 'object' && Object.keys(distances).length > 0;
@@ -188,12 +189,17 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
               <div
-                className="relative rounded-[22px] overflow-hidden aspect-video"
-                style={{ background: '#051A24', boxShadow: '0 30px 80px rgba(5,26,36,0.12)' }}
+                className="relative mx-auto rounded-[22px] overflow-hidden aspect-video"
+                style={{
+                  background: '#051A24',
+                  boxShadow: '0 30px 80px rgba(5,26,36,0.12)',
+                  maxHeight: '80vh',
+                  width: '100%',
+                }}
               >
                 <iframe
-                  src={`https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0`}
-                  allow="autoplay; fullscreen; picture-in-picture"
+                  src={video.embedUrl}
+                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
                   allowFullScreen
                   className="absolute inset-0 w-full h-full"
                   title={`${name} — video tour`}

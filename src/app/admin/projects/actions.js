@@ -82,6 +82,7 @@ function payloadFrom(formData) {
     metro: formData.get('metro') === 'on',
     img: str('img') || '',
     vimeo_id: str('vimeo_id') || '',
+    youtube_url: str('youtube_url') || '',
     total_units: num('total_units'),
     blocks: num('blocks'),
     land_area: num('land_area'),

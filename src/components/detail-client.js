@@ -323,7 +323,7 @@ export default function DetailClient({ project, lang, allProjects = [] }) {
         )}
       </div>
 
-      <VideoModal open={videoOpen} onClose={() => setVideoOpen(false)} vimeoId={project.vimeoId} />
+      <VideoModal open={videoOpen} onClose={() => setVideoOpen(false)} project={project} />
     </div>
   );
 }

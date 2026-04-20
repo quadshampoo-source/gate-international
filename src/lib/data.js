@@ -31,6 +31,7 @@ function fromRow(r) {
     metro: r.metro,
     img: r.img || '',
     vimeoId: r.vimeo_id || '',
+    youtubeUrl: r.youtube_url || '',
     gallery: r.gallery,
     totalUnits: r.total_units,
     blocks: r.blocks,

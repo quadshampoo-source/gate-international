@@ -1,8 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
+import { resolveVideo } from '@/lib/video';
 
-export default function VideoModal({ open, onClose, vimeoId }) {
+export default function VideoModal({ open, onClose, vimeoId, project }) {
+  // Backwards-compatible: if a project object is passed, resolve full video
+  // (Vimeo > YouTube). Otherwise fall back to the legacy vimeoId prop.
+  const video = project ? resolveVideo(project) : (vimeoId ? { provider: 'vimeo', id: String(vimeoId), embedUrl: `https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0` } : null);
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -33,10 +37,10 @@ export default function VideoModal({ open, onClose, vimeoId }) {
         >
           CLOSE ✕
         </button>
-        {vimeoId ? (
+        {video ? (
           <iframe
-            src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0`}
-            allow="autoplay; fullscreen; picture-in-picture"
+            src={`${video.embedUrl}${video.embedUrl.includes('?') ? '&' : '?'}autoplay=1`}
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
             allowFullScreen
             className="w-full h-full border-0"
             title="Property video tour"
