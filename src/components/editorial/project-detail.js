@@ -63,18 +63,22 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
   // gallery is a dedicated labelled section further down the page.
   const heroImages = coverImage ? [coverImage] : [];
 
-  // Dynamic numbering — sections collapse when their data is absent.
+  // Dynamic numbering — emotion first (visuals), then logic (facts), then
+  // action (CTA). Sections collapse out of the count when their data is
+  // absent so the sequence stays consistent.
   const pad = (n) => String(n).padStart(2, '0');
   let n = 1;
   const nOverview = ++n;
-  const nSpecs = ++n;
   const nExterior = exterior.length ? ++n : null;
   const nInterior = interior.length ? ++n : null;
+  const nSpecs = ++n;
   const nVideo = video ? ++n : null;
   const nLocation = ++n;
 
   return (
-    <div style={{ background: 'rgb(var(--c-bg))', color: 'rgb(var(--c-fg))' }}>
+    // Bottom padding keeps the tail of the page content from hiding
+    // behind the sticky enquire bar (~72 px tall).
+    <div style={{ background: 'rgb(var(--c-bg))', color: 'rgb(var(--c-fg))', paddingBottom: 80 }}>
       <HeroSlider
         images={heroImages}
         kicker="RESIDENCE"
@@ -89,12 +93,6 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
         title={d.overviewTitle}
         paragraphs={overviewParagraphs}
         image={null}
-      />
-
-      <SpecsHorizontal
-        kicker={`№ ${pad(nSpecs)} — FACTS`}
-        heading={<>Facts &amp; <em className="italic">figures.</em></>}
-        items={specItems}
       />
 
       {exterior.length > 0 && (
@@ -118,6 +116,12 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
           background="rgb(var(--c-bg-raised))"
         />
       )}
+
+      <SpecsHorizontal
+        kicker={`№ ${pad(nSpecs)} — FACTS`}
+        heading={<>Facts &amp; <em className="italic">figures.</em></>}
+        items={specItems}
+      />
 
       {video && (
         <VideoFacade
