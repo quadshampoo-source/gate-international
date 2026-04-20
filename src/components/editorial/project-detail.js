@@ -88,11 +88,30 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
 
       <SimilarEpilogue project={project} allProjects={allProjects} lang={lang} label={d.similar} />
 
+      {/* Small WhatsApp text link above the global footer — WA lives here
+          now that the sticky bar is single-action. */}
+      <section className="py-10 border-t" style={{ borderColor: 'rgb(var(--c-line))' }}>
+        <div className="container-x text-center">
+          <Link
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 font-mono"
+            style={{
+              fontSize: 13,
+              letterSpacing: '0.08em',
+              color: 'rgb(var(--c-fg-muted))',
+            }}
+          >
+            Prefer WhatsApp? Message us directly
+            <span aria-hidden style={{ color: '#C9A84C' }}>→</span>
+          </Link>
+        </div>
+      </section>
+
       <StickyCTABar
-        waHref={waHref}
-        contactHref={`/${lang}/contact`}
-        bookLabel={d.contact}
-        waLabel="WhatsApp"
+        href={`/${lang}/contact`}
+        label={d.contact}
       />
     </div>
   );
