@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { WHATSAPP_DEFAULT_MESSAGES } from '@/lib/utils';
 import { LANG_FLAGS, localizedTitle } from '@/lib/team-constants';
 
@@ -17,13 +18,16 @@ function avatarHue(name = '') {
 
 function Avatar({ name, photoUrl }) {
   if (photoUrl) {
-    // eslint-disable-next-line @next/next/no-img-element
     return (
-      <img
-        src={photoUrl}
-        alt={name}
-        className="w-20 h-20 rounded-full object-cover border border-gold/30"
-      />
+      <div className="relative w-20 h-20 rounded-full overflow-hidden border border-gold/30">
+        <Image
+          src={photoUrl}
+          alt={name}
+          fill
+          sizes="80px"
+          style={{ objectFit: 'cover' }}
+        />
+      </div>
     );
   }
   const initials = name.split(/\s+/).map((p) => p[0] || '').join('').slice(0, 2).toUpperCase();

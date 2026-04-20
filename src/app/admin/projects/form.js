@@ -96,7 +96,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           }
         />
         <p className="text-[11px] text-fg-dim mt-3">
-          Cephe render, site planı, peyzaj, bina genel görünümü. İlk görsel kapak fotoğrafı olur ve hero slider'a düşer. Max 12 görsel.
+          Cephe render, site planı, peyzaj, bina genel görünümü. İlk görsel kapak fotoğrafı olur ve hero slider&apos;a düşer. Max 12 görsel.
         </p>
       </Row>
 
@@ -106,7 +106,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           initialUrls={Array.isArray(project?.interior_images) ? project.interior_images : []}
         />
         <p className="text-[11px] text-fg-dim mt-3">
-          Salon, mutfak, yatak odası, banyo, balkon, iç mekan detayları. "Interior studies" bölümüne düşer; boş bırakırsan o section gizlenir. Max 12 görsel.
+          Salon, mutfak, yatak odası, banyo, balkon, iç mekan detayları. &quot;Interior studies&quot; bölümüne düşer; boş bırakırsan o section gizlenir. Max 12 görsel.
         </p>
       </Row>
       <Row label="Vimeo ID">

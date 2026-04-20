@@ -83,13 +83,15 @@ export default function EditorialProjects({ lang, projects = [] }) {
     return Object.keys(DISTRICT_NAMES).filter((d) => used.has(d));
   }, [projects]);
 
-  const budgets = [
+  // Memoised so we can pass a stable ref to useMemo below without tripping
+  // the exhaustive-deps rule on a fresh array every render.
+  const budgets = useMemo(() => [
     { key: 'all', label: t.projects.any, min: 0, max: Infinity },
     { key: '<1m', label: '< $1M', min: 0, max: 1_000_000 },
     { key: '1-3m', label: '$1M — $3M', min: 1_000_000, max: 3_000_000 },
     { key: '3-5m', label: '$3M — $5M', min: 3_000_000, max: 5_000_000 },
     { key: '>5m', label: '$5M+', min: 5_000_000, max: Infinity },
-  ];
+  ], [t.projects.any]);
 
   const filtered = useMemo(() => {
     const qlc = q.trim().toLowerCase();
@@ -104,7 +106,7 @@ export default function EditorialProjects({ lang, projects = [] }) {
       }
       return true;
     });
-  }, [projects, q, district, budget]);
+  }, [projects, q, district, budget, budgets]);
 
   return (
     <div className="fade-in" style={{ background: '#FFFFFF', color: '#051A24' }}>
