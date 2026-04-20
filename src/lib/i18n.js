@@ -426,6 +426,27 @@ const en = {
     ctaSub: '30 minutes with a partner — in English, Arabic, Turkish or Mandarin.',
     ctaBtn: 'Book a free consultation',
   },
+  team: {
+    title: 'Meet our directors',
+    sub: 'Multilingual consultants on the ground — Istanbul, Jeddah, and desks for Mandarin, Russian, Persian and French speakers.',
+    chatCta: 'Chat',
+    emailCta: 'Email',
+    speaks: 'Speaks',
+    offices: {
+      istanbul: 'Istanbul Office',
+      jeddah: 'Jeddah Office',
+      china: 'China Office',
+      'russian-desk': 'Russian Desk',
+      'persian-desk': 'Persian Desk',
+      'french-desk': 'French Desk',
+      remote: 'Remote',
+    },
+    chinaSoon: 'Opening Soon',
+    chinaSoonBody: 'Our Shanghai office opens in 2026. In the meantime, our Istanbul team speaks Mandarin and handles the China market directly.',
+    chinaSoonCta: 'Contact Istanbul office',
+    popupTitle: 'Chat with our team',
+    popupSub: 'Pick a consultant — message opens in WhatsApp.',
+  },
 };
 
 const ar = {
@@ -848,6 +869,27 @@ const ar = {
     ctaTitle: 'احصل على استشارة قانونية مجانية',
     ctaSub: '30 دقيقة مع شريك — بالإنجليزية أو العربية أو التركية أو الماندارينية.',
     ctaBtn: 'احجز استشارة مجانية',
+  },
+  team: {
+    title: 'تعرّف على مديرينا',
+    sub: 'مستشارون متعددو اللغات على الأرض — إسطنبول، جدة، ومكاتب للماندارينية والروسية والفارسية والفرنسية.',
+    chatCta: 'محادثة',
+    emailCta: 'بريد',
+    speaks: 'يتحدث',
+    offices: {
+      istanbul: 'مكتب إسطنبول',
+      jeddah: 'مكتب جدة',
+      china: 'مكتب الصين',
+      'russian-desk': 'المكتب الروسي',
+      'persian-desk': 'المكتب الفارسي',
+      'french-desk': 'المكتب الفرنسي',
+      remote: 'عن بُعد',
+    },
+    chinaSoon: 'قريباً',
+    chinaSoonBody: 'يفتح مكتبنا في شنغهاي عام 2026. في هذه الأثناء، فريقنا في إسطنبول يتحدث الماندارينية ويخدم السوق الصينية مباشرة.',
+    chinaSoonCta: 'تواصل مع مكتب إسطنبول',
+    popupTitle: 'تحدث مع فريقنا',
+    popupSub: 'اختر مستشاراً — تُفتح المحادثة على واتساب.',
   },
 };
 
@@ -1272,6 +1314,27 @@ const zh = {
     ctaSub: '与合伙人 30 分钟 — 英文、阿拉伯语、土耳其语或普通话。',
     ctaBtn: '预约免费咨询',
   },
+  team: {
+    title: '与我们的顾问对话',
+    sub: '多语种顾问,本地对接 — 伊斯坦布尔、吉达,以及普通话、俄语、波斯语和法语专席。',
+    chatCta: '发送消息',
+    emailCta: '邮件',
+    speaks: '语言',
+    offices: {
+      istanbul: '伊斯坦布尔办公室',
+      jeddah: '吉达办公室',
+      china: '中国办公室',
+      'russian-desk': '俄语专席',
+      'persian-desk': '波斯语专席',
+      'french-desk': '法语专席',
+      remote: '远程',
+    },
+    chinaSoon: '即将开业',
+    chinaSoonBody: '我们的上海办公室将于 2026 年开业。在此期间,伊斯坦布尔团队精通普通话,直接服务中国市场。',
+    chinaSoonCta: '联系伊斯坦布尔办公室',
+    popupTitle: '与团队对话',
+    popupSub: '选择顾问 — 在 WhatsApp 中打开对话。',
+  },
 };
 
 const ru = {
@@ -1694,6 +1757,27 @@ const ru = {
     ctaTitle: 'Бесплатная юрконсультация',
     ctaSub: '30 минут с партнёром — на английском, арабском, турецком или мандарине.',
     ctaBtn: 'Записаться на консультацию',
+  },
+  team: {
+    title: 'Познакомьтесь с командой',
+    sub: 'Многоязычные консультанты на местах — Стамбул, Джидда и отделы для мандарина, русского, персидского и французского.',
+    chatCta: 'Чат',
+    emailCta: 'Email',
+    speaks: 'Говорит на',
+    offices: {
+      istanbul: 'Офис Стамбул',
+      jeddah: 'Офис Джидда',
+      china: 'Офис Китай',
+      'russian-desk': 'Русский отдел',
+      'persian-desk': 'Персидский отдел',
+      'french-desk': 'Французский отдел',
+      remote: 'Удалённо',
+    },
+    chinaSoon: 'Скоро открытие',
+    chinaSoonBody: 'Офис в Шанхае открывается в 2026 году. Пока стамбульская команда говорит на мандарине и напрямую работает с китайским рынком.',
+    chinaSoonCta: 'Связаться со Стамбулом',
+    popupTitle: 'Связь с командой',
+    popupSub: 'Выберите консультанта — чат откроется в WhatsApp.',
   },
 };
 
@@ -2118,6 +2202,27 @@ const fa = {
     ctaSub: '۳۰ دقیقه با یک شریک — به انگلیسی، عربی، ترکی یا چینی.',
     ctaBtn: 'رزرو مشاوره رایگان',
   },
+  team: {
+    title: 'با مدیران ما آشنا شوید',
+    sub: 'مشاوران چندزبانه در محل — استانبول، جده و میزهای چینی، روسی، فارسی و فرانسوی.',
+    chatCta: 'گفت‌وگو',
+    emailCta: 'ایمیل',
+    speaks: 'زبان‌ها',
+    offices: {
+      istanbul: 'دفتر استانبول',
+      jeddah: 'دفتر جده',
+      china: 'دفتر چین',
+      'russian-desk': 'میز روسی',
+      'persian-desk': 'میز فارسی',
+      'french-desk': 'میز فرانسوی',
+      remote: 'از راه دور',
+    },
+    chinaSoon: 'به‌زودی',
+    chinaSoonBody: 'دفتر ما در شانگهای در سال ۲۰۲۶ افتتاح می‌شود. فعلاً تیم استانبول به زبان چینی صحبت می‌کند و بازار چین را مستقیم پوشش می‌دهد.',
+    chinaSoonCta: 'تماس با دفتر استانبول',
+    popupTitle: 'گفت‌وگو با تیم ما',
+    popupSub: 'یک مشاور انتخاب کنید — پیام در واتساپ باز می‌شود.',
+  },
 };
 
 const fr = {
@@ -2540,6 +2645,27 @@ const fr = {
     ctaTitle: 'Obtenez une consultation juridique gratuite',
     ctaSub: '30 minutes avec un associé — en anglais, arabe, turc ou mandarin.',
     ctaBtn: 'Réserver une consultation gratuite',
+  },
+  team: {
+    title: 'Rencontrez nos directeurs',
+    sub: 'Conseillers multilingues sur le terrain — Istanbul, Djeddah et des bureaux dédiés au mandarin, au russe, au persan et au français.',
+    chatCta: 'Chat',
+    emailCta: 'Email',
+    speaks: 'Parle',
+    offices: {
+      istanbul: 'Bureau Istanbul',
+      jeddah: 'Bureau Djeddah',
+      china: 'Bureau Chine',
+      'russian-desk': 'Desk Russe',
+      'persian-desk': 'Desk Persan',
+      'french-desk': 'Desk Français',
+      remote: 'À distance',
+    },
+    chinaSoon: 'Ouverture prochaine',
+    chinaSoonBody: "Notre bureau de Shanghai ouvre en 2026. Dans l'intervalle, l'équipe d'Istanbul parle mandarin et gère directement le marché chinois.",
+    chinaSoonCta: 'Contacter le bureau Istanbul',
+    popupTitle: 'Chat avec notre équipe',
+    popupSub: "Choisissez un conseiller — le message s'ouvre dans WhatsApp.",
   },
 };
 

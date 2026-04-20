@@ -1,11 +1,14 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { WhatsappIcon, WechatIcon, MailIcon, PhoneIcon, CheckIcon, FakeQR } from '@/components/icons';
+import TeamCard from '@/components/team-card';
 import { whatsappLink } from '@/lib/utils';
 import { getDict } from '@/lib/i18n';
+import { OFFICE_GROUP_ORDER, OFFICE_FLAGS } from '@/lib/team-constants';
 
-export default function ContactClient({ lang }) {
+export default function ContactClient({ lang, teamGroups = {} }) {
   const t = getDict(lang);
   const [sent, setSent] = useState(false);
 
@@ -24,6 +27,67 @@ export default function ContactClient({ lang }) {
             {t.contact.title}
           </h1>
           <p className="text-fg-muted text-[17px] max-w-[540px]">{t.contact.sub}</p>
+        </div>
+      </section>
+
+      {/* Team — grouped by office/desk */}
+      <section className="pb-20">
+        <div className="container-x">
+          <div className="mb-10">
+            <h2 className="section-title">{t.team.title}</h2>
+            <p className="text-fg-muted text-[15px] max-w-[620px] mt-3">{t.team.sub}</p>
+          </div>
+          <div className="space-y-12">
+            {OFFICE_GROUP_ORDER.map((office) => {
+              const members = teamGroups[office] || [];
+              // Special China handling: if no active members, render "coming soon" banner.
+              if (office === 'china' && members.length === 0) {
+                return (
+                  <div key={office}>
+                    <div className="flex items-center gap-3 mb-5">
+                      <span className="text-[20px] leading-none">{OFFICE_FLAGS[office]}</span>
+                      <h3 className="font-serif text-[24px] tracking-[-0.01em]">{t.team.offices[office]}</h3>
+                      <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-gold border border-gold/40 rounded-full px-3 py-1">
+                        {t.team.chinaSoon}
+                      </span>
+                    </div>
+                    <div
+                      className="p-8 rounded-[22px] backdrop-blur-xl bg-bg-raised/40"
+                      style={{ border: '0.5px solid rgba(255,255,255,0.12)' }}
+                    >
+                      <p className="text-fg-muted text-[15px] leading-relaxed mb-5 max-w-[640px]">
+                        {t.team.chinaSoonBody}
+                      </p>
+                      <Link
+                        href="#top"
+                        onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                        className="inline-flex items-center gap-2 h-10 px-5 rounded-xl border border-gold/35 text-gold hover:bg-gold/10 font-mono text-[11px] tracking-[0.14em] uppercase transition-colors"
+                      >
+                        {t.team.chinaSoonCta}
+                      </Link>
+                    </div>
+                  </div>
+                );
+              }
+              if (members.length === 0) return null;
+              return (
+                <div key={office}>
+                  <div className="flex items-center gap-3 mb-5">
+                    <span className="text-[20px] leading-none">{OFFICE_FLAGS[office]}</span>
+                    <h3 className="font-serif text-[24px] tracking-[-0.01em]">{t.team.offices[office]}</h3>
+                    <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-fg-dim">
+                      · {members.length}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {members.map((m) => (
+                      <TeamCard key={m.id} member={m} lang={lang} dict={t} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
