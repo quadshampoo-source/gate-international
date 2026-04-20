@@ -48,8 +48,10 @@ export async function generateMetadata({ params }) {
   };
 }
 
-// Priority: localStorage > prefers-color-scheme > 'light' (new default).
-const NO_FLASH_SCRIPT = `(function(){try{var t=localStorage.getItem('gate-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
+// Default: light. Only a deliberate toggle (persisted to localStorage) can
+// switch the site into dark. System prefers-color-scheme is intentionally
+// ignored so every first-time visitor sees the editorial white ground.
+const NO_FLASH_SCRIPT = `(function(){try{var t=localStorage.getItem('gate-theme');if(t!=='light'&&t!=='dark'){t='light';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
 
 export default async function LangLayout({ children, params }) {
   const { lang } = await params;
