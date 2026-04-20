@@ -4,6 +4,9 @@ import { districtLabel } from '@/lib/districts';
 import { getProjects } from '@/lib/data';
 import { localizedName } from '@/lib/utils';
 import { FadeIn, ScrollReveal, Stagger } from '@/components/motion';
+import WordReveal from '@/components/editorial/home/word-reveal';
+import FilterBar from '@/components/editorial/home/filter-bar';
+import LocationsRail from '@/components/editorial/home/locations-rail';
 import EditorialServicesAccordion from '@/components/editorial/services-accordion';
 import EditorialTestimonials from '@/components/editorial/testimonials-carousel';
 import EditorialPricingCards from '@/components/editorial/pricing-cards';
@@ -71,6 +74,55 @@ export default async function HomeEditorial({ lang }) {
     { big: '$400K', caption: 'Minimum investment for the Turkish citizenship pathway.' },
   ];
 
+  // Wrap the last word of the hero title in {word} so WordReveal emits
+  // it as <em>. Matches the existing italic accent (e.g. "view.").
+  const heroTitleMarked = (() => {
+    const raw = t.home.heroTitle || '';
+    const parts = raw.trim().split(/\s+/);
+    if (parts.length < 2) return raw;
+    parts[parts.length - 1] = `{${parts[parts.length - 1]}}`;
+    return parts.join(' ');
+  })();
+
+  // Build {city → districts} for the filter bar.
+  const byCity = { Istanbul: [], Bodrum: [], Bursa: [] };
+  for (const p of all) {
+    if (p.district === 'Bodrum') byCity.Bodrum.push(p);
+    else if (p.district === 'Bursa') byCity.Bursa.push(p);
+    else byCity.Istanbul.push(p);
+  }
+  const countBy = (list, key) => list.reduce((m, p) => { m[p[key]] = (m[p[key]] || 0) + 1; return m; }, {});
+  const istanbulCounts = countBy(byCity.Istanbul, 'district');
+  const cities = [
+    { value: 'Istanbul', label: 'Istanbul', color: '#C9A84C', count: byCity.Istanbul.length },
+    { value: 'Bodrum', label: 'Bodrum', color: '#5DCAA5', count: byCity.Bodrum.length },
+    { value: 'Bursa', label: 'Bursa', color: '#B47CA8', count: byCity.Bursa.length },
+  ];
+  const districtsBy = {
+    Istanbul: Object.keys(istanbulCounts)
+      .sort((a, b) => istanbulCounts[b] - istanbulCounts[a])
+      .map((d) => ({ value: d, label: districtLabel(d, lang), count: istanbulCounts[d] })),
+    Bodrum: [{ value: 'Bodrum', label: districtLabel('Bodrum', lang), count: byCity.Bodrum.length }],
+    Bursa: [{ value: 'Bursa', label: districtLabel('Bursa', lang), count: byCity.Bursa.length }],
+  };
+
+  // Location cards — the six headline neighbourhoods with counts + a
+  // stock photograph each. Links route to /projects pre-filtered or
+  // into the dedicated district guides (Bodrum + Bursa).
+  const locationCards = [
+    { name: 'Sarıyer',   district: 'Sariyer',   image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=85' },
+    { name: 'Beşiktaş',  district: 'Beşiktaş',  image: 'https://images.unsplash.com/photo-1605296830682-d1e3619e50ed?w=800&q=85' },
+    { name: 'Beyoğlu',   district: 'Beyoğlu',   image: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=800&q=85' },
+    { name: 'Şişli',     district: 'Şişli',     image: 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=800&q=85' },
+    { name: 'Bodrum',    district: 'Bodrum',    image: 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800&q=85', href: `/${lang}/districts/bodrum` },
+    { name: 'Bursa',     district: 'Bursa',     image: 'https://images.unsplash.com/photo-1542317854-b935c7dc9bb6?w=800&q=85', href: `/${lang}/districts/bursa` },
+  ].map((loc) => ({
+    name: districtLabel(loc.district, lang),
+    image: loc.image,
+    count: (istanbulCounts[loc.district] ?? byCity[loc.district]?.length ?? 0),
+    href: loc.href || `/${lang}/projects?district=${encodeURIComponent(loc.district)}`,
+  }));
+
   return (
     <div className="fade-in" style={{ background: '#FFFFFF', color: '#051A24' }}>
       {/* ── Hero ───────────────────────────────────────────────────────── */}
@@ -96,11 +148,15 @@ export default async function HomeEditorial({ lang }) {
                 {t.home.kicker}
               </span>
             </FadeIn>
-            <FadeIn delay={0.3}>
-              <h1 className="font-editorial text-[46px] md:text-[84px] leading-[1.02] tracking-[-0.02em] text-[#051A24] mt-5 md:mt-8">
-                {renderHeroTitle(t.home.heroTitle)}
-              </h1>
-            </FadeIn>
+            {/* Stagger each word; the last noun is italicised via a
+                {word} marker emitted from renderHeroMarker. */}
+            <WordReveal
+              as="h1"
+              text={heroTitleMarked}
+              delay={0.35}
+              step={0.045}
+              className="font-editorial text-[46px] md:text-[84px] leading-[1.02] tracking-[-0.02em] text-[#051A24] mt-5 md:mt-8"
+            />
             <FadeIn delay={0.55}>
               <p className="text-[15px] md:text-[17px] leading-relaxed text-[#273C46] max-w-[540px] mx-auto mt-6 md:mt-8">
                 {t.home.heroSub}
@@ -127,6 +183,11 @@ export default async function HomeEditorial({ lang }) {
           </div>
         </div>
       </section>
+
+      {/* ── Discover: filter bar (overlaps hero bottom) + locations rail ── */}
+      <FilterBar lang={lang} cities={cities} districtsBy={districtsBy} />
+
+      <LocationsRail items={locationCards} />
 
       {/* ── Marquee ────────────────────────────────────────────────────── */}
       <section className="py-12 md:py-16 bg-white">
