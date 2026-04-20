@@ -4,7 +4,7 @@ import { localizedName, whatsappLink, WHATSAPP_DEFAULT_MESSAGES, fmtUsd } from '
 import { districtLabel } from '@/lib/districts';
 import { FadeIn, ScrollReveal, Stagger } from '@/components/motion';
 import EditorialTileBg from '@/components/editorial/tile-bg';
-import LightboxGallery from '@/components/editorial/lightbox-gallery';
+import GalleryCarousel from '@/components/editorial/gallery-carousel';
 import { resolveVideo } from '@/lib/video';
 
 function renderTitle(title) {
@@ -225,7 +225,7 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
               </div>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <LightboxGallery images={project.gallery} />
+              <GalleryCarousel images={project.gallery} />
             </ScrollReveal>
           </div>
         </section>
