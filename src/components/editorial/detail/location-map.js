@@ -1,7 +1,7 @@
 // Location section — big typography + embedded map. Uses the keyless
 // maps.google.com embed so no API key is required; zoomed enough to show
 // the neighbourhood context.
-export default function LocationMap({ district, city = 'Istanbul', projectName }) {
+export default function LocationMap({ district, city = 'Istanbul', projectName, kicker = '№ 06 — LOCATION' }) {
   const query = encodeURIComponent(`${projectName || district}, ${district}, ${city}`);
   const mapSrc = `https://maps.google.com/maps?q=${query}&z=14&output=embed`;
 
@@ -20,7 +20,7 @@ export default function LocationMap({ district, city = 'Istanbul', projectName }
             color: '#C9A84C',
           }}
         >
-          № 06 — LOCATION
+          {kicker}
         </div>
         <h2
           className="font-editorial"

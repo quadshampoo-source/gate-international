@@ -7,7 +7,7 @@ import { resolveVideo } from '@/lib/video';
 import HeroSlider from '@/components/editorial/detail/hero-slider';
 import OverviewSticky from '@/components/editorial/detail/overview-sticky';
 import SpecsHorizontal from '@/components/editorial/detail/specs-horizontal';
-import GalleryScroll from '@/components/editorial/detail/gallery-scroll';
+import ImageSection from '@/components/editorial/detail/image-section';
 import VideoFacade from '@/components/editorial/detail/video-facade';
 import LocationMap from '@/components/editorial/detail/location-map';
 import StickyCTABar from '@/components/editorial/detail/sticky-cta-bar';
@@ -59,42 +59,81 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
   if (project.totalUnits && specItems.length < 4) specItems.push({ label: t.detailExtra.totalUnits, value: Number(project.totalUnits) });
   if (specItems.length < 4 && project.delivery) specItems.push({ label: d.delivery, value: project.delivery });
 
+  // Hero stays a clean cover — just the first shot. The full Exterior
+  // gallery is a dedicated labelled section further down the page.
+  const heroImages = coverImage ? [coverImage] : [];
+
+  // Dynamic numbering — sections collapse when their data is absent.
+  const pad = (n) => String(n).padStart(2, '0');
+  let n = 1;
+  const nOverview = ++n;
+  const nSpecs = ++n;
+  const nExterior = exterior.length ? ++n : null;
+  const nInterior = interior.length ? ++n : null;
+  const nVideo = video ? ++n : null;
+  const nLocation = ++n;
+
   return (
     <div style={{ background: 'rgb(var(--c-bg))', color: 'rgb(var(--c-fg))' }}>
       <HeroSlider
-        images={exterior.length ? exterior : (coverImage ? [coverImage] : [])}
-        kicker="EXTERIOR"
+        images={heroImages}
+        kicker="RESIDENCE"
         title={name}
         gradientSeed={project.id}
       />
 
-      {/* Overview is text-only now; the exterior slider above already
-          carries the hero imagery. Passing `image={null}` folds the
-          layout into a single column. */}
+      {/* Overview is text-only now; the hero above carries the cover.
+          Exterior and Interior get their own labelled sections below. */}
       <OverviewSticky
-        kicker="№ 02 — OVERVIEW"
+        kicker={`№ ${pad(nOverview)} — OVERVIEW`}
         title={d.overviewTitle}
         paragraphs={overviewParagraphs}
         image={null}
       />
 
       <SpecsHorizontal
-        kicker="№ 03 — FACTS"
+        kicker={`№ ${pad(nSpecs)} — FACTS`}
         heading={<>Facts &amp; <em className="italic">figures.</em></>}
         items={specItems}
       />
 
-      {interior.length > 0 && <GalleryScroll images={interior} projectName={name} />}
+      {exterior.length > 0 && (
+        <ImageSection
+          images={exterior}
+          kicker={`№ ${pad(nExterior)} — EXTERIOR`}
+          heading={<>Facade &amp; <em className="italic">grounds.</em></>}
+          sublabel="EXTERIOR"
+          projectName={name}
+          background="rgb(var(--c-bg))"
+        />
+      )}
+
+      {interior.length > 0 && (
+        <ImageSection
+          images={interior}
+          kicker={`№ ${pad(nInterior)} — INTERIOR`}
+          heading={<>Interior <em className="italic">studies.</em></>}
+          sublabel="INTERIOR"
+          projectName={name}
+          background="rgb(var(--c-bg-raised))"
+        />
+      )}
 
       {video && (
         <VideoFacade
           video={video}
           poster={coverImage || interior[0]}
           title={`${name} — video tour`}
+          kicker={`№ ${pad(nVideo)} — VIDEO`}
         />
       )}
 
-      <LocationMap district={district} city="Istanbul" projectName={name} />
+      <LocationMap
+        district={district}
+        city="Istanbul"
+        projectName={name}
+        kicker={`№ ${pad(nLocation)} — LOCATION`}
+      />
 
       <SimilarEpilogue project={project} allProjects={allProjects} lang={lang} label={d.similar} />
 
