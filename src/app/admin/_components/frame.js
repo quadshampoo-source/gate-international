@@ -8,11 +8,13 @@ const NAV_ADMIN = [
   { k: 'testimonials', label: 'Testimonials', href: '/admin/testimonials' },
   { k: 'users', label: 'Users', href: '/admin/users' },
   { k: 'settings', label: 'Site Settings', href: '/admin/settings' },
+  { k: 'account', label: 'Account', href: '/admin/account' },
 ];
 
 const NAV_EDITOR = [
   { k: 'dashboard', label: 'Dashboard', href: '/admin' },
   { k: 'projects', label: 'My Projects', href: '/admin/projects' },
+  { k: 'account', label: 'Account', href: '/admin/account' },
 ];
 
 export default function AdminFrame({ active, userEmail, role = 'editor', children }) {
