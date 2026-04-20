@@ -173,7 +173,7 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
         </div>
       </section>
 
-      {/* Video tour — Vimeo iframe, only if vimeo_id is set */}
+      {/* Video tour — Vimeo (priority) or YouTube, hidden when both empty */}
       {hasVideo && (
         <section className="py-16 md:py-20 bg-white">
           <div className="container-x max-w-[1080px]">
@@ -199,7 +199,7 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
               >
                 <iframe
                   src={video.embedUrl}
-                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                  {...video.iframeProps}
                   allowFullScreen
                   className="absolute inset-0 w-full h-full"
                   title={`${name} — video tour`}

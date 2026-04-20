@@ -40,7 +40,7 @@ export default function VideoModal({ open, onClose, vimeoId, project }) {
         {video ? (
           <iframe
             src={`${video.embedUrl}${video.embedUrl.includes('?') ? '&' : '?'}autoplay=1`}
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            {...video.iframeProps}
             allowFullScreen
             className="w-full h-full border-0"
             title="Property video tour"
