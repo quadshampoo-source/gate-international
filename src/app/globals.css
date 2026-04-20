@@ -328,6 +328,53 @@ body.theme-editorial {
   background: #FFFFFF;
   color: #051A24;
 }
+
+/* Dark-mode inversion for Editorial — triggered by the user's light/dark
+   toggle (html[data-theme="dark"]) while Editorial is the active theme.
+   Keeps typography + pill geometry intact; inverts surface colours to a
+   near-black canvas with cream ink, preserving gold as the accent. */
+html[data-theme="dark"] body.theme-editorial {
+  --c-bg: 8 14 18;
+  --c-bg-raised: 16 24 30;
+  --c-bg-sunken: 4 8 12;
+  --c-surface: 12 18 24;
+  --c-line: 28 38 46;
+  --c-line-strong: 60 76 88;
+  --c-fg: 238 240 234;
+  --c-fg-muted: 180 188 192;
+  --c-fg-dim: 120 132 140;
+  --c-gold: 215 185 100;
+  --c-gold-dim: 160 136 68;
+  background: #081116;
+  color: #EEF0EA;
+}
+/* Hard-coded Tailwind colour utilities used across editorial components
+   (white/navy) need to flip under dark-mode. */
+html[data-theme="dark"] body.theme-editorial .bg-white,
+html[data-theme="dark"] body.theme-editorial [style*="background: #FFFFFF"] {
+  background: #0C141A !important;
+}
+html[data-theme="dark"] body.theme-editorial [style*="background: #F6FCFF"] {
+  background: #101820 !important;
+}
+html[data-theme="dark"] body.theme-editorial [style*="background: #051A24"] {
+  background: #EEF0EA !important;
+  color: #081116 !important;
+}
+html[data-theme="dark"] body.theme-editorial [style*="color: #051A24"] { color: #EEF0EA !important; }
+html[data-theme="dark"] body.theme-editorial [style*="color: #273C46"] { color: #B4BCC0 !important; }
+html[data-theme="dark"] body.theme-editorial [style*="border: 1px solid #E0EBF0"],
+html[data-theme="dark"] body.theme-editorial [style*="border: 0.5px solid rgba(5,26,36,0.08)"] {
+  border-color: #1C262E !important;
+}
+/* Pill navbar in dark editorial — frosted over near-black. */
+html[data-theme="dark"] body.theme-editorial nav[style*="rgba(255,255,255,0.82)"] {
+  background: rgba(12,18,24,0.78) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+/* Grain should still be visible on dark surfaces. */
+html[data-theme="dark"] body.theme-editorial .editorial-grain { opacity: 0.12; }
+
 /* Legacy home-only class (still honoured) — hide non-editorial site-header. */
 body.theme-editorial-home .site-header { display: none; }
 body.theme-editorial-home { background: #FFFFFF; color: #051A24; }
