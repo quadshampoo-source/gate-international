@@ -5,6 +5,7 @@ const NAV_ADMIN = [
   { k: 'dashboard', label: 'Dashboard', href: '/admin' },
   { k: 'projects', label: 'Projects', href: '/admin/projects' },
   { k: 'team', label: 'Team', href: '/admin/team' },
+  { k: 'testimonials', label: 'Testimonials', href: '/admin/testimonials' },
   { k: 'users', label: 'Users', href: '/admin/users' },
   { k: 'settings', label: 'Site Settings', href: '/admin/settings' },
 ];

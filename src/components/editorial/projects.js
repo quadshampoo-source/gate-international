@@ -5,12 +5,7 @@ import { useMemo, useState } from 'react';
 import { getDict } from '@/lib/i18n';
 import { localizedName } from '@/lib/utils';
 import { districtLabel, DISTRICT_NAMES } from '@/lib/districts';
-
-function tileHue(seed = '') {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) % 360;
-  return h;
-}
+import EditorialTileBg from '@/components/editorial/tile-bg';
 
 function renderTitle(title) {
   if (!title || typeof title !== 'string') return title;
@@ -25,7 +20,6 @@ function renderTitle(title) {
 }
 
 function Tile({ project, lang, index, wide }) {
-  const hue = tileHue(project.id || project.name);
   const name = localizedName(project, lang);
   const district = districtLabel(project.district, lang);
   return (
@@ -34,10 +28,7 @@ function Tile({ project, lang, index, wide }) {
       className={`group block rounded-[22px] overflow-hidden relative ${wide ? 'aspect-[16/10]' : 'aspect-[4/5]'}`}
       style={{ boxShadow: '0 20px 50px rgba(5,26,36,0.08)' }}
     >
-      <div
-        className="absolute inset-0 transition-transform duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.04]"
-        style={{ background: `linear-gradient(135deg, hsl(${hue} 35% 72%), hsl(${(hue + 40) % 360} 40% 54%))` }}
-      />
+      <EditorialTileBg project={project} alt={name} />
       <div className="editorial-grain" />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 55%, rgba(5,26,36,0.65) 100%)' }} />
       {project.citizenship_eligible && (

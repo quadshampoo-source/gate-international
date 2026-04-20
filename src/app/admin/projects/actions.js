@@ -5,6 +5,27 @@ import { revalidatePath } from 'next/cache';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { currentProfile } from '@/lib/supabase/server';
 
+const PROJECT_BUCKET = 'project-photos';
+const PROJECT_MAX_SIZE = 10 * 1024 * 1024;
+const PROJECT_ALLOWED = new Set(['image/jpeg', 'image/png', 'image/webp']);
+
+async function uploadProjectPhoto(admin, file) {
+  if (!file || typeof file === 'string' || file.size === 0) return null;
+  if (file.size > PROJECT_MAX_SIZE) throw new Error('photo too large (max 10 MB)');
+  if (!PROJECT_ALLOWED.has(file.type)) throw new Error('photo must be JPEG, PNG or WebP');
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const filename = `${crypto.randomUUID()}.${ext}`;
+  const buf = Buffer.from(await file.arrayBuffer());
+  const { error } = await admin.storage.from(PROJECT_BUCKET).upload(filename, buf, {
+    contentType: file.type,
+    cacheControl: '31536000',
+    upsert: false,
+  });
+  if (error) throw new Error(`upload failed: ${error.message}`);
+  const { data } = admin.storage.from(PROJECT_BUCKET).getPublicUrl(filename);
+  return data.publicUrl;
+}
+
 async function requireProjectAccess(projectId) {
   const ctx = await currentProfile();
   if (!ctx) redirect('/admin/login');
@@ -86,6 +107,12 @@ export async function createProject(formData) {
     redirect('/admin/projects/new?error=missing');
   }
   const supabase = supabaseAdmin();
+  try {
+    const uploaded = await uploadProjectPhoto(supabase, formData.get('photo'));
+    if (uploaded) row.img = uploaded;
+  } catch (e) {
+    redirect(`/admin/projects/new?error=${encodeURIComponent(e.message)}`);
+  }
   const { error } = await supabase.from('projects').insert(row);
   if (error) {
     console.error('createProject', error);
@@ -100,6 +127,12 @@ export async function updateProject(formData) {
   if (!row.id) redirect('/admin/projects');
   await requireProjectAccess(row.id);
   const supabase = supabaseAdmin();
+  try {
+    const uploaded = await uploadProjectPhoto(supabase, formData.get('photo'));
+    if (uploaded) row.img = uploaded;
+  } catch (e) {
+    redirect(`/admin/projects/${row.id}?error=${encodeURIComponent(e.message)}`);
+  }
   const { error } = await supabase.from('projects').update(row).eq('id', row.id);
   if (error) {
     console.error('updateProject', error);

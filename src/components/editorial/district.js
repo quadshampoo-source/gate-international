@@ -3,6 +3,7 @@ import { getDict } from '@/lib/i18n';
 import { localizedName } from '@/lib/utils';
 import { districtLabel } from '@/lib/districts';
 import { FadeIn, ScrollReveal, Stagger } from '@/components/motion';
+import EditorialTileBg from '@/components/editorial/tile-bg';
 
 function renderTitle(title) {
   if (!title || typeof title !== 'string') return title;
@@ -16,24 +17,14 @@ function renderTitle(title) {
   return (<>{before}{before ? ' ' : ''}<em className="italic">{core}</em>{punct}</>);
 }
 
-function tileHue(seed = '') {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) % 360;
-  return h;
-}
-
 function Tile({ project, lang, index }) {
-  const hue = tileHue(project.id || project.name);
   return (
     <Link
       href={`/${lang}/project/${project.id}`}
       className="group block rounded-[22px] overflow-hidden relative aspect-[4/5]"
       style={{ boxShadow: '0 20px 50px rgba(5,26,36,0.08)' }}
     >
-      <div
-        className="absolute inset-0 transition-transform duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.04]"
-        style={{ background: `linear-gradient(135deg, hsl(${hue} 35% 72%), hsl(${(hue + 40) % 360} 40% 54%))` }}
-      />
+      <EditorialTileBg project={project} alt={localizedName(project, lang)} />
       <div className="editorial-grain" />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 55%, rgba(5,26,36,0.65) 100%)' }} />
       <div

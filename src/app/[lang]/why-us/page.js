@@ -3,6 +3,9 @@ import { getDict } from '@/lib/i18n';
 import { DEVELOPERS } from '@/lib/projects';
 import { ShieldIcon, AwardIcon, GlobeIcon, KeyIcon, CheckIcon } from '@/components/icons';
 import { FadeIn, ScrollReveal, Counter, Marquee } from '@/components/motion';
+import EditorialWhyUs from '@/components/editorial/why-us';
+import { getActiveTheme } from '@/lib/theme';
+import { getTestimonials } from '@/lib/testimonials';
 
 const TESTIMONIALS = [
   { name: 'Ahmed Al-Saud', role: 'Riyadh → Istanbul', q: 'Gate handled everything from airport pickup to TAPU registration. Flawless.', lang: 'EN' },
@@ -17,6 +20,12 @@ const PRESS = ['Bloomberg', 'Reuters', 'Al Arabiya', '财经', 'Hurriyet', 'Forb
 
 export default async function WhyUsPage({ params }) {
   const { lang } = await params;
+  const theme = await getActiveTheme();
+  if (theme === 'editorial') {
+    const testimonials = await getTestimonials();
+    const mapped = testimonials.map((r) => ({ name: r.name, role: r.role, quote: r.quote }));
+    return <EditorialWhyUs lang={lang} testimonials={mapped.length ? mapped : undefined} />;
+  }
   const t = getDict(lang);
   const w = t.why;
 

@@ -8,17 +8,11 @@ import EditorialServicesAccordion from '@/components/editorial/services-accordio
 import EditorialTestimonials from '@/components/editorial/testimonials-carousel';
 import EditorialPricingCards from '@/components/editorial/pricing-cards';
 import EditorialMarquee from '@/components/editorial/marquee';
+import EditorialTileBg from '@/components/editorial/tile-bg';
 import { whatsappLink, WHATSAPP_DEFAULT_MESSAGES } from '@/lib/utils';
-
-// Stable pastel gradient from name/id.
-function tileHue(seed = '') {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) % 360;
-  return h;
-}
+import { getTestimonials } from '@/lib/testimonials';
 
 function ProjectTile({ project, lang, index, size = 'small' }) {
-  const hue = tileHue(project.id || project.name);
   const name = localizedName(project, lang);
   const district = districtLabel(project.district, lang);
   const wide = size === 'wide';
@@ -28,10 +22,7 @@ function ProjectTile({ project, lang, index, size = 'small' }) {
       className={`group block rounded-[22px] overflow-hidden relative ${wide ? 'aspect-[16/10]' : 'aspect-[4/5]'}`}
       style={{ boxShadow: '0 20px 50px rgba(5,26,36,0.08)' }}
     >
-      <div
-        className="absolute inset-0 transition-transform duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.04]"
-        style={{ background: `linear-gradient(135deg, hsl(${hue} 35% 72%), hsl(${(hue + 40) % 360} 40% 54%))` }}
-      />
+      <EditorialTileBg project={project} alt={name} />
       <div className="editorial-grain" />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 55%, rgba(5,26,36,0.65) 100%)' }} />
 
@@ -66,9 +57,10 @@ function ProjectTile({ project, lang, index, size = 'small' }) {
 
 export default async function HomeEditorial({ lang }) {
   const t = getDict(lang);
-  const all = await getProjects();
+  const [all, testimonials] = await Promise.all([getProjects(), getTestimonials()]);
   const featured = all.slice(0, 6);
   const marqueeSource = all.slice(0, 18);
+  const mappedTestimonials = testimonials.map((r) => ({ name: r.name, role: r.role, quote: r.quote }));
 
   const waHref = whatsappLink(WHATSAPP_DEFAULT_MESSAGES[lang] || WHATSAPP_DEFAULT_MESSAGES.en, lang);
   const servicesItems = t.services?.items?.slice(0, 4) || [];
@@ -140,18 +132,14 @@ export default async function HomeEditorial({ lang }) {
       <section className="py-12 md:py-16 bg-white">
         <EditorialMarquee>
           {marqueeSource.map((p) => {
-            const hue = tileHue(p.id || p.name);
             return (
               <Link
                 key={p.id}
                 href={`/${lang}/project/${p.id}`}
-                className="w-[260px] md:w-[300px] aspect-[4/3] rounded-[22px] overflow-hidden relative block"
+                className="group w-[260px] md:w-[300px] aspect-[4/3] rounded-[22px] overflow-hidden relative block"
                 style={{ boxShadow: '0 14px 40px rgba(5,26,36,0.08)' }}
               >
-                <div
-                  className="absolute inset-0"
-                  style={{ background: `linear-gradient(135deg, hsl(${hue} 35% 72%), hsl(${(hue + 40) % 360} 40% 54%))` }}
-                />
+                <EditorialTileBg project={p} alt={localizedName(p, lang)} />
                 <div className="editorial-grain" />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 50%, rgba(5,26,36,0.6))' }} />
                 <div className="absolute inset-x-0 bottom-0 p-5 text-white">
@@ -269,7 +257,7 @@ export default async function HomeEditorial({ lang }) {
             </div>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <EditorialTestimonials />
+            <EditorialTestimonials items={mappedTestimonials.length ? mappedTestimonials : undefined} />
           </ScrollReveal>
         </div>
       </section>

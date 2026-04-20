@@ -5,7 +5,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
   const jsonVal = (k) => (project[k] != null ? JSON.stringify(project[k], null, 2) : '');
 
   return (
-    <form action={action} className="max-w-[860px]">
+    <form action={action} encType="multipart/form-data" className="max-w-[860px]">
       <Row label="ID (slug)">
         <input
           name="id"
@@ -82,7 +82,17 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       </Row>
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Media</h3>
-      <Row label="Image URL"><input name="img" type="url" defaultValue={v('img')} className="admin-input" placeholder="https://…" /></Row>
+      <Row label="Image URL"><input name="img" type="url" defaultValue={v('img')} className="admin-input" placeholder="https://… or upload below" /></Row>
+      <Row label="Upload cover photo">
+        <div className="flex items-center gap-5">
+          {v('img') && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={v('img')} alt="" className="w-20 h-20 rounded object-cover border border-line" />
+          )}
+          <input name="photo" type="file" accept="image/jpeg,image/png,image/webp" className="text-[13px]" />
+          <span className="text-[11px] text-fg-dim">Max 10 MB · JPEG/PNG/WebP. Overrides Image URL.</span>
+        </div>
+      </Row>
       <Row label="Vimeo ID"><input name="vimeo_id" defaultValue={v('vimeo_id')} className="admin-input font-mono" /></Row>
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Project scale</h3>
