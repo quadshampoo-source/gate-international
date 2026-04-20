@@ -15,33 +15,25 @@ export async function generateMetadata({ params }) {
   return { title: `${t.heroTitle} — Gate International`, description: t.heroSub };
 }
 
-const STATS = [
-  { value: 250, suffix: '+', label: 'Applications supported' },
-  { value: 10, suffix: '+', label: 'Years experience' },
-  { value: '6-9', label: 'Months timeline', raw: true },
-  { value: 98, suffix: '%', label: 'Success rate' },
+const STAT_METRICS = [
+  { value: 250, suffix: '+' },
+  { value: 10, suffix: '+' },
+  { value: '6-9', raw: true },
+  { value: 98, suffix: '%' },
 ];
 
-const STEPS = [
-  { n: '01', icon: '🏠', title: 'Choose a Qualifying Property', body: 'Select real estate meeting the $400K threshold that fits your investment goals — curated shortlist, yield analysis, citizenship verification.' },
-  { n: '02', icon: '📋', title: 'Complete the Purchase', body: 'Title deed transfer, SPK valuation report, and transaction executed under Turkish legal framework with full escrow protection.' },
-  { n: '03', icon: '📄', title: 'Prepare Application', body: 'Document compilation, sworn translations, biometric photos, and submission to the Ministry of Interior handled end-to-end.' },
-  { n: '04', icon: '🇹🇷', title: 'Receive Citizenship', body: 'Application review and approval — Turkish passport issued for the applicant, spouse and children under 18. Visa-free travel to 110+ countries.' },
+const STEP_DECOR = [
+  { n: '01', icon: '🏠' },
+  { n: '02', icon: '📋' },
+  { n: '03', icon: '📄' },
+  { n: '04', icon: '🇹🇷' },
 ];
 
-const WHY = [
-  { icon: <ShieldIcon />, title: 'Eligible Property Guidance', body: 'Every project we represent above $400K is pre-verified for citizenship eligibility.' },
-  { icon: <GlobeIcon />, title: 'Local Market Expertise', body: 'Sixteen years in Istanbul prime and Bodrum ultra-luxury markets.' },
-  { icon: <AwardIcon />, title: 'End-to-End Support', body: 'Property selection, legal, banking, immigration — one director, one process.' },
-  { icon: <CheckIcon />, title: 'Proven Track Record', body: '250+ families successfully moved through our citizenship desk.' },
-];
-
-const FAQ = [
-  { q: 'What is the minimum investment?', a: '$400,000 — it can be one property or several combined, purchased from Turkish sellers.' },
-  { q: 'Can my family be included?', a: 'Yes. Spouse and children under 18 are included on the same application at no additional investment cost.' },
-  { q: 'How long does it take?', a: 'Typically 6 to 9 months end-to-end: 2 months transaction, 2-3 months document prep, 2-4 months Ministry review.' },
-  { q: 'Do I need to live in Turkey?', a: 'No. There is no residency requirement — you are free to live anywhere and visit when you wish.' },
-  { q: 'Can I sell the property later?', a: 'Yes, after a mandatory 3-year holding period registered on the title deed.' },
+const WHY_ICONS = [
+  <ShieldIcon key="shield" />,
+  <GlobeIcon key="globe" />,
+  <AwardIcon key="award" />,
+  <CheckIcon key="check" />,
 ];
 
 export default async function CitizenshipPage({ params }) {
@@ -64,7 +56,7 @@ export default async function CitizenshipPage({ params }) {
         <div className="container-x relative z-10">
           <div className="max-w-[860px]">
             <FadeIn delay={0.1}>
-              <span className="kicker">TURKISH CITIZENSHIP · 2026</span>
+              <span className="kicker">{t.heroKicker}</span>
             </FadeIn>
             <BlurText
               as="h1"
@@ -104,20 +96,20 @@ export default async function CitizenshipPage({ params }) {
               style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
             >
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                {STATS.map((s, i) => (
+                {STAT_METRICS.map((m, i) => (
                   <div key={i} className="text-center">
                     <div className="font-serif text-[44px] md:text-[60px] leading-none tracking-[-0.03em] text-fg">
-                      {s.raw ? (
-                        s.value
+                      {m.raw ? (
+                        m.value
                       ) : (
                         <>
-                          <Counter to={s.value} />
-                          {s.suffix && <span className="text-gold">{s.suffix}</span>}
+                          <Counter to={m.value} />
+                          {m.suffix && <span className="text-gold">{m.suffix}</span>}
                         </>
                       )}
                     </div>
                     <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-fg-muted mt-3">
-                      {s.label}
+                      {t.stats[i]?.label}
                     </div>
                   </div>
                 ))}
@@ -133,12 +125,12 @@ export default async function CitizenshipPage({ params }) {
         <div className="container-x relative z-10">
           <ScrollReveal>
             <div className="mb-15">
-              <span className="kicker block mb-4">№ 01 — PROCESS</span>
+              <span className="kicker block mb-4">{t.processKicker}</span>
               <h2 className="section-title">{t.processTitle}</h2>
             </div>
           </ScrollReveal>
           <div className="space-y-6">
-            {STEPS.map((s, i) => (
+            {t.steps.map((s, i) => (
               <ScrollReveal key={i} delay={i * 0.08}>
                 <div
                   className="grid grid-cols-[auto_1fr] md:grid-cols-[200px_1fr] gap-6 md:gap-12 items-start backdrop-blur-xl bg-bg-raised/40 p-6 md:p-10 rounded-[24px]"
@@ -146,9 +138,9 @@ export default async function CitizenshipPage({ params }) {
                 >
                   <div className="flex items-center gap-4 md:block">
                     <div className="font-serif text-[56px] md:text-[96px] text-gold leading-none tracking-[-0.04em]">
-                      {s.n}
+                      {STEP_DECOR[i]?.n}
                     </div>
-                    <div className="text-4xl md:text-5xl md:mt-4">{s.icon}</div>
+                    <div className="text-4xl md:text-5xl md:mt-4">{STEP_DECOR[i]?.icon}</div>
                   </div>
                   <div>
                     <h3 className="font-serif text-[24px] md:text-[32px] leading-tight tracking-[-0.01em] mb-3">
@@ -171,19 +163,19 @@ export default async function CitizenshipPage({ params }) {
         <div className="container-x relative z-10">
           <ScrollReveal>
             <div className="mb-15">
-              <span className="kicker block mb-4">№ 02 — DIFFERENCE</span>
+              <span className="kicker block mb-4">{t.diffKicker}</span>
               <h2 className="section-title">{t.whyTitle}</h2>
             </div>
           </ScrollReveal>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
-            {WHY.map((w, i) => (
+            {t.whyItems.map((w, i) => (
               <ScrollReveal key={i} delay={i * 0.1}>
                 <div
                   className="group backdrop-blur-xl bg-bg-raised/40 p-7 md:p-9 rounded-[22px] h-full hover:bg-bg-raised/60 transition-all hover:-translate-y-1"
                   style={{ border: '0.5px solid rgba(255,255,255,0.12)' }}
                 >
                   <div className="w-12 h-12 rounded-2xl backdrop-blur-lg bg-gold/15 border border-gold/30 flex items-center justify-center text-gold mb-5 group-hover:scale-110 transition-transform">
-                    {w.icon}
+                    {WHY_ICONS[i]}
                   </div>
                   <h3 className="font-serif text-[22px] mb-3 tracking-[-0.01em]">{w.title}</h3>
                   <p className="text-fg-muted text-[14px] leading-relaxed">{w.body}</p>
@@ -200,12 +192,12 @@ export default async function CitizenshipPage({ params }) {
         <div className="container-x relative z-10 max-w-[880px]">
           <ScrollReveal>
             <div className="mb-12 text-center">
-              <span className="kicker block mb-4">№ 03 — FAQ</span>
+              <span className="kicker block mb-4">{t.faqKicker}</span>
               <h2 className="section-title">{t.faqTitle}</h2>
             </div>
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <Accordion items={FAQ} />
+            <Accordion items={t.faqs} />
           </ScrollReveal>
         </div>
       </section>
@@ -226,19 +218,19 @@ export default async function CitizenshipPage({ params }) {
               <form className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-[600px] mx-auto mb-6">
                 <input
                   type="text"
-                  placeholder="Full name"
+                  placeholder={t.formName}
                   className="px-5 py-4 bg-bg-raised/60 backdrop-blur rounded-xl text-fg placeholder-fg-dim font-serif text-[15px]"
                   style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
                 />
                 <input
                   type="email"
-                  placeholder="Email"
+                  placeholder={t.formEmail}
                   className="px-5 py-4 bg-bg-raised/60 backdrop-blur rounded-xl text-fg placeholder-fg-dim font-serif text-[15px]"
                   style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
                 />
                 <input
                   type="tel"
-                  placeholder="Phone · country code"
+                  placeholder={t.formPhone}
                   className="px-5 py-4 bg-bg-raised/60 backdrop-blur rounded-xl text-fg placeholder-fg-dim font-serif text-[15px]"
                   style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
                 />
@@ -247,22 +239,21 @@ export default async function CitizenshipPage({ params }) {
                   style={{ border: '0.5px solid rgba(255,255,255,0.15)' }}
                   defaultValue=""
                 >
-                  <option value="" className="bg-bg">Indicative budget</option>
-                  <option value="400-700k" className="bg-bg">$400K — $700K</option>
-                  <option value="700k-1m" className="bg-bg">$700K — $1M</option>
-                  <option value="1-3m" className="bg-bg">$1M — $3M</option>
-                  <option value="3m+" className="bg-bg">$3M+</option>
+                  <option value="" className="bg-bg">{t.budgetPlaceholder}</option>
+                  {t.budgetOptions.map((opt, i) => (
+                    <option key={i} value={['400-700k', '700k-1m', '1-3m', '3m+'][i] || i} className="bg-bg">{opt}</option>
+                  ))}
                 </select>
               </form>
               <div className="flex flex-wrap justify-center gap-3">
                 <Link
-                  href={whatsappLink('Hello, I would like a Turkish citizenship consultation.', lang)}
+                  href={whatsappLink(t.waMsg, lang)}
                   className="btn btn-gold btn-arrow shadow-[0_10px_30px_rgba(201,168,76,0.25)]"
                 >
                   {t.ctaBtn}
                 </Link>
                 <Link href={`/${lang}/contact`} className="btn btn-outline">
-                  Other contact options
+                  {t.otherContact}
                 </Link>
               </div>
             </div>

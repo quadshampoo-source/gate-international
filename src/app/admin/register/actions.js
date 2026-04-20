@@ -26,7 +26,21 @@ export async function register(formData) {
     redirect('/admin/register?error=short');
   }
 
+  const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase();
+  if (adminEmail && email === adminEmail) {
+    redirect('/admin/register?error=reserved');
+  }
+
   const admin = supabaseAdmin();
+
+  const { data: existingProfile } = await admin
+    .from('profiles')
+    .select('id, role')
+    .eq('email', email)
+    .maybeSingle();
+  if (existingProfile && existingProfile.role && existingProfile.role !== 'pending') {
+    redirect('/admin/register?error=exists');
+  }
 
   const { data, error } = await admin.auth.admin.createUser({
     email,
@@ -40,12 +54,20 @@ export async function register(formData) {
   }
 
   if (data?.user?.id) {
-    await admin
+    const { data: currentRow } = await admin
       .from('profiles')
-      .upsert(
-        { id: data.user.id, email, full_name, company, phone, role: 'pending' },
-        { onConflict: 'id' }
-      );
+      .select('role')
+      .eq('id', data.user.id)
+      .maybeSingle();
+    const safeToWrite = !currentRow || !currentRow.role || currentRow.role === 'pending';
+    if (safeToWrite) {
+      await admin
+        .from('profiles')
+        .upsert(
+          { id: data.user.id, email, full_name, company, phone, role: 'pending' },
+          { onConflict: 'id' }
+        );
+    }
   }
 
   // Notify the admin of the new application.

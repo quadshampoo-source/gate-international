@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
-import { DISTRICT_NAMES_AR, DISTRICT_NAMES_ZH } from '@/lib/projects';
+import { districtLabel } from '@/lib/districts';
 import { getProjects } from '@/lib/data';
 import ProjectCard from '@/components/project-card';
 import { ShieldIcon, AwardIcon, GlobeIcon, KeyIcon } from '@/components/icons';
@@ -16,8 +16,7 @@ export default async function HomeClassic({ lang }) {
   }, {});
   const districts = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Bodrum', 'Bursa'].map((d) => ({
     name: d,
-    nameAr: DISTRICT_NAMES_AR[d],
-    nameZh: DISTRICT_NAMES_ZH[d],
+    label: districtLabel(d, lang),
     count: districtCounts[d] || 0,
     href:
       d === 'Bodrum' ? `/${lang}/districts/bodrum` :
@@ -138,26 +137,23 @@ export default async function HomeClassic({ lang }) {
             </div>
           </ScrollReveal>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-px bg-line border-y border-line">
-            {districts.map((d, i) => {
-              const name = lang === 'ar' ? d.nameAr : lang === 'zh' ? d.nameZh : d.name;
-              return (
-                <Link
-                  key={d.name}
-                  href={d.href}
-                  className="bg-bg p-5 md:p-7 cursor-pointer transition-colors hover:bg-bg-raised group"
-                >
-                  <div className="font-mono text-[10px] text-fg-dim tracking-[0.12em] mb-8">
-                    № {String(i + 1).padStart(2, '0')}
-                  </div>
-                  <div className="font-serif text-[22px] leading-tight transition-colors group-hover:text-gold">
-                    {name}
-                  </div>
-                  <div className="font-mono text-[11px] text-fg-muted mt-1.5">
-                    {d.count} residences
-                  </div>
-                </Link>
-              );
-            })}
+            {districts.map((d, i) => (
+              <Link
+                key={d.name}
+                href={d.href}
+                className="bg-bg p-5 md:p-7 cursor-pointer transition-colors hover:bg-bg-raised group"
+              >
+                <div className="font-mono text-[10px] text-fg-dim tracking-[0.12em] mb-8">
+                  № {String(i + 1).padStart(2, '0')}
+                </div>
+                <div className="font-serif text-[22px] leading-tight transition-colors group-hover:text-gold">
+                  {d.label}
+                </div>
+                <div className="font-mono text-[11px] text-fg-muted mt-1.5">
+                  {d.count} {t.projects.results}
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

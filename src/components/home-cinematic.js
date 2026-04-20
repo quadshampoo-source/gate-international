@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
+import { districtLabel } from '@/lib/districts';
 import { getProjects } from '@/lib/data';
 import { FadeIn, ScrollReveal, Counter } from '@/components/motion';
 import GlassHero from '@/components/cinematic/hero';
@@ -13,6 +14,7 @@ export default async function HomeCinematic({ lang }) {
   const districts = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Bodrum', 'Bursa'];
   const counts = districts.map((d) => ({
     name: d,
+    label: districtLabel(d, lang),
     count: all.filter((p) => p.district === d).length,
     href:
       d === 'Bodrum' ? `/${lang}/districts/bodrum` :
@@ -107,7 +109,7 @@ export default async function HomeCinematic({ lang }) {
                   <span className="font-mono text-[10px] text-gold/70 tracking-wider">
                     № {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span className="font-serif text-[22px] group-hover:text-gold transition-colors">{d.name}</span>
+                  <span className="font-serif text-[22px] group-hover:text-gold transition-colors">{d.label}</span>
                   <span className="font-mono text-[11px] text-fg-muted">{d.count}</span>
                 </Link>
               </ScrollReveal>

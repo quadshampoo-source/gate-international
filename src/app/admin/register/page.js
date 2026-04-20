@@ -46,6 +46,10 @@ export default async function RegisterPage({ searchParams }) {
               ? 'Please fill all required fields.'
               : err === 'short'
               ? 'Password must be at least 8 characters.'
+              : err === 'reserved'
+              ? 'This email is reserved for the primary administrator.'
+              : err === 'exists'
+              ? 'An account with this email already exists. Please sign in instead.'
               : decodeURIComponent(err)}
           </div>
         )}

@@ -7,8 +7,11 @@ import { LOCALES } from '@/lib/i18n';
 
 const LABELS = {
   en: { short: 'EN', long: 'English' },
-  ar: { short: 'AR', long: 'عربي' },
-  zh: { short: 'ZH', long: '中文' },
+  ar: { short: 'عربي', long: 'عربي' },
+  zh: { short: '中文', long: '中文' },
+  ru: { short: 'РУ', long: 'Русский' },
+  fa: { short: 'فا', long: 'فارسی' },
+  fr: { short: 'FR', long: 'Français' },
 };
 
 export default function LangDropdown({ lang }) {

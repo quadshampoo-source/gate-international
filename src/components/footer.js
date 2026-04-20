@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
+import { districtLabel } from '@/lib/districts';
 
 export default function Footer({ lang }) {
   const dict = getDict(lang);
@@ -24,7 +25,7 @@ export default function Footer({ lang }) {
                     href={`/${lang}/projects?district=${encodeURIComponent(d)}`}
                     className="text-fg-muted text-[13px] hover:text-fg transition-colors"
                   >
-                    {d}
+                    {districtLabel(d, lang)}
                   </Link>
                 </li>
               ))}
