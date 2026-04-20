@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import AdminFrame from '../_components/frame';
 import { currentProfile } from '@/lib/supabase/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import ProjectListClient from './_components/list-client';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,43 +47,13 @@ export default async function ProjectsListPage() {
           <Link href="/admin/projects/new" className="admin-btn">+ New project</Link>
         )}
       </div>
-      <div className="border border-line overflow-x-auto">
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>District</th>
-              <th>Developer</th>
-              <th>Price (USD)</th>
-              <th>Status</th>
-              <th>Category</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((p, i) => (
-              <tr key={p.id}>
-                <td className="font-mono text-xs text-fg-muted">{String(i + 1).padStart(2, '0')}</td>
-                <td>
-                  <Link href={`/admin/projects/${p.id}`} className="hover:text-gold">{p.name}</Link>
-                </td>
-                <td>{p.district}</td>
-                <td className="text-fg-muted">{p.developer || '—'}</td>
-                <td className="font-mono">{p.price_usd ? `$${Number(p.price_usd).toLocaleString()}` : '—'}</td>
-                <td className="text-xs font-mono uppercase tracking-wider">{p.status || '—'}</td>
-                <td className="text-xs text-fg-muted">{p.category || '—'}</td>
-                <td className="text-right">
-                  <Link href={`/admin/projects/${p.id}`} className="text-xs text-gold hover:underline">Edit</Link>
-                </td>
-              </tr>
-            ))}
-            {rows.length === 0 && isAdminRole && (
-              <tr><td colSpan={8} className="text-center py-10 text-fg-muted">No projects yet. Run the seed script or add one.</td></tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      {rows.length === 0 && isAdminRole ? (
+        <div className="border border-line p-10 text-center text-fg-muted">
+          No projects yet. Run the seed script or add one.
+        </div>
+      ) : (
+        <ProjectListClient initialProjects={rows} canReorder={isAdminRole} />
+      )}
     </AdminFrame>
   );
 }
