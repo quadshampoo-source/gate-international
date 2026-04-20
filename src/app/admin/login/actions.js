@@ -8,11 +8,10 @@ export async function login(formData) {
   const password = String(formData.get('password') || '');
   const next = String(formData.get('next') || '/admin');
 
-  const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase();
-  if (adminEmail && email.toLowerCase() !== adminEmail) {
-    redirect(`/admin/login?error=unauthorized&next=${encodeURIComponent(next)}`);
-  }
-
+  // Authorization (admin vs editor vs pending) is enforced by the middleware
+  // and per-page currentProfile() checks — not here. Gating the login form on
+  // ADMIN_EMAIL used to reject every approved editor before Supabase even saw
+  // their credentials, which broke the multi-user approval flow entirely.
   const supabase = await supabaseServer();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
