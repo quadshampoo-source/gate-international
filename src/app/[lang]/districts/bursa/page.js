@@ -6,6 +6,8 @@ import ProjectCard from '@/components/project-card';
 import { ScrollReveal, FadeIn, Counter } from '@/components/motion';
 import BlurText from '@/components/cinematic/blur-text';
 import OrbBackdrop from '@/components/cinematic/orb-backdrop';
+import EditorialDistrict from '@/components/editorial/district';
+import { getActiveTheme } from '@/lib/theme';
 
 export const revalidate = 60;
 
@@ -28,9 +30,26 @@ const ADVANTAGES = [
 
 export default async function BursaGuidePage({ params }) {
   const { lang } = await params;
+  const theme = await getActiveTheme();
   const t = getDict(lang);
   const all = await getProjects();
   const bursa = all.filter((p) => p.district === 'Bursa');
+
+  if (theme === 'editorial') {
+    return (
+      <EditorialDistrict
+        lang={lang}
+        districtCode="Bursa"
+        heroImage="https://images.unsplash.com/photo-1542317854-b935c7dc9bb6?w=2400&q=85"
+        heroKicker="BURSA · OTTOMAN CAPITAL"
+        heroTitle="Ottoman heritage, modern investment."
+        heroSub="Citizenship-eligible residences from $400K. Mudanya ferry to Istanbul, Uludağ in half an hour, Çekirge thermal springs — a third of prime Istanbul pricing."
+        advantages={ADVANTAGES.map((a) => ({ t: a.title, d: a.body }))}
+        subRegions={BURSA_SUB_DISTRICTS}
+        projects={bursa}
+      />
+    );
+  }
   const avgPrice = (() => {
     const prices = bursa.filter((p) => typeof p.priceUsd === 'number').map((p) => p.priceUsd);
     if (!prices.length) return null;

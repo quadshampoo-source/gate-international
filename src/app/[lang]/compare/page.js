@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
 import { DISTRICTS } from '@/lib/projects';
 import { getProjects } from '@/lib/data';
+import { getActiveTheme } from '@/lib/theme';
+import EditorialCompare from '@/components/editorial/compare';
 
 export const revalidate = 60;
 
@@ -26,6 +28,7 @@ const fmtUsd = (n) => {
 
 export default async function ComparePage({ params }) {
   const { lang } = await params;
+  const theme = await getActiveTheme();
   const t = getDict(lang);
   const c = t.compare;
 
@@ -50,6 +53,8 @@ export default async function ComparePage({ params }) {
       primary: PRIMARY_MARKET[d] || 'both',
     };
   });
+
+  if (theme === 'editorial') return <EditorialCompare lang={lang} rows={rows} c={c} />;
 
   const growthLabel = (g) => (g === 'high' ? c.high : g === 'medium' ? c.medium : c.stable);
   const growthColor = (g) => (g === 'high' ? '#4ade80' : g === 'medium' ? '#C9A84C' : '#9a9487');

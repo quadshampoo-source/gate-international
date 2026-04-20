@@ -4,6 +4,8 @@ import { getProjects } from '@/lib/data';
 import { BODRUM_SUB_DISTRICTS } from '@/lib/projects';
 import ProjectCard from '@/components/project-card';
 import { ScrollReveal, FadeIn, Counter } from '@/components/motion';
+import EditorialDistrict from '@/components/editorial/district';
+import { getActiveTheme } from '@/lib/theme';
 
 export const revalidate = 60;
 
@@ -17,9 +19,33 @@ export async function generateMetadata() {
 
 export default async function BodrumGuidePage({ params }) {
   const { lang } = await params;
+  const theme = await getActiveTheme();
   const t = getDict(lang);
   const all = await getProjects();
   const bodrum = all.filter((p) => p.district === 'Bodrum');
+
+  if (theme === 'editorial') {
+    return (
+      <EditorialDistrict
+        lang={lang}
+        districtCode="Bodrum"
+        heroImage="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=2400&q=85"
+        heroKicker="BODRUM · TURKISH RIVIERA"
+        heroTitle="Aegean villas, branded to the world's finest names."
+        heroSub="Ritz-Carlton, Mandarin Oriental, Aman and Kempinski have chosen the Bodrum peninsula for their most exclusive Turkish residences. Private beaches, marina access, citizenship eligibility from $400K."
+        advantages={[
+          { t: 'Branded residences', d: 'Ritz-Carlton, Mandarin Oriental, Aman, Kempinski, Swissôtel and Nikki Beach all operating on the peninsula.' },
+          { t: 'Ultra-luxury enclaves', d: 'Türkbükü, Yalıkavak, Gölköy — private bays with limited inventory.' },
+          { t: 'Citizenship eligible', d: 'Most Bodrum branded residences meet the $400K threshold for the Turkish passport.' },
+          { t: 'Super-yacht access', d: 'Yalıkavak Marina — the Mediterranean anchor for vessels over 60 m.' },
+          { t: 'Aegean microclimate', d: 'Mild winters, cool Meltemi breeze summers — 300 days of sunshine.' },
+          { t: 'Managed rental yield', d: 'Branded-residence programmes offer 4–7% net yield on peak-season letting.' },
+        ]}
+        subRegions={BODRUM_SUB_DISTRICTS}
+        projects={bodrum}
+      />
+    );
+  }
 
   const countByBrand = {
     branded: bodrum.filter((p) => p.category === 'branded-residence').length,
