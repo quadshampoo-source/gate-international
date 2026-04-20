@@ -4,7 +4,7 @@ import { localizedName, whatsappLink, WHATSAPP_DEFAULT_MESSAGES, fmtUsd } from '
 import { districtLabel } from '@/lib/districts';
 import { resolveVideo } from '@/lib/video';
 
-import HeroParallax from '@/components/editorial/detail/hero-parallax';
+import HeroSlider from '@/components/editorial/detail/hero-slider';
 import OverviewSticky from '@/components/editorial/detail/overview-sticky';
 import SpecsHorizontal from '@/components/editorial/detail/specs-horizontal';
 import GalleryScroll from '@/components/editorial/detail/gallery-scroll';
@@ -53,11 +53,10 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
 
   return (
     <div style={{ background: 'rgb(var(--c-bg))', color: 'rgb(var(--c-fg))' }}>
-      <HeroParallax
-        image={coverImage}
-        name={name}
-        tagline={tagline}
-        kicker="№ 01 — RESIDENCE"
+      <HeroSlider
+        images={galleryImages.length ? galleryImages : (coverImage ? [coverImage] : [])}
+        kicker="OVERVIEW"
+        title={name}
         gradientSeed={project.id}
       />
 
@@ -75,7 +74,7 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
         items={specItems}
       />
 
-      {galleryImages.length > 0 && <GalleryScroll images={galleryImages} />}
+      {galleryImages.length > 0 && <GalleryScroll images={galleryImages} projectName={name} />}
 
       {video && (
         <VideoFacade

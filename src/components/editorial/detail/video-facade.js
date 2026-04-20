@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 
-// Lazy video section: shows a poster image + a gold play button. The iframe
-// is only mounted when the user clicks Play, so YouTube/Vimeo scripts stay
-// off the page until they're needed. The iframe's props come from resolveVideo
-// so both providers (Vimeo, YouTube nocookie) work.
+// Lazy video section — unified with the other image blocks. Shows a poster
+// image sized to the shared slider aspect (3:4 → 4:5 → 16:10 desktop) with
+// a gold play button centred. Clicking mounts the iframe (Vimeo/YouTube via
+// resolveVideo) with autoplay; until then no third-party scripts load.
 export default function VideoFacade({ video, poster, title, kicker = '№ 05 — VIDEO' }) {
   const [playing, setPlaying] = useState(false);
   if (!video) return null;
@@ -17,6 +17,22 @@ export default function VideoFacade({ video, poster, title, kicker = '№ 05 —
       className="py-20 md:py-28 overflow-hidden"
       style={{ background: '#081116', color: '#EEF0EA' }}
     >
+      <style>{`
+        .video-facade-frame {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 3 / 4;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        @media (min-width: 768px) {
+          .video-facade-frame { aspect-ratio: 4 / 5; }
+        }
+        @media (min-width: 1024px) {
+          .video-facade-frame { aspect-ratio: 16 / 10; max-height: 70vh; border-radius: 16px; }
+        }
+      `}</style>
+
       <div className="container-x mb-10 md:mb-14">
         <div
           className="font-mono mb-4"
@@ -41,12 +57,12 @@ export default function VideoFacade({ video, poster, title, kicker = '№ 05 —
           Watch the <em className="italic">residence.</em>
         </h2>
       </div>
+
       <div className="container-x">
         <div
-          className="relative mx-auto rounded-[16px] overflow-hidden aspect-video"
+          className="video-facade-frame mx-auto"
           style={{
             background: '#000',
-            maxHeight: '80vh',
             boxShadow: '0 40px 100px rgba(0,0,0,0.35)',
           }}
         >
