@@ -2,8 +2,10 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 import PageTransition from '@/components/page-transition';
 import Analytics from '@/components/analytics';
+import WhatsappFab from '@/components/whatsapp-fab';
 import { LOCALES, DEFAULT_LOCALE, dirOf, getDict } from '@/lib/i18n';
 import { getActiveTheme } from '@/lib/theme';
+import { getTeam } from '@/lib/team';
 import { notFound } from 'next/navigation';
 
 export function generateStaticParams() {
@@ -55,7 +57,7 @@ export default async function LangLayout({ children, params }) {
   const { lang } = await params;
   if (!LOCALES.includes(lang)) notFound();
   const dir = dirOf(lang);
-  const theme = await getActiveTheme();
+  const [team, theme] = await Promise.all([getTeam(), getActiveTheme()]);
   const bodyClass = theme === 'editorial' ? 'theme-editorial' : '';
   return (
     <html lang={lang} dir={dir} data-theme="light" data-active-theme={theme}>
@@ -69,6 +71,7 @@ export default async function LangLayout({ children, params }) {
           <PageTransition>{children}</PageTransition>
         </main>
         <Footer lang={lang} theme={theme} />
+        <WhatsappFab lang={lang} team={team} />
       </body>
     </html>
   );

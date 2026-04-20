@@ -18,8 +18,16 @@ export default function FilterBar({ lang, cities = [], districtsBy = {} }) {
   const ref = useRef(null);
   const [revealed, setRevealed] = useState(false);
 
-  const [city, setCity] = useState({ value: '', label: cities[0]?.label || 'All cities' });
-  const [district, setDistrict] = useState({ value: '', label: 'Select city first' });
+  // Preselect the first city so the District field is immediately usable.
+  // Prior behaviour left `value:''` but showed the first city's label, which
+  // produced "Istanbul selected but District locked on 'Select city first'".
+  const firstCity = cities[0];
+  const [city, setCity] = useState(firstCity || { value: '', label: 'All cities' });
+  const [district, setDistrict] = useState(
+    firstCity?.value
+      ? { value: '', label: 'All districts' }
+      : { value: '', label: 'Select city first' }
+  );
   const [openField, setOpenField] = useState(null); // 'city' | 'district' | null
 
   const districtOptions = city.value ? (districtsBy[city.value] || []) : [];
@@ -72,9 +80,9 @@ export default function FilterBar({ lang, cities = [], districtsBy = {} }) {
   return (
     <div
       ref={ref}
-      className="filter-bar relative z-20 mx-5 md:mx-10"
+      className="filter-bar relative z-20"
       style={{
-        marginTop: -36,
+        margin: '-28px 20px 0',
         opacity: revealed ? 1 : 0,
         transform: revealed ? 'translateY(0)' : 'translateY(30px)',
         transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -83,53 +91,58 @@ export default function FilterBar({ lang, cities = [], districtsBy = {} }) {
       <style>{`
         .filter-bar .inner {
           display: flex;
+          flex-direction: row;
           align-items: flex-end;
-          gap: 12px;
-          padding: 20px;
-          background: rgba(255, 255, 255, 0.85);
+          gap: 8px;
+          padding: 16px;
+          background: rgba(255, 255, 255, 0.88);
           backdrop-filter: blur(24px);
           -webkit-backdrop-filter: blur(24px);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          border-radius: 20px;
-          box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          border-radius: 16px;
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
         }
         html[data-theme="dark"] .filter-bar .inner {
-          background: rgba(12,16,20,0.7);
+          background: rgba(12,16,20,0.72);
           border-color: rgba(255,255,255,0.08);
         }
-        .filter-bar .field { flex: 1; position: relative; }
+        .filter-bar .field { flex: 1; min-width: 0; position: relative; }
         .filter-bar .field-label {
-          display: block; font-size: 10px; letter-spacing: 0.15em;
-          text-transform: uppercase; color: #C9A84C; margin-bottom: 6px; font-weight: 600;
+          display: block; font-size: 9px; letter-spacing: 0.12em;
+          text-transform: uppercase; color: #C9A84C; margin-bottom: 4px; font-weight: 600;
         }
         .filter-bar .trigger {
-          display: flex; align-items: center; justify-content: space-between;
-          width: 100%; padding: 10px 14px;
-          background: rgba(0,0,0,0.03);
-          border: 1px solid rgba(0,0,0,0.06);
-          border-radius: 10px;
-          font-size: 15px; color: #1a1a2e; cursor: pointer;
+          display: flex; align-items: center; justify-content: space-between; gap: 6px;
+          width: 100%; padding: 8px 10px;
+          background: rgba(0,0,0,0.02);
+          border: 1px solid rgba(0,0,0,0.08);
+          border-radius: 8px;
+          font-size: 13px; color: #1a1a2e; cursor: pointer;
           transition: background 0.2s ease, border-color 0.2s ease;
         }
-        .filter-bar .trigger:hover { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.12); }
+        .filter-bar .trigger > span {
+          overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+        }
+        .filter-bar .trigger:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.14); }
+        .filter-bar .trigger:focus-visible { outline: none; border-color: #C9A84C; }
         .filter-bar .trigger:disabled { opacity: 0.4; cursor: not-allowed; }
         html[data-theme="dark"] .filter-bar .trigger {
-          background: rgba(255,255,255,0.05);
+          background: rgba(255,255,255,0.04);
           border-color: rgba(255,255,255,0.1);
           color: #F5F0E2;
         }
-        .filter-bar .chev { opacity: 0.4; transition: transform 0.3s ease; }
+        .filter-bar .chev { opacity: 0.4; flex-shrink: 0; transition: transform 0.3s ease; }
         .filter-bar .field.open .chev { transform: rotate(180deg); }
 
         .filter-bar .dropdown {
-          position: absolute; top: calc(100% + 8px); left: 0; right: 0;
-          background: rgba(255,255,255,0.95);
+          position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+          background: rgba(255,255,255,0.96);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           border: 1px solid rgba(0,0,0,0.06);
-          border-radius: 14px;
+          border-radius: 12px;
           box-shadow: 0 12px 40px rgba(0,0,0,0.1);
-          padding: 6px; z-index: 30;
+          padding: 5px; z-index: 30;
           opacity: 0; transform: translateY(-8px) scale(0.96); pointer-events: none;
           transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
           max-height: 320px; overflow-y: auto;
@@ -142,37 +155,43 @@ export default function FilterBar({ lang, cities = [], districtsBy = {} }) {
           border-color: rgba(255,255,255,0.08);
         }
         .filter-bar .option {
-          display: flex; align-items: center; gap: 10px; width: 100%;
-          padding: 10px 14px; background: none; border: none; border-radius: 10px;
-          font-size: 14px; color: #1a1a2e; cursor: pointer; text-align: left;
+          display: flex; align-items: center; gap: 8px; width: 100%;
+          padding: 8px 12px; background: none; border: none; border-radius: 8px;
+          font-size: 13px; color: #1a1a2e; cursor: pointer; text-align: left;
           transition: background 0.15s ease;
         }
         .filter-bar .option:hover { background: rgba(0,0,0,0.04); }
         .filter-bar .option.active { background: rgba(201,168,76,0.12); font-weight: 500; }
         html[data-theme="dark"] .filter-bar .option { color: #F5F0E2; }
         html[data-theme="dark"] .filter-bar .option:hover { background: rgba(255,255,255,0.05); }
-        .filter-bar .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .filter-bar .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
         .filter-bar .count {
-          margin-left: auto; font-size: 12px; color: rgba(0,0,0,0.4);
+          margin-left: auto; font-size: 11px; color: rgba(0,0,0,0.4);
         }
         html[data-theme="dark"] .filter-bar .count { color: rgba(255,255,255,0.4); }
 
         .filter-bar .search-btn {
-          display: flex; align-items: center; gap: 8px;
-          padding: 10px 24px; background: #1a1a2e; color: #fff;
-          border: none; border-radius: 10px;
-          font-size: 14px; font-weight: 500; cursor: pointer;
-          white-space: nowrap; position: relative; overflow: hidden;
-          transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding-right 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease;
+          display: flex; align-items: center; gap: 6px;
+          padding: 8px 16px; min-height: 36px;
+          background: #1a1a2e; color: #fff;
+          border: none; border-radius: 8px;
+          font-size: 13px; font-weight: 500; cursor: pointer;
+          white-space: nowrap; flex-shrink: 0;
+          position: relative; overflow: hidden;
+          transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease;
         }
-        .filter-bar .search-btn:hover { background: #2a2a4e; padding-right: 28px; }
+        .filter-bar .search-btn:hover { background: #2a2a4e; }
         .filter-bar .search-btn:active { transform: scale(0.96); }
         .filter-bar .search-btn svg { transition: transform 0.3s ease; }
         .filter-bar .search-btn:hover svg { transform: rotate(90deg); }
 
-        @media (max-width: 640px) {
-          .filter-bar .inner { flex-direction: column; gap: 14px; padding: 24px 20px; }
-          .filter-bar .search-btn { width: 100%; justify-content: center; padding: 14px 24px; }
+        /* Compact tweaks for very narrow phones — still horizontal. */
+        @media (max-width: 380px) {
+          .filter-bar { margin-left: 12px; margin-right: 12px; }
+          .filter-bar .inner { gap: 6px; padding: 12px; }
+          .filter-bar .trigger { padding: 8px 6px; font-size: 12px; }
+          .filter-bar .search-btn { padding: 8px 12px; font-size: 12px; }
+          .filter-bar .search-btn span { display: none; }
         }
       `}</style>
 
