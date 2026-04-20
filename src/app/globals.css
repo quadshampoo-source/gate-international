@@ -310,10 +310,25 @@ input, textarea, select { font: inherit; color: inherit; background: transparent
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ── Editorial theme (Northbound-inspired) ─────────────────────────── */
-body.theme-editorial-home .site-header,
-body.theme-editorial-home .wa-fab { /* let the editorial FAB placement drive */
-  /* keep WA fab visible; no change */
+/* When editorial is active globally, override the CSS palette so every page
+   inherits the white ground + navy ink look. Header/Footer render their
+   own editorial variants via the `theme` prop. */
+body.theme-editorial {
+  --c-bg: 255 255 255;
+  --c-bg-raised: 246 252 255;
+  --c-bg-sunken: 224 235 240;
+  --c-surface: 255 255 255;
+  --c-line: 224 235 240;
+  --c-line-strong: 195 212 222;
+  --c-fg: 5 26 36;
+  --c-fg-muted: 39 60 70;
+  --c-fg-dim: 113 134 144;
+  --c-gold: 201 168 76;
+  --c-gold-dim: 138 116 51;
+  background: #FFFFFF;
+  color: #051A24;
 }
+/* Legacy home-only class (still honoured) — hide non-editorial site-header. */
 body.theme-editorial-home .site-header { display: none; }
 body.theme-editorial-home { background: #FFFFFF; color: #051A24; }
 

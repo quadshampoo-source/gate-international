@@ -4,7 +4,6 @@ import { districtLabel } from '@/lib/districts';
 import { getProjects } from '@/lib/data';
 import { localizedName } from '@/lib/utils';
 import { FadeIn, ScrollReveal, Stagger } from '@/components/motion';
-import EditorialNavbar from '@/components/editorial/navbar';
 import EditorialServicesAccordion from '@/components/editorial/services-accordion';
 import EditorialTestimonials from '@/components/editorial/testimonials-carousel';
 import EditorialPricingCards from '@/components/editorial/pricing-cards';
@@ -82,8 +81,6 @@ export default async function HomeEditorial({ lang }) {
 
   return (
     <div className="fade-in" style={{ background: '#FFFFFF', color: '#051A24' }}>
-      <EditorialNavbar lang={lang} dict={t} contactHref={`/${lang}/contact`} />
-
       {/* ── Hero ───────────────────────────────────────────────────────── */}
       <section className="relative min-h-[100svh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">

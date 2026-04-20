@@ -2,8 +2,32 @@ import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
 import { districtLabel } from '@/lib/districts';
 
-export default function Footer({ lang }) {
+export default function Footer({ lang, theme }) {
   const dict = getDict(lang);
+  if (theme === 'editorial') {
+    return (
+      <footer className="py-16 md:py-20 text-center" style={{ borderTop: '1px solid #E0EBF0', background: '#FFFFFF', color: '#051A24' }}>
+        <div className="container-x">
+          <div className="font-editorial text-[26px] text-[#051A24] mb-3">
+            Gate <span className="italic">International</span>
+          </div>
+          <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#273C46] mb-6">
+            {dict.footer.cities}
+          </div>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] text-[#273C46]">
+            <Link href={`/${lang}/projects`} className="hover:text-[#051A24]">{dict.nav.projects}</Link>
+            <Link href={`/${lang}/services`} className="hover:text-[#051A24]">{dict.nav.services}</Link>
+            <Link href={`/${lang}/citizenship`} className="hover:text-[#051A24]">{dict.nav.citizenship}</Link>
+            <Link href={`/${lang}/about`} className="hover:text-[#051A24]">{dict.nav.about}</Link>
+            <Link href={`/${lang}/contact`} className="hover:text-[#051A24]">{dict.nav.contact}</Link>
+          </div>
+          <div className="font-mono text-[10px] tracking-[0.1em] mt-8" style={{ color: 'rgba(39,60,70,0.6)' }}>
+            {dict.footer.rights}
+          </div>
+        </div>
+      </footer>
+    );
+  }
   return (
     <footer className="bg-bg-sunken border-t border-line pt-20 pb-8">
       <div className="container-x">
