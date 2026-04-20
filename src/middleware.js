@@ -1,7 +1,19 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-const PUBLIC_ADMIN_PATHS = new Set(['/admin/login', '/admin/register']);
+const PUBLIC_ADMIN_PATHS = new Set([
+  '/admin/login',
+  '/admin/register',
+  '/admin/forgot-password',
+  '/admin/reset-password',
+]);
+// On these paths we must NOT redirect an already-logged-in user: the recovery
+// email establishes a short-lived session, and bouncing them to /admin would
+// skip the new-password form.
+const ALLOW_LOGGED_IN_PUBLIC = new Set([
+  '/admin/forgot-password',
+  '/admin/reset-password',
+]);
 
 export async function middleware(request) {
   let response = NextResponse.next({ request });
@@ -30,6 +42,7 @@ export async function middleware(request) {
 
   // Public admin pages
   if (PUBLIC_ADMIN_PATHS.has(pathname)) {
+    if (ALLOW_LOGGED_IN_PUBLIC.has(pathname)) return response;
     const { data } = await supabase.auth.getUser();
     if (data?.user) {
       // Already logged in — skip login/register pages.

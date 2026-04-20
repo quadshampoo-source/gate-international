@@ -47,7 +47,11 @@ export default async function LoginPage({ searchParams }) {
 
         <button className="admin-btn w-full" type="submit">Sign in</button>
 
-        <div className="text-center mt-6 text-[12px] text-fg-muted">
+        <div className="text-center mt-5 text-[12px]">
+          <a href="/admin/forgot-password" className="text-gold hover:underline">Forgot password?</a>
+        </div>
+
+        <div className="text-center mt-4 text-[12px] text-fg-muted">
           Need access? <a href="/admin/register" className="text-gold hover:underline">Request an account</a>
         </div>
       </form>
