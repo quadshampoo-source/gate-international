@@ -61,14 +61,26 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
   const waMsg = `${WHATSAPP_DEFAULT_MESSAGES[lang] || WHATSAPP_DEFAULT_MESSAGES.en} — ${name}`;
   const waHref = whatsappLink(waMsg, lang);
 
-  const priceFrom = project.price_usd ?? project.priceUsd;
-  const hasVideo = !!project.vimeo_id;
+  const priceFrom = project.priceUsd ?? project.price_usd;
+  const vimeoId = project.vimeoId ?? project.vimeo_id;
+  const hasVideo = !!vimeoId;
   const hasGallery = Array.isArray(project.gallery) && project.gallery.length > 0;
+  const distances = project.distances;
+  const hasDistances = distances && typeof distances === 'object' && Object.keys(distances).length > 0;
+  const priceTable = Array.isArray(project.priceTable) ? project.priceTable : null;
+  const paymentPlan = project.paymentPlan;
+  const hasPaymentPlan = paymentPlan && typeof paymentPlan === 'object' && Object.keys(paymentPlan).length > 0;
+  const reasons = Array.isArray(project.reasons) ? project.reasons.filter(Boolean) : [];
+
   const pad = (n) => String(n).padStart(2, '0');
   let n = 1; // Overview is always 01.
   const nVideo = hasVideo ? ++n : null;
   const nGallery = hasGallery ? ++n : null;
   const nSpecs = ++n;
+  const nDistances = hasDistances ? ++n : null;
+  const nPriceTable = priceTable && priceTable.length > 0 ? ++n : null;
+  const nPaymentPlan = hasPaymentPlan ? ++n : null;
+  const nReasons = reasons.length > 0 ? ++n : null;
   const nSimilar = similar.length > 0 ? ++n : null;
 
   return (
@@ -161,7 +173,7 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
       </section>
 
       {/* Video tour — Vimeo iframe, only if vimeo_id is set */}
-      {project.vimeo_id && (
+      {hasVideo && (
         <section className="py-16 md:py-20 bg-white">
           <div className="container-x max-w-[1080px]">
             <ScrollReveal>
@@ -180,7 +192,7 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
                 style={{ background: '#051A24', boxShadow: '0 30px 80px rgba(5,26,36,0.12)' }}
               >
                 <iframe
-                  src={`https://player.vimeo.com/video/${project.vimeo_id}?title=0&byline=0&portrait=0`}
+                  src={`https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0`}
                   allow="autoplay; fullscreen; picture-in-picture"
                   allowFullScreen
                   className="absolute inset-0 w-full h-full"
@@ -236,12 +248,155 @@ export default function EditorialProjectDetail({ project, lang, allProjects = []
               <Fact label={d.parking} value={project.parking ? `${project.parking} · ${d.coveredParking}` : null} />
               <Fact label={d.view} value={project.view} />
               <Fact label={t.detailExtra.developer} value={project.developer} />
-              <Fact label={t.detailExtra.totalUnits} value={project.total_units ?? project.totalUnits} />
+              <Fact label={t.detailExtra.totalUnits} value={project.totalUnits ?? project.total_units} />
               <Fact label={t.detailExtra.blocks} value={project.blocks} />
             </div>
           </Stagger>
         </div>
       </section>
+
+      {/* Distances */}
+      {hasDistances && (
+        <section className="py-16 md:py-20" style={{ background: '#F6FCFF' }}>
+          <div className="container-x">
+            <ScrollReveal>
+              <div className="mb-8 md:mb-10 max-w-[780px]">
+                <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">№ {pad(nDistances)} — {t.detailExtra.distances}</div>
+                <h2 className="font-editorial text-[32px] md:text-[44px] leading-[1.1] tracking-[-0.02em] text-[#051A24]">
+                  Getting <em className="italic">there.</em>
+                </h2>
+              </div>
+            </ScrollReveal>
+            <Stagger stagger={0.05}>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                {Object.entries(distances).map(([key, value]) => (
+                  <div
+                    key={key}
+                    className="p-5 rounded-[18px]"
+                    style={{ background: '#FFFFFF', border: '1px solid #E0EBF0' }}
+                  >
+                    <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-[#C9A84C] mb-2">
+                      {t.detailExtra[key] || key}
+                    </div>
+                    <div className="font-editorial text-[22px] text-[#051A24] leading-tight">
+                      {value} <span className="text-[12px] font-mono text-[#273C46]/60">{t.detailExtra.km}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Stagger>
+          </div>
+        </section>
+      )}
+
+      {/* Price table */}
+      {priceTable && priceTable.length > 0 && (
+        <section className="py-16 md:py-20 bg-white">
+          <div className="container-x max-w-[960px]">
+            <ScrollReveal>
+              <div className="mb-8 md:mb-10">
+                <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">№ {pad(nPriceTable)} — {t.detailExtra.priceTable}</div>
+                <h2 className="font-editorial text-[32px] md:text-[44px] leading-[1.1] tracking-[-0.02em] text-[#051A24]">
+                  Starting <em className="italic">prices.</em>
+                </h2>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <div
+                className="rounded-[22px] overflow-hidden"
+                style={{ background: '#F6FCFF', border: '1px solid #E0EBF0' }}
+              >
+                <div className="grid grid-cols-[1fr_auto] items-baseline px-6 py-4" style={{ borderBottom: '1px solid #E0EBF0' }}>
+                  <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C]">{t.detailExtra.unitType}</div>
+                  <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C]">{t.detailExtra.unitPrice}</div>
+                </div>
+                {priceTable.map((row, i) => (
+                  <div
+                    key={i}
+                    className="grid grid-cols-[1fr_auto] items-baseline px-6 py-4"
+                    style={{ borderBottom: i < priceTable.length - 1 ? '1px solid #E0EBF0' : 'none' }}
+                  >
+                    <div className="font-editorial text-[17px] text-[#051A24]">{row.type || row.unit || row.name}</div>
+                    <div className="font-mono text-[16px] text-[#051A24]">{row.price ? (typeof row.price === 'number' ? `$${row.price.toLocaleString()}` : row.price) : '—'}</div>
+                  </div>
+                ))}
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
+      {/* Payment plan */}
+      {hasPaymentPlan && (
+        <section className="py-16 md:py-20" style={{ background: '#F6FCFF' }}>
+          <div className="container-x max-w-[780px]">
+            <ScrollReveal>
+              <div className="mb-8 md:mb-10">
+                <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">№ {pad(nPaymentPlan)} — {t.detailExtra.paymentPlan}</div>
+                <h2 className="font-editorial text-[32px] md:text-[44px] leading-[1.1] tracking-[-0.02em] text-[#051A24]">
+                  Payment <em className="italic">plan.</em>
+                </h2>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+                {[
+                  ['downPayment', paymentPlan.downPayment || paymentPlan.down_payment],
+                  ['term', paymentPlan.term],
+                  ['interest', paymentPlan.interest],
+                ]
+                  .filter(([, v]) => v !== undefined && v !== null && v !== '')
+                  .map(([key, value]) => (
+                    <div
+                      key={key}
+                      className="p-6 rounded-[22px]"
+                      style={{ background: '#FFFFFF', border: '1px solid #E0EBF0' }}
+                    >
+                      <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-[#C9A84C] mb-2">
+                        {t.detailExtra[key] || key}
+                      </div>
+                      <div className="font-editorial text-[26px] text-[#051A24] leading-tight">
+                        {key === 'term' ? `${value} ${t.detailExtra.months}` : key === 'interest' ? `${value}%` : (typeof value === 'number' ? `${value}%` : value)}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
+      {/* Why this residence — reasons */}
+      {reasons.length > 0 && (
+        <section className="py-16 md:py-20 bg-white">
+          <div className="container-x max-w-[960px]">
+            <ScrollReveal>
+              <div className="mb-8 md:mb-10">
+                <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] mb-3">№ {pad(nReasons)} — {t.detailExtra.whyThis}</div>
+                <h2 className="font-editorial text-[32px] md:text-[44px] leading-[1.1] tracking-[-0.02em] text-[#051A24]">
+                  Why this <em className="italic">residence.</em>
+                </h2>
+              </div>
+            </ScrollReveal>
+            <Stagger stagger={0.06}>
+              <ul className="space-y-3">
+                {reasons.map((reason, i) => (
+                  <li
+                    key={i}
+                    className="flex items-baseline gap-4 p-5 rounded-[18px]"
+                    style={{ background: '#F6FCFF', border: '1px solid #E0EBF0' }}
+                  >
+                    <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-[#C9A84C] shrink-0">
+                      № {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="text-[15px] md:text-[16px] leading-relaxed text-[#051A24]">{reason}</span>
+                  </li>
+                ))}
+              </ul>
+            </Stagger>
+          </div>
+        </section>
+      )}
 
       {/* Similar */}
       {similar.length > 0 && (

@@ -42,15 +42,20 @@ export default function DetailClient({ project, lang, allProjects = [] }) {
 
   const isPlaceholderImg = !project.img || !project.img.trim() || project.img.includes('picsum.photos');
   const hasImg = !isPlaceholderImg;
-  const gallery = hasImg
-    ? [
-        project.img,
-        'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1600&q=80',
-        'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=1600&q=80',
-        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80',
-        'https://images.unsplash.com/photo-1615875605825-5eb9bb5d52ac?w=1600&q=80',
-      ]
-    : [];
+  // Prefer admin-uploaded gallery; fall back to a placeholder set when we have
+  // a hero image but no gallery yet.
+  const dbGallery = Array.isArray(project.gallery) ? project.gallery.filter(Boolean) : [];
+  const gallery = dbGallery.length
+    ? dbGallery
+    : hasImg
+      ? [
+          project.img,
+          'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1600&q=80',
+          'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=1600&q=80',
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80',
+          'https://images.unsplash.com/photo-1615875605825-5eb9bb5d52ac?w=1600&q=80',
+        ]
+      : [];
 
   const pool = allProjects.length ? allProjects : staticProjects;
   const similar = pool.filter((p) => p.id !== project.id && p.district === project.district).slice(0, 3);
