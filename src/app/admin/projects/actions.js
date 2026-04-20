@@ -49,6 +49,7 @@ function payloadFrom(formData) {
   const unitTypesCsv = String(formData.get('unit_types_csv') || '').trim();
   const reasonsLines = String(formData.get('reasons_lines') || '').trim();
   const galleryLines = String(formData.get('gallery_lines') || '').trim();
+  const galleryUrls = galleryLines ? galleryLines.split('\n').map((s) => s.trim()).filter(Boolean) : null;
   const num = (k) => {
     const v = formData.get(k);
     if (v === null || v === '') return null;
@@ -80,7 +81,8 @@ function payloadFrom(formData) {
     status: str('status'),
     category: str('category'),
     metro: formData.get('metro') === 'on',
-    img: str('img') || '',
+    // Cover photo = first gallery image (falls back to any existing img field).
+    img: (galleryUrls && galleryUrls[0]) || str('img') || '',
     vimeo_id: str('vimeo_id') || '',
     youtube_url: str('youtube_url') || '',
     total_units: num('total_units'),
@@ -91,7 +93,7 @@ function payloadFrom(formData) {
     price_table: parseJsonOrNull(String(formData.get('price_table') || '')),
     distances: parseJsonOrNull(String(formData.get('distances') || '')),
     reasons: reasonsLines ? reasonsLines.split('\n').map((s) => s.trim()).filter(Boolean) : null,
-    gallery: galleryLines ? galleryLines.split('\n').map((s) => s.trim()).filter(Boolean) : null,
+    gallery: galleryUrls,
     china_score: num('china_score'),
     arab_score: num('arab_score'),
   };

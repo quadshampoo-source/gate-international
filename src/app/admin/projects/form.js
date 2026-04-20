@@ -1,4 +1,5 @@
 import { DISTRICTS, TYPOLOGIES, CATEGORIES } from '@/lib/projects';
+import GalleryUpload from '@/components/admin/gallery-upload';
 
 export default function ProjectForm({ action, project = {}, isNew = false, deleteAction }) {
   const v = (k, fallback = '') => project[k] ?? fallback;
@@ -82,16 +83,17 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       </Row>
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Media</h3>
-      <Row label="Image URL"><input name="img" type="url" defaultValue={v('img')} className="admin-input" placeholder="https://… or upload below" /></Row>
-      <Row label="Upload cover photo">
-        <div className="flex items-center gap-5">
-          {v('img') && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={v('img')} alt="" className="w-20 h-20 rounded object-cover border border-line" />
-          )}
-          <input name="photo" type="file" accept="image/jpeg,image/png,image/webp" className="text-[13px]" />
-          <span className="text-[11px] text-fg-dim">Max 10 MB · JPEG/PNG/WebP. Overrides Image URL.</span>
-        </div>
+      <Row label="Gallery & cover photo">
+        <GalleryUpload
+          initialUrls={
+            Array.isArray(project?.gallery) && project.gallery.length > 0
+              ? project.gallery
+              : (project.img ? [project.img] : [])
+          }
+        />
+        <p className="text-[11px] text-fg-dim mt-3">
+          İlk görsel otomatik kapak fotoğrafıdır. Sürükleyerek sıralamayı değiştirebilirsin. Max 12 görsel.
+        </p>
       </Row>
       <Row label="Vimeo ID">
         <input
@@ -111,16 +113,6 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
         <p className="text-[11px] text-fg-dim mt-1.5">
           Vimeo ID doluyken YouTube yok sayılır. YouTube için shorts, embed ve youtu.be kısa linkleri de desteklenir.
         </p>
-      </Row>
-      <Row label="Gallery image URLs (one per line)">
-        <textarea
-          name="gallery_lines"
-          defaultValue={Array.isArray(project?.gallery) ? project.gallery.join('\n') : ''}
-          rows={6}
-          className="admin-input font-mono text-[12px]"
-          style={{ resize: 'vertical' }}
-          placeholder={'https://example.com/photo-1.jpg\nhttps://example.com/photo-2.jpg'}
-        />
       </Row>
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Project scale</h3>
