@@ -44,7 +44,7 @@ export default async function AdminSettingsPage({ searchParams }) {
         <form action={setActiveTheme}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {THEMES.map((t) => {
-              const disabled = t.key === 'minimal';
+              const disabled = false;
               const selected = active === t.key;
               return (
                 <label
@@ -111,6 +111,23 @@ function ThemePreview({ theme }) {
         <div className="absolute inset-4 backdrop-blur-md bg-bg-raised/40 border border-gold/20 rounded-2xl flex flex-col justify-end p-3">
           <div className="h-4 bg-fg/15 w-3/4 rounded" />
           <div className="h-2 bg-fg/10 w-1/2 rounded mt-2" />
+        </div>
+      </div>
+    );
+  }
+  if (theme === 'editorial') {
+    return (
+      <div className="mt-4 aspect-[16/9] bg-white rounded-[16px] overflow-hidden relative">
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #FFFFFF 0%, #F6FCFF 100%)' }} />
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 h-5 w-[64%] rounded-full bg-white border border-[#E0EBF0] shadow-sm" />
+        <div className="absolute inset-x-6 top-12 flex flex-col items-center gap-1.5">
+          <div className="w-[70%] h-3 bg-[#051A24] rounded-sm" />
+          <div className="w-[50%] h-2 bg-[#C9A84C] rounded-sm" />
+        </div>
+        <div className="absolute inset-x-6 bottom-3 flex gap-1.5">
+          <div className="flex-1 h-3 bg-[#F6FCFF] rounded-sm border border-[#E0EBF0]" />
+          <div className="flex-1 h-3 bg-[#F6FCFF] rounded-sm border border-[#E0EBF0]" />
+          <div className="flex-1 h-3 bg-[#F6FCFF] rounded-sm border border-[#E0EBF0]" />
         </div>
       </div>
     );

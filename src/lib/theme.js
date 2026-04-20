@@ -1,9 +1,9 @@
 import { supabaseServer } from '@/lib/supabase/server';
 
 export const THEMES = [
-  { key: 'classic', label: 'Classic', description: 'Current editorial design — dark with gold hairlines.' },
+  { key: 'classic', label: 'Classic', description: 'Dark, gold hairlines — the flagship portfolio aesthetic.' },
   { key: 'cinematic', label: 'Cinematic', description: 'Liquid glass surfaces, animated gradient orbs, softer motion.' },
-  { key: 'minimal', label: 'Minimal', description: 'Coming soon — reduced palette, print-inspired.' },
+  { key: 'editorial', label: 'Editorial', description: 'Northbound-inspired: white ground, serif + mono, pill glass navigation.' },
 ];
 
 export const DEFAULT_THEME = 'classic';
