@@ -2,14 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-// Horizontal scroll gallery (not a slider). Large images flow side-by-side.
-// Supports mouse drag, native touch swipe, and a thin progress bar instead
-// of dots. Images hover-zoom slightly. Scrollbar is hidden.
+// Apple-style horizontal scroll gallery. Native CSS scroll-snap handles
+// snapping; pointer-drag is layered on top for desktop mouse users. Touch
+// falls through to native smooth swipe. Responsive card widths:
+//   mobile  — 85vw (max 600 px)
+//   tablet  — 42vw (max 560 px)
+//   desktop — 30vw (max 520 px)
+// scroll-snap-align: center keeps the focused card in the middle of the
+// viewport. A thin gold progress bar (≤200 px, centred) replaces dot
+// pagination — no small touch targets.
 export default function GalleryScroll({ images = [] }) {
   const scrollRef = useRef(null);
   const [progress, setProgress] = useState(0);
-  const drag = useRef({ active: false, startX: 0, startScroll: 0, moved: 0 });
   const [isDragging, setIsDragging] = useState(false);
+  const drag = useRef({ active: false, startX: 0, startScroll: 0, moved: 0 });
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -28,16 +34,19 @@ export default function GalleryScroll({ images = [] }) {
     };
   }, [images.length]);
 
+  // Touch uses native swipe + CSS snap. Mouse/pen gets a drag layer so
+  // desktop users don't have to find the scrollbar.
   const onPointerDown = (e) => {
     const el = scrollRef.current;
-    if (!el || e.pointerType === 'touch') return; // let touch do native scroll
+    if (!el || e.pointerType === 'touch') return;
     try { el.setPointerCapture(e.pointerId); } catch {}
     drag.current.active = true;
     drag.current.startX = e.clientX;
     drag.current.startScroll = el.scrollLeft;
     drag.current.moved = 0;
     setIsDragging(true);
-    el.style.scrollBehavior = 'auto';
+    // Disable snap while the pointer is held so dragging feels continuous.
+    el.style.scrollSnapType = 'none';
   };
   const onPointerMove = (e) => {
     const el = scrollRef.current;
@@ -51,7 +60,8 @@ export default function GalleryScroll({ images = [] }) {
     if (!el) return;
     drag.current.active = false;
     setIsDragging(false);
-    el.style.scrollBehavior = '';
+    // Re-enable snap — browser snaps to the nearest card on release.
+    el.style.scrollSnapType = '';
   };
   const onClickCapture = (e) => {
     if (drag.current.moved > 5) { e.preventDefault(); e.stopPropagation(); }
@@ -81,48 +91,72 @@ export default function GalleryScroll({ images = [] }) {
         onPointerCancel={endDrag}
         onPointerLeave={endDrag}
         onClickCapture={onClickCapture}
-        className="gallery-scroll flex gap-5 md:gap-6 overflow-x-auto pb-4"
+        className="gallery-scroll flex gap-4 overflow-x-auto"
         style={{
+          scrollSnapType: 'x mandatory',
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
-          cursor: isDragging ? 'grabbing' : 'grab',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
+          paddingLeft: 24,
+          paddingRight: 24,
+          cursor: isDragging ? 'grabbing' : 'grab',
           userSelect: isDragging ? 'none' : 'auto',
         }}
       >
-        <style>{`.gallery-scroll::-webkit-scrollbar { display: none; }`}</style>
-        <div className="shrink-0 w-6 md:w-10" aria-hidden />
+        <style>{`
+          .gallery-scroll::-webkit-scrollbar { display: none; }
+          .gallery-scroll .gallery-item { flex: 0 0 85vw; max-width: 600px; }
+          @media (min-width: 768px) {
+            .gallery-scroll .gallery-item { flex: 0 0 42vw; max-width: 560px; }
+          }
+          @media (min-width: 1024px) {
+            .gallery-scroll .gallery-item { flex: 0 0 30vw; max-width: 520px; }
+          }
+          .gallery-scroll .gallery-item:hover img { transform: scale(1.04); }
+        `}</style>
+
         {images.map((src, i) => (
-          <div
+          <figure
             key={i}
-            className="shrink-0 group overflow-hidden rounded-[12px]"
+            className="gallery-item group overflow-hidden rounded-[12px] relative m-0"
             style={{
-              width: 'clamp(280px, 72vw, 960px)',
-              aspectRatio: '16 / 10',
+              aspectRatio: '4 / 3',
+              scrollSnapAlign: 'center',
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={src}
               alt=""
-              loading="lazy"
+              loading={i <= 1 ? 'eager' : 'lazy'}
               draggable={false}
-              className="w-full h-full object-cover transition-transform duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.03] pointer-events-none"
+              className="w-full h-full object-cover pointer-events-none"
+              style={{ transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}
             />
-          </div>
+          </figure>
         ))}
-        <div className="shrink-0 w-6 md:w-10" aria-hidden />
       </div>
 
-      {/* Thin progress bar */}
-      <div className="container-x mt-4">
-        <div className="relative h-[2px] rounded-full overflow-hidden" style={{ background: 'rgb(var(--c-line))' }}>
-          <div
-            className="absolute left-0 top-0 h-full rounded-full transition-[width] duration-200"
-            style={{ width: `${Math.max(8, progress * 100)}%`, background: '#C9A84C' }}
-          />
-        </div>
+      {/* Progress bar — 2 px tall, centred, max 200 px wide, gold fill.
+          Uses --c-line so the track stays visible on both light and dark. */}
+      <div
+        className="relative mx-auto mt-6 overflow-hidden"
+        style={{
+          height: 2,
+          maxWidth: 200,
+          background: 'rgb(var(--c-line))',
+          borderRadius: 1,
+        }}
+      >
+        <div
+          className="h-full rounded-[1px]"
+          style={{
+            width: `${Math.max(8, progress * 100)}%`,
+            background: '#C9A84C',
+            transition: 'width 0.3s ease',
+          }}
+        />
       </div>
     </section>
   );
