@@ -10,7 +10,11 @@ export default async function ProjectsPage({ params }) {
   const { lang } = await params;
   const [projects, theme] = await Promise.all([getProjects(), getActiveTheme()]);
   if (theme === 'editorial') {
-    return <EditorialProjects lang={lang} projects={projects} />;
+    return (
+      <Suspense fallback={<div className="pt-[180px] container-x">Loading…</div>}>
+        <EditorialProjects lang={lang} projects={projects} />
+      </Suspense>
+    );
   }
   return (
     <Suspense fallback={<div className="pt-[180px] container-x">Loading…</div>}>

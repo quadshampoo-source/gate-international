@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { getDict } from '@/lib/i18n';
 import { localizedName } from '@/lib/utils';
 import { districtLabel, DISTRICT_NAMES } from '@/lib/districts';
@@ -74,8 +75,15 @@ function Pill({ active, onClick, children }) {
 
 export default function EditorialProjects({ lang, projects = [] }) {
   const t = getDict(lang);
+  const searchParams = useSearchParams();
   const [q, setQ] = useState('');
-  const [district, setDistrict] = useState('all');
+  // Accept ?district= from the URL (location cards + home filter bar). Only
+  // honour values that actually exist in the current project set; otherwise
+  // fall back to "all" rather than showing an unintentionally empty grid.
+  const [district, setDistrict] = useState(() => {
+    const d = searchParams?.get('district');
+    return d && projects.some((p) => p.district === d) ? d : 'all';
+  });
   const [budget, setBudget] = useState('all');
 
   const districtCodes = useMemo(() => {
