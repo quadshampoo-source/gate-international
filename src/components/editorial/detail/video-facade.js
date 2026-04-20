@@ -19,12 +19,25 @@ export default function VideoFacade({ video, poster, title, kicker = '№ 05 —
     >
       <div className="container-x mb-10 md:mb-14">
         <div
-          className="font-mono text-[10px] md:text-[11px] uppercase text-[#C9A84C] mb-4"
-          style={{ letterSpacing: '3px' }}
+          className="font-mono mb-4"
+          style={{
+            fontSize: 12,
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            color: '#C9A84C',
+          }}
         >
           {kicker}
         </div>
-        <h2 className="font-editorial text-[36px] md:text-[56px] leading-[1.08] tracking-[-0.02em]">
+        <h2
+          className="font-editorial"
+          style={{
+            fontSize: 'clamp(28px, 5vw, 48px)',
+            fontWeight: 400,
+            lineHeight: 1.1,
+            letterSpacing: '-0.02em',
+          }}
+        >
           Watch the <em className="italic">residence.</em>
         </h2>
       </div>

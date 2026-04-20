@@ -73,12 +73,25 @@ export default function GalleryScroll({ images = [] }) {
     <section className="py-20 md:py-28 overflow-hidden" style={{ background: 'rgb(var(--c-bg))' }}>
       <div className="container-x mb-10 md:mb-14">
         <div
-          className="font-mono text-[10px] md:text-[11px] uppercase text-[#C9A84C] mb-4"
-          style={{ letterSpacing: '3px' }}
+          className="font-mono mb-4"
+          style={{
+            fontSize: 12,
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            color: '#C9A84C',
+          }}
         >
           № 04 — GALLERY
         </div>
-        <h2 className="font-editorial text-[36px] md:text-[56px] leading-[1.08] tracking-[-0.02em]">
+        <h2
+          className="font-editorial"
+          style={{
+            fontSize: 'clamp(28px, 5vw, 48px)',
+            fontWeight: 400,
+            lineHeight: 1.1,
+            letterSpacing: '-0.02em',
+          }}
+        >
           Interior <em className="italic">studies.</em>
         </h2>
       </div>

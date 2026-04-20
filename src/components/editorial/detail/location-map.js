@@ -12,12 +12,25 @@ export default function LocationMap({ district, city = 'Istanbul', projectName }
     >
       <div className="container-x">
         <div
-          className="font-mono text-[10px] md:text-[11px] uppercase text-[#C9A84C] mb-5"
-          style={{ letterSpacing: '3px' }}
+          className="font-mono mb-5"
+          style={{
+            fontSize: 12,
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            color: '#C9A84C',
+          }}
         >
           № 06 — LOCATION
         </div>
-        <h2 className="font-editorial text-[48px] md:text-[104px] leading-[0.98] tracking-[-0.02em]">
+        <h2
+          className="font-editorial"
+          style={{
+            fontSize: 'clamp(40px, 9vw, 104px)',
+            fontWeight: 400,
+            lineHeight: 0.98,
+            letterSpacing: '-0.02em',
+          }}
+        >
           {district}
           <span className="text-[#C9A84C]"> · </span>
           <span className="italic">{city}.</span>
