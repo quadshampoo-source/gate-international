@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
 import { districtLabel } from '@/lib/districts';
-import { getProjects } from '@/lib/data';
+import { getProjects, getDistricts } from '@/lib/data';
+import { DEFAULT_DISTRICT_IMAGES, coverOfProject } from '@/lib/district-images';
 import { localizedName } from '@/lib/utils';
 import { FadeIn, ScrollReveal, Stagger } from '@/components/motion';
 import WordReveal from '@/components/editorial/home/word-reveal';
@@ -60,7 +61,7 @@ function ProjectTile({ project, lang, index, size = 'small' }) {
 
 export default async function HomeEditorial({ lang }) {
   const t = getDict(lang);
-  const [all, testimonials] = await Promise.all([getProjects(), getTestimonials()]);
+  const [all, testimonials, districts] = await Promise.all([getProjects(), getTestimonials(), getDistricts()]);
   const featured = all.slice(0, 6);
   const marqueeSource = all.slice(0, 18);
   const mappedTestimonials = testimonials.map((r) => ({ name: r.name, role: r.role, quote: r.quote }));
@@ -106,22 +107,50 @@ export default async function HomeEditorial({ lang }) {
     Bursa: [{ value: 'Bursa', label: districtLabel('Bursa', lang), count: byCity.Bursa.length }],
   };
 
-  // Location cards — the six headline neighbourhoods with counts + a
-  // stock photograph each. Links route to /projects pre-filtered or
-  // into the dedicated district guides (Bodrum + Bursa).
-  const locationCards = [
-    { name: 'Sarıyer',   district: 'Sariyer',   image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=85' },
-    { name: 'Beşiktaş',  district: 'Beşiktaş',  image: 'https://images.unsplash.com/photo-1605296830682-d1e3619e50ed?w=800&q=85' },
-    { name: 'Beyoğlu',   district: 'Beyoğlu',   image: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=800&q=85' },
-    { name: 'Şişli',     district: 'Şişli',     image: 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=800&q=85' },
-    { name: 'Bodrum',    district: 'Bodrum',    image: 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800&q=85', href: `/${lang}/districts/bodrum` },
-    { name: 'Bursa',     district: 'Bursa',     image: 'https://images.unsplash.com/photo-1542317854-b935c7dc9bb6?w=800&q=85', href: `/${lang}/districts/bursa` },
-  ].map((loc) => ({
-    name: districtLabel(loc.district, lang),
-    image: loc.image,
-    count: (istanbulCounts[loc.district] ?? byCity[loc.district]?.length ?? 0),
-    href: loc.href || `/${lang}/projects?district=${encodeURIComponent(loc.district)}`,
-  }));
+  // Location cards — fetched from the `districts` table when populated.
+  // For each district we try: admin-uploaded image → first project's cover
+  // → hardcoded Unsplash default → gradient (handled by LocationsRail).
+  // Fall back to a hardcoded six-card list if the table is empty or
+  // missing (e.g. migration not run yet).
+  const projectsByDistrict = {};
+  for (const p of all) {
+    const k = (p.district || '').trim();
+    if (!k) continue;
+    (projectsByDistrict[k] ||= []).push(p);
+  }
+  const countFor = (districtName) => (projectsByDistrict[districtName] || []).length;
+  const hrefFor = (districtName) => {
+    if (districtName === 'Bodrum') return `/${lang}/districts/bodrum`;
+    if (districtName === 'Bursa') return `/${lang}/districts/bursa`;
+    return `/${lang}/projects?district=${encodeURIComponent(districtName)}`;
+  };
+  const resolveImage = (dbDistrict) => {
+    if (dbDistrict?.image) return dbDistrict.image;
+    const firstProject = (projectsByDistrict[dbDistrict?.name] || [])[0];
+    const cover = coverOfProject(firstProject);
+    if (cover) return cover;
+    return DEFAULT_DISTRICT_IMAGES[dbDistrict?.name] || null;
+  };
+
+  let locationCards;
+  if (districts && districts.length > 0) {
+    locationCards = districts
+      .filter((d) => countFor(d.name) > 0 || d.image)
+      .map((d) => ({
+        name: districtLabel(d.name, lang),
+        image: resolveImage(d),
+        count: countFor(d.name),
+        href: hrefFor(d.name),
+      }));
+  } else {
+    const fallback = ['Sariyer', 'Beşiktaş', 'Beyoğlu', 'Şişli', 'Bodrum', 'Bursa'];
+    locationCards = fallback.map((name) => ({
+      name: districtLabel(name, lang),
+      image: coverOfProject((projectsByDistrict[name] || [])[0]) || DEFAULT_DISTRICT_IMAGES[name] || null,
+      count: countFor(name),
+      href: hrefFor(name),
+    }));
+  }
 
   return (
     <div className="fade-in" style={{ background: '#FFFFFF', color: '#051A24' }}>

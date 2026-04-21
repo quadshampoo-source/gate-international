@@ -4,6 +4,7 @@ import { logout } from '../login/actions';
 const NAV_ADMIN = [
   { k: 'dashboard', label: 'Dashboard', href: '/admin' },
   { k: 'projects', label: 'Projects', href: '/admin/projects' },
+  { k: 'districts', label: 'Districts', href: '/admin/districts' },
   { k: 'team', label: 'Team', href: '/admin/team' },
   { k: 'testimonials', label: 'Testimonials', href: '/admin/testimonials' },
   { k: 'users', label: 'Users', href: '/admin/users' },

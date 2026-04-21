@@ -69,6 +69,22 @@ export async function getProjects() {
   }
 }
 
+export async function getDistricts() {
+  try {
+    const s = await supabaseServer();
+    const { data, error } = await s
+      .from('districts')
+      .select('*')
+      .eq('is_visible', true)
+      .order('sort_order', { ascending: true })
+      .order('name', { ascending: true });
+    if (error || !data) return [];
+    return data;
+  } catch {
+    return [];
+  }
+}
+
 export async function getProject(id) {
   try {
     const s = await supabaseServer();
