@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import DetailClient from '@/components/detail-client';
 import EditorialProjectDetail from '@/components/editorial/project-detail';
+import AtomProjectDetail from '@/components/atom/project-detail';
 import { LOCALES } from '@/lib/i18n';
 import { PROJECTS } from '@/lib/projects';
 import { getProject, getProjects } from '@/lib/data';
@@ -30,6 +31,9 @@ export default async function ProjectDetailPage({ params }) {
   const project = await getProject(id);
   if (!project) notFound();
   const [all, theme] = await Promise.all([getProjects(), getActiveTheme()]);
+  if (theme === 'atom') {
+    return <AtomProjectDetail project={project} lang={lang} allProjects={all} />;
+  }
   if (theme === 'editorial') {
     return <EditorialProjectDetail project={project} lang={lang} allProjects={all} />;
   }

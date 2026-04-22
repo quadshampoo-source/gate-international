@@ -5,6 +5,7 @@ export const THEMES = [
   { key: 'cinematic', label: 'Cinematic', description: 'Liquid glass surfaces, animated gradient orbs, softer motion.' },
   { key: 'editorial', label: 'Gate', description: 'The flagship Gate International theme — white ground, serif + mono, pill glass navigation.' },
   { key: 'legacy', label: 'Legacy Editorial', description: 'Cormorant Garamond + warm cream. Hero with search bar overlap, city ticker, editorial long-form.' },
+  { key: 'atom', label: 'Atom', description: 'Modern SaaS — Inter, gradient-border cards, coral search, primary purple CTAs. Light first.' },
 ];
 
 export const DEFAULT_THEME = 'classic';
