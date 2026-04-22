@@ -1,0 +1,360 @@
+/*
+ * Atom admin skin — opt-in layer activated by the `.atom-admin` class on
+ * <body>. All selectors are compound (.atom-admin .admin-*) so the classic
+ * theme continues to work whenever the class is absent.
+ *
+ * Backup of the original rules lives alongside this file as
+ * admin.classic.css.
+ */
+
+.atom-admin {
+  background: var(--neutral-50);
+  color: var(--neutral-900);
+  font-family: var(--atom-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Shell ──────────────────────────────────────────────────── */
+.atom-admin .admin-shell {
+  background: var(--neutral-50);
+  color: var(--neutral-900);
+}
+
+/* ── Topbar ─────────────────────────────────────────────────── */
+.atom-admin .admin-topbar {
+  background: var(--atom-white);
+  border-bottom: 1px solid var(--neutral-200);
+  padding: 18px 32px;
+  box-shadow: var(--atom-shadow-sm);
+}
+.atom-admin .admin-brand {
+  font-family: var(--atom-font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--neutral-900);
+  letter-spacing: -0.01em;
+}
+.atom-admin .admin-brand em {
+  font-style: normal;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.atom-admin .admin-topbar a { color: var(--neutral-500); }
+.atom-admin .admin-topbar a:hover { color: var(--primary-600); }
+.atom-admin .admin-topbar span[style*="--c-gold"],
+.atom-admin .admin-topbar .text-gold {
+  color: var(--primary-600) !important;
+  border-color: var(--primary-200) !important;
+}
+
+/* ── Grid + sidebar ─────────────────────────────────────────── */
+.atom-admin .admin-grid { background: var(--neutral-50); }
+.atom-admin .admin-side {
+  background: var(--atom-white);
+  border-right: 1px solid var(--neutral-200);
+  padding: 24px 16px;
+}
+.atom-admin .admin-side a {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neutral-500);
+  border-left: none;
+  border-radius: var(--atom-radius-md);
+  transition: var(--atom-transition);
+}
+.atom-admin .admin-side a:hover {
+  background: var(--primary-50);
+  color: var(--primary-700);
+}
+.atom-admin .admin-side a.active {
+  background: var(--gradient-cta);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+/* ── Main content area ─────────────────────────────────────── */
+.atom-admin .admin-main { padding: 36px 40px; }
+.atom-admin .admin-main h1 {
+  font-family: var(--atom-font-sans);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--neutral-900);
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+@media (max-width: 900px) { .atom-admin .admin-main { padding: 24px 20px; } }
+
+/* ── Inputs ────────────────────────────────────────────────── */
+.atom-admin .admin-input,
+.atom-admin .admin-textarea,
+.atom-admin .admin-select {
+  background: var(--atom-white);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--atom-radius-md);
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--neutral-900);
+  font-family: var(--atom-font-sans);
+  transition: var(--atom-transition);
+}
+.atom-admin .admin-input::placeholder,
+.atom-admin .admin-textarea::placeholder { color: var(--neutral-400); }
+.atom-admin .admin-input:focus,
+.atom-admin .admin-textarea:focus,
+.atom-admin .admin-select:focus {
+  border-color: var(--primary-500);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.atom-admin .admin-btn {
+  background: var(--gradient-cta);
+  color: #fff;
+  border: none;
+  border-radius: var(--atom-radius-md);
+  padding: 12px 22px;
+  font-family: var(--atom-font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: var(--atom-shadow-cta);
+  transition: var(--atom-transition);
+}
+.atom-admin .admin-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--atom-shadow-cta-hover);
+  filter: none;
+}
+.atom-admin .admin-btn.secondary {
+  background: var(--atom-white);
+  color: var(--neutral-700);
+  border: 1px solid var(--neutral-200);
+  box-shadow: var(--atom-shadow-sm);
+}
+.atom-admin .admin-btn.secondary:hover {
+  color: var(--primary-700);
+  border-color: var(--primary-200);
+  background: var(--primary-50);
+  transform: none;
+}
+.atom-admin .admin-btn.danger {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  box-shadow: none;
+}
+.atom-admin .admin-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+  transform: none;
+}
+
+/* ── Rows (label + field) ──────────────────────────────────── */
+.atom-admin .admin-row {
+  grid-template-columns: 200px 1fr;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--neutral-200);
+}
+.atom-admin .admin-row:last-child { border-bottom: none; }
+.atom-admin .admin-row label {
+  font-family: var(--atom-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--neutral-700);
+  padding-top: 12px;
+}
+
+/* ── Table ─────────────────────────────────────────────────── */
+.atom-admin .admin-table {
+  background: var(--atom-white);
+  border-radius: var(--atom-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--atom-shadow-md);
+}
+.atom-admin .admin-table th {
+  background: var(--neutral-100);
+  font-family: var(--atom-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--neutral-500);
+  border-bottom: 1px solid var(--neutral-200);
+  padding: 14px 16px;
+}
+.atom-admin .admin-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--neutral-100);
+  color: var(--neutral-700);
+  font-size: 14px;
+}
+.atom-admin .admin-table tr:last-child td { border-bottom: none; }
+.atom-admin .admin-table tr:hover td { background: var(--primary-50); }
+.atom-admin .admin-table a { color: var(--primary-600); font-weight: 500; }
+.atom-admin .admin-table a:hover { color: var(--primary-700); text-decoration: underline; }
+.atom-admin .border.border-line {
+  border: none;
+  background: transparent;
+}
+
+/* Drag handles keep accent — switch gold → primary. */
+.atom-admin .admin-table td.drag-handle { color: var(--primary-500); opacity: 0.55; }
+.atom-admin .admin-table tr:hover td.drag-handle { opacity: 1; }
+.atom-admin .admin-table tr.dragging td { background: var(--primary-100); opacity: 0.5; }
+.atom-admin .admin-table tr.drag-over td { box-shadow: inset 0 2px 0 0 var(--primary-500); }
+.atom-admin .admin-table .move-btn {
+  border-color: var(--neutral-200);
+  color: var(--neutral-500);
+  border-radius: var(--atom-radius-sm);
+}
+.atom-admin .admin-table .move-btn:hover:not(:disabled) {
+  color: var(--primary-600);
+  border-color: var(--primary-200);
+  background: var(--primary-50);
+}
+
+/* ── Save-order floating bar ───────────────────────────────── */
+.atom-admin .save-order-bar {
+  background: var(--atom-white);
+  border: 1px solid var(--primary-200);
+  border-radius: var(--atom-radius-lg);
+  padding: 14px 18px;
+  box-shadow: var(--atom-shadow-md);
+}
+.atom-admin .save-order-bar > span:first-child { color: var(--primary-700); }
+.atom-admin .save-order-btn {
+  background: var(--gradient-cta);
+  color: #fff;
+  border: none;
+  border-radius: var(--atom-radius-md);
+  padding: 10px 18px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+  box-shadow: var(--atom-shadow-cta);
+}
+.atom-admin .save-order-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--atom-shadow-cta-hover);
+  filter: none;
+}
+.atom-admin .cancel-order-btn {
+  background: var(--atom-white);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--atom-radius-md);
+  color: var(--neutral-500);
+  padding: 10px 16px;
+}
+.atom-admin .cancel-order-btn:hover:not(:disabled) {
+  color: var(--primary-700);
+  border-color: var(--primary-200);
+  background: var(--primary-50);
+}
+
+/* ── Option pickers / groups ───────────────────────────────── */
+.atom-admin .btn-group { gap: 8px; }
+.atom-admin .btn-option {
+  background: var(--atom-white);
+  border: 1px solid var(--neutral-200);
+  color: var(--neutral-700);
+  border-radius: var(--atom-radius-pill);
+  padding: 8px 14px;
+}
+.atom-admin .btn-option:hover {
+  color: var(--primary-700);
+  border-color: var(--primary-200);
+  background: var(--primary-50);
+}
+.atom-admin .btn-option.active {
+  background: var(--gradient-cta);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.atom-admin .option-row {
+  background: var(--atom-white);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--atom-radius-md);
+  padding: 12px;
+}
+.atom-admin .price-prefix { color: var(--primary-600); }
+.atom-admin .btn-remove {
+  background: var(--atom-white);
+  border: 1px solid var(--neutral-200);
+  color: var(--neutral-400);
+  border-radius: var(--atom-radius-sm);
+}
+.atom-admin .btn-remove:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+.atom-admin .btn-add-option {
+  border: 1px dashed var(--primary-200);
+  color: var(--primary-600);
+  border-radius: var(--atom-radius-md);
+  padding: 12px 16px;
+  background: var(--primary-50);
+}
+.atom-admin .btn-add-option:hover {
+  border-color: var(--primary-500);
+  background: var(--primary-100);
+}
+.atom-admin .form-hint { color: var(--neutral-500); }
+
+/* ── Misc tweaks — font stacks, gold refs ──────────────────── */
+.atom-admin [class*="font-mono"] { font-family: var(--atom-font-sans); letter-spacing: 0; text-transform: none; }
+.atom-admin .text-gold { color: var(--primary-600) !important; }
+.atom-admin .text-fg-muted { color: var(--neutral-500) !important; }
+.atom-admin .text-fg { color: var(--neutral-900) !important; }
+.atom-admin .bg-bg-raised { background: var(--neutral-100) !important; }
+
+/* ── Style toggle button ───────────────────────────────────── */
+.admin-style-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-family: var(--atom-font-sans);
+  font-weight: 500;
+  border-radius: var(--atom-radius-pill);
+  border: 1px solid rgb(var(--c-line));
+  color: rgb(var(--c-fg-muted));
+  background: transparent;
+  cursor: pointer;
+  transition: var(--atom-transition);
+}
+.admin-style-toggle:hover {
+  color: rgb(var(--c-gold));
+  border-color: rgb(var(--c-gold) / 0.6);
+}
+.atom-admin .admin-style-toggle {
+  background: var(--primary-50);
+  color: var(--primary-700);
+  border-color: var(--primary-200);
+}
+.atom-admin .admin-style-toggle:hover {
+  background: var(--primary-100);
+  border-color: var(--primary-500);
+}
+.admin-style-toggle .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgb(var(--c-gold));
+  transition: background 0.2s ease;
+}
+.atom-admin .admin-style-toggle .dot { background: var(--primary-500); }

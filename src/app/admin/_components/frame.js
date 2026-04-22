@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { logout } from '../login/actions';
+import AdminStyleToggle from './style-toggle';
 
 const NAV_ADMIN = [
   { k: 'dashboard', label: 'Dashboard', href: '/admin' },
@@ -33,6 +34,7 @@ export default function AdminFrame({ active, userEmail, role = 'editor', childre
           )}
         </div>
         <div className="flex items-center gap-4 text-xs">
+          <AdminStyleToggle />
           <span className="text-fg-muted">{userEmail}</span>
           <form action={logout}>
             <button className="admin-btn secondary" type="submit">Sign out</button>
