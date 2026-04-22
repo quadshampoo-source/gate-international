@@ -152,7 +152,7 @@ export default async function HomeEditorial({ lang }) {
     <div className="fade-in" style={{ background: '#FFFFFF', color: '#051A24' }}>
       {/* ── Hero ───────────────────────────────────────────────────────── */}
       <section className="relative min-h-[100svh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0" style={{ background: '#0a101c' }}>
           <video
             src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260302_085640_276ea93b-d7da-4418-a09b-2aa5b490e838.mp4"
             autoPlay
@@ -160,9 +160,9 @@ export default async function HomeEditorial({ lang }) {
             loop
             playsInline
             preload="auto"
-            poster="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=2400&q=85"
             aria-hidden
             className="absolute inset-0 w-full h-full object-cover"
+            style={{ background: '#0a101c' }}
           />
           <div
             className="absolute inset-0 backdrop-blur-[2px]"
