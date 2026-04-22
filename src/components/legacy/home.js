@@ -101,7 +101,18 @@ export default async function LegacyHome({ lang = 'en' }) {
 
       {/* Hero */}
       <section className="hero">
-        <div className="hero-bg" style={{ backgroundImage: `url(${heroBg})` }} />
+        <div className="hero-bg">
+          <video
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260302_085640_276ea93b-d7da-4418-a09b-2aa5b490e838.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={heroBg}
+            aria-hidden
+          />
+        </div>
         <div className="hero-inner">
           <h1>Where vision meets <span className="ital">legacy.</span></h1>
           <div className="hero-sub">Istanbul · Bodrum · Bursa</div>
