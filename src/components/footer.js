@@ -3,9 +3,6 @@ import { getDict } from '@/lib/i18n';
 import { districtLabel } from '@/lib/districts';
 
 export default function Footer({ lang, theme }) {
-  // Atom pages render their own AtomFooter; skip the global footer entirely
-  // while the atom theme is active.
-  if (theme === 'atom') return null;
   const dict = getDict(lang);
   if (theme === 'editorial') {
     return (

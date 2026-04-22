@@ -27,9 +27,6 @@ const MOBILE_NAV = [
 ];
 
 export default function Header({ lang, theme, logoUrl = null, logoAlt = null }) {
-  // Atom theme brings its own nav on every atom-rendered page, so the global
-  // site header sits this one out to avoid stacking two navbars.
-  if (theme === 'atom') return null;
   const dict = getDict(lang);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
