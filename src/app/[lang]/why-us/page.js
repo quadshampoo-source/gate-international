@@ -4,6 +4,7 @@ import { DEVELOPERS } from '@/lib/projects';
 import { ShieldIcon, AwardIcon, GlobeIcon, KeyIcon, CheckIcon } from '@/components/icons';
 import { FadeIn, ScrollReveal, Counter, Marquee } from '@/components/motion';
 import EditorialWhyUs from '@/components/editorial/why-us';
+import AtomWhyUs from '@/components/atom/why-us';
 import { getActiveTheme } from '@/lib/theme';
 import { getTestimonials } from '@/lib/testimonials';
 
@@ -21,6 +22,7 @@ const PRESS = ['Bloomberg', 'Reuters', 'Al Arabiya', '财经', 'Hurriyet', 'Forb
 export default async function WhyUsPage({ params }) {
   const { lang } = await params;
   const theme = await getActiveTheme();
+  if (theme === 'atom') return <AtomWhyUs lang={lang} />;
   if (theme === 'editorial') {
     const testimonials = await getTestimonials();
     const mapped = testimonials.map((r) => ({ name: r.name, role: r.role, quote: r.quote }));

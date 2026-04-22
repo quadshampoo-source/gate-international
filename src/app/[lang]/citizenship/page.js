@@ -7,6 +7,8 @@ import Accordion from '@/components/cinematic/accordion';
 import OrbBackdrop from '@/components/cinematic/orb-backdrop';
 import { ShieldIcon, AwardIcon, GlobeIcon, CheckIcon } from '@/components/icons';
 import EditorialCitizenship from '@/components/editorial/citizenship';
+import AtomCitizenship from '@/components/atom/citizenship';
+import AtomShell from '@/components/atom/shell';
 import { getActiveTheme } from '@/lib/theme';
 
 export const revalidate = 60;
@@ -41,6 +43,7 @@ const WHY_ICONS = [
 export default async function CitizenshipPage({ params }) {
   const { lang } = await params;
   const theme = await getActiveTheme();
+  if (theme === 'atom') return <AtomShell lang={lang}><AtomCitizenship lang={lang} /></AtomShell>;
   if (theme === 'editorial') return <EditorialCitizenship lang={lang} />;
   const t = getDict(lang).citizenshipV2;
   const badges = [t.b1, t.b2, t.b3, t.b4];

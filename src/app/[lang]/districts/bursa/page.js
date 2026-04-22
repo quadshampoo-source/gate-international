@@ -7,6 +7,7 @@ import { ScrollReveal, FadeIn, Counter } from '@/components/motion';
 import BlurText from '@/components/cinematic/blur-text';
 import OrbBackdrop from '@/components/cinematic/orb-backdrop';
 import EditorialDistrict from '@/components/editorial/district';
+import AtomDistrict from '@/components/atom/district';
 import { getActiveTheme } from '@/lib/theme';
 
 export const revalidate = 60;
@@ -34,6 +35,8 @@ export default async function BursaGuidePage({ params }) {
   const t = getDict(lang);
   const all = await getProjects();
   const bursa = all.filter((p) => p.district === 'Bursa');
+
+  if (theme === 'atom') return <AtomDistrict lang={lang} district="Bursa" projects={all} />;
 
   if (theme === 'editorial') {
     return (

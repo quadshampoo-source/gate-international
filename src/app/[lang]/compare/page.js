@@ -4,6 +4,7 @@ import { DISTRICTS } from '@/lib/projects';
 import { getProjects } from '@/lib/data';
 import { getActiveTheme } from '@/lib/theme';
 import EditorialCompare from '@/components/editorial/compare';
+import AtomCompare from '@/components/atom/compare';
 
 export const revalidate = 60;
 
@@ -54,6 +55,7 @@ export default async function ComparePage({ params }) {
     };
   });
 
+  if (theme === 'atom') return <AtomCompare lang={lang} projects={projects} />;
   if (theme === 'editorial') return <EditorialCompare lang={lang} rows={rows} c={c} />;
 
   const growthLabel = (g) => (g === 'high' ? c.high : g === 'medium' ? c.medium : c.stable);

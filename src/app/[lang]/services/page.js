@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
 import { getActiveTheme } from '@/lib/theme';
 import EditorialServices from '@/components/editorial/services';
+import AtomServices from '@/components/atom/services';
 
 const CORE_ICONS = ['🗺️', '🇹🇷', '📜', '🗣️', '🏠', '🛋️', '💳', '🏦', '📊', '📦'];
 const EXTRA_ICONS = ['💎', '💻', '🏢', '📋', '⛵', '🚗', '📖', '🎥'];
@@ -9,6 +10,7 @@ const EXTRA_ICONS = ['💎', '💻', '🏢', '📋', '⛵', '🚗', '📖', '�
 export default async function ServicesPage({ params }) {
   const { lang } = await params;
   const theme = await getActiveTheme();
+  if (theme === 'atom') return <AtomServices lang={lang} />;
   if (theme === 'editorial') return <EditorialServices lang={lang} />;
   const t = getDict(lang);
   const s = t.services;

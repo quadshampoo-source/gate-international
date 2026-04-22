@@ -5,6 +5,7 @@ import { BODRUM_SUB_DISTRICTS } from '@/lib/projects';
 import ProjectCard from '@/components/project-card';
 import { ScrollReveal, FadeIn, Counter } from '@/components/motion';
 import EditorialDistrict from '@/components/editorial/district';
+import AtomDistrict from '@/components/atom/district';
 import { getActiveTheme } from '@/lib/theme';
 
 export const revalidate = 60;
@@ -23,6 +24,8 @@ export default async function BodrumGuidePage({ params }) {
   const t = getDict(lang);
   const all = await getProjects();
   const bodrum = all.filter((p) => p.district === 'Bodrum');
+
+  if (theme === 'atom') return <AtomDistrict lang={lang} district="Bodrum" projects={all} />;
 
   if (theme === 'editorial') {
     return (

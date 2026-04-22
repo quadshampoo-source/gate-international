@@ -1,6 +1,7 @@
 import { getDict } from '@/lib/i18n';
 import { getActiveTheme } from '@/lib/theme';
 import EditorialAbout from '@/components/editorial/about';
+import AtomAbout from '@/components/atom/about';
 
 const TEAM = [
   { name: 'Emre Altınok', role: 'Founding Partner', bio: 'Twenty years in Istanbul prime. Former BCG. Wharton MBA.', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80' },
@@ -21,6 +22,7 @@ const LICENSES = [
 export default async function AboutPage({ params }) {
   const { lang } = await params;
   const theme = await getActiveTheme();
+  if (theme === 'atom') return <AtomAbout lang={lang} />;
   if (theme === 'editorial') return <EditorialAbout lang={lang} />;
   const t = getDict(lang);
 

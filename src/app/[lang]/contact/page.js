@@ -1,5 +1,6 @@
 import ContactClient from '@/components/contact-client';
 import EditorialContact from '@/components/editorial/contact';
+import AtomContact from '@/components/atom/contact';
 import { getTeamGroupedByOffice } from '@/lib/team';
 import { getActiveTheme } from '@/lib/theme';
 
@@ -11,6 +12,9 @@ export default async function ContactPage({ params }) {
     getTeamGroupedByOffice(),
     getActiveTheme(),
   ]);
+  if (theme === 'atom') {
+    return <AtomContact lang={lang} team={teamGroups} />;
+  }
   if (theme === 'editorial') {
     return <EditorialContact lang={lang} teamGroups={teamGroups} />;
   }
