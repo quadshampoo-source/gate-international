@@ -115,12 +115,13 @@ export default function FilterBar({ lang, cities = [], districtsBy = {} }) {
           text-transform: uppercase; color: #C9A84C; margin-bottom: 4px; font-weight: 600;
         }
         .filter-bar .trigger {
-          display: flex; align-items: center; justify-content: space-between; gap: 6px;
-          width: 100%; padding: 8px 10px;
+          display: flex; align-items: center; justify-content: space-between; gap: 8px;
+          width: 100%; padding: 12px 14px;
           background: rgba(0,0,0,0.02);
           border: 1px solid rgba(0,0,0,0.08);
-          border-radius: 8px;
-          font-size: 13px; color: #1a1a2e; cursor: pointer;
+          border-radius: 10px;
+          font-size: 15px; font-weight: 500; color: #1a1a2e; cursor: pointer;
+          letter-spacing: -0.005em;
           transition: background 0.2s ease, border-color 0.2s ease;
         }
         .filter-bar .trigger > span {
@@ -174,12 +175,12 @@ export default function FilterBar({ lang, cities = [], districtsBy = {} }) {
         html[data-theme="dark"] .filter-bar .count { color: rgba(255,255,255,0.4); }
 
         .filter-bar .search-btn {
-          display: flex; align-items: center; gap: 6px;
-          padding: 8px 16px; min-height: 36px;
+          display: inline-flex; align-items: center; justify-content: center;
+          width: 48px; height: 48px; padding: 0;
           background: #1a1a2e; color: #fff;
-          border: none; border-radius: 8px;
-          font-size: 13px; font-weight: 500; cursor: pointer;
-          white-space: nowrap; flex-shrink: 0;
+          border: none; border-radius: 10px;
+          cursor: pointer; flex-shrink: 0;
+          align-self: flex-end;
           position: relative; overflow: hidden;
           transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease;
         }
@@ -192,9 +193,8 @@ export default function FilterBar({ lang, cities = [], districtsBy = {} }) {
         @media (max-width: 380px) {
           .filter-bar { margin-left: 12px; margin-right: 12px; }
           .filter-bar .inner { gap: 6px; padding: 12px; }
-          .filter-bar .trigger { padding: 8px 6px; font-size: 12px; }
-          .filter-bar .search-btn { padding: 8px 12px; font-size: 12px; }
-          .filter-bar .search-btn span { display: none; }
+          .filter-bar .trigger { padding: 10px 10px; font-size: 13px; }
+          .filter-bar .search-btn { width: 42px; height: 42px; }
         }
       `}</style>
 
@@ -276,10 +276,15 @@ export default function FilterBar({ lang, cities = [], districtsBy = {} }) {
           </div>
         </div>
 
-        {/* Search */}
-        <button type="button" className="search-btn" onClick={onSearch}>
-          <span>Search</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        {/* Search — icon only, so City and District get room to breathe. */}
+        <button
+          type="button"
+          className="search-btn"
+          onClick={onSearch}
+          aria-label="Search"
+          title="Search"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
