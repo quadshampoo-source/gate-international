@@ -30,7 +30,7 @@ const SORTS = [
 
 const priceOf = (p) => Number(p.priceUsd ?? p.price_usd) || 0;
 
-export default function AtomProjectsList({ lang = 'en', projects = [] }) {
+export default function AtomProjectsList({ lang = 'en', projects = [], logoUrl = null, logoAlt = null }) {
   const [city, setCity] = useState('all');
   const [type, setType] = useState('all');
   const [sortKey, setSortKey] = useState('sort');
@@ -47,7 +47,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
 
   return (
     <div style={{ background: 'var(--neutral-50)', color: 'var(--neutral-900)', fontFamily: 'var(--atom-font-sans)' }}>
-      <AtomNav lang={lang} />
+      <AtomNav lang={lang} logoUrl={logoUrl} logoAlt={logoAlt} />
 
       <section className="pt-32 md:pt-40 pb-10 md:pb-14">
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">

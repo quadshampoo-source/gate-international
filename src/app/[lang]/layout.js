@@ -5,6 +5,7 @@ import Analytics from '@/components/analytics';
 import WhatsappFab from '@/components/whatsapp-fab';
 import { LOCALES, DEFAULT_LOCALE, dirOf, getDict } from '@/lib/i18n';
 import { getActiveTheme } from '@/lib/theme';
+import { getSiteSettings } from '@/lib/site-settings';
 import { getTeam } from '@/lib/team';
 import { notFound } from 'next/navigation';
 
@@ -57,7 +58,7 @@ export default async function LangLayout({ children, params }) {
   const { lang } = await params;
   if (!LOCALES.includes(lang)) notFound();
   const dir = dirOf(lang);
-  const [team, theme] = await Promise.all([getTeam(), getActiveTheme()]);
+  const [team, theme, settings] = await Promise.all([getTeam(), getActiveTheme(), getSiteSettings()]);
   const bodyClass = theme === 'editorial' ? 'theme-editorial' : '';
   return (
     <html lang={lang} dir={dir} data-theme="light" data-active-theme={theme}>
@@ -66,7 +67,7 @@ export default async function LangLayout({ children, params }) {
       </head>
       <body className={bodyClass}>
         <Analytics />
-        <Header lang={lang} theme={theme} />
+        <Header lang={lang} theme={theme} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
         <main className="pt-0">
           <PageTransition>{children}</PageTransition>
         </main>

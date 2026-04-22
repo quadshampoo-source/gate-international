@@ -4,6 +4,7 @@ import EditorialProjects from '@/components/editorial/projects';
 import AtomProjectsList from '@/components/atom/projects-list';
 import { getProjects } from '@/lib/data';
 import { getActiveTheme } from '@/lib/theme';
+import { getSiteSettings } from '@/lib/site-settings';
 
 export const revalidate = 60;
 
@@ -11,9 +12,10 @@ export default async function ProjectsPage({ params }) {
   const { lang } = await params;
   const [projects, theme] = await Promise.all([getProjects(), getActiveTheme()]);
   if (theme === 'atom') {
+    const settings = await getSiteSettings();
     return (
       <Suspense fallback={<div className="pt-[180px] px-6">Loading…</div>}>
-        <AtomProjectsList lang={lang} projects={projects} />
+        <AtomProjectsList lang={lang} projects={projects} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
       </Suspense>
     );
   }

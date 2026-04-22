@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import SiteLogo from '@/components/site-logo';
 
 const LABELS = {
   en: { projects: 'Projects', services: 'Services', about: 'About', contact: 'Contact', cta: 'Get in touch' },
@@ -13,7 +14,7 @@ const LABELS = {
   fr: { projects: 'Projets', services: 'Services', about: 'À propos', contact: 'Contact', cta: 'Contactez-nous' },
 };
 
-export default function AtomNav({ lang = 'en' }) {
+export default function AtomNav({ lang = 'en', logoUrl = null, logoAlt = null }) {
   const [scrolled, setScrolled] = useState(false);
   const labels = LABELS[lang] || LABELS.en;
 
@@ -35,25 +36,13 @@ export default function AtomNav({ lang = 'en' }) {
       }}
     >
       <div className="max-w-[1360px] mx-auto flex items-center justify-between px-6 md:px-10 py-4 md:py-5">
-        <Link href={`/${lang}`} className="inline-flex items-center gap-3">
-          <span
-            aria-hidden
-            className="inline-grid place-items-center font-bold"
-            style={{
-              width: 36, height: 36,
-              borderRadius: 10,
-              background: 'var(--gradient-cta)',
-              color: '#fff',
-              fontSize: 18,
-              boxShadow: '0 4px 12px rgba(99,102,241,0.30)',
-            }}
-          >
-            G
-          </span>
-          <span className="hidden sm:inline font-semibold text-base" style={{ color: 'var(--neutral-900)' }}>
-            Gate International
-          </span>
-        </Link>
+        <SiteLogo
+          lang={lang}
+          logoUrl={logoUrl}
+          logoAlt={logoAlt}
+          variant="atom"
+          height={32}
+        />
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium" style={{ color: 'var(--neutral-700)' }}>
           <Link href={`/${lang}/projects`} className="hover:text-atom-primary-600 transition-colors">{labels.projects}</Link>

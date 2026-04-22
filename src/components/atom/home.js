@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getProjects, getDistricts } from '@/lib/data';
 import { getTestimonials } from '@/lib/testimonials';
+import { getSiteSettings } from '@/lib/site-settings';
 import AtomNav from './nav';
 import AtomFooter from './footer';
 import AtomProjectCard from './project-card';
@@ -19,10 +20,11 @@ const SERVICES = [
 ];
 
 export default async function AtomHome({ lang = 'en' }) {
-  const [projects, districts, testimonials] = await Promise.all([
+  const [projects, districts, testimonials, settings] = await Promise.all([
     getProjects(),
     getDistricts(),
     getTestimonials(),
+    getSiteSettings(),
   ]);
   const isRtl = RTL_LANGS.has(lang);
   const featured = projects.slice(0, 6);
@@ -30,7 +32,7 @@ export default async function AtomHome({ lang = 'en' }) {
 
   return (
     <div dir={isRtl ? 'rtl' : 'ltr'} style={{ background: 'var(--neutral-50)', color: 'var(--neutral-900)', fontFamily: 'var(--atom-font-sans)' }}>
-      <AtomNav lang={lang} />
+      <AtomNav lang={lang} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
 
       {/* Hero */}
       <section className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">

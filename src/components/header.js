@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { getDict } from '@/lib/i18n';
 import ThemeToggle from '@/components/theme-toggle';
 import LangDropdown from '@/components/lang-dropdown';
+import SiteLogo from '@/components/site-logo';
 
 // Desktop nav (contact is promoted to a CTA button on the right)
 const NAV = [
@@ -25,7 +26,7 @@ const MOBILE_NAV = [
   { key: 'contact', path: 'contact' },
 ];
 
-export default function Header({ lang, theme }) {
+export default function Header({ lang, theme, logoUrl = null, logoAlt = null }) {
   const dict = getDict(lang);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -62,12 +63,14 @@ export default function Header({ lang, theme }) {
               border: '0.5px solid rgba(5,26,36,0.08)',
             }}
           >
-            <Link
-              href={`/${lang}`}
-              className="font-editorial text-[16px] md:text-[17px] text-[#051A24] leading-none pr-2 md:pr-3 whitespace-nowrap"
-            >
-              Gate <span className="italic">International</span>
-            </Link>
+            <SiteLogo
+              lang={lang}
+              logoUrl={logoUrl}
+              logoAlt={logoAlt}
+              variant="editorial"
+              className="pr-2 md:pr-3 text-[#051A24]"
+            />
+
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <LangDropdown lang={lang} />
@@ -120,12 +123,22 @@ export default function Header({ lang, theme }) {
     <>
       <header className={`site-header${scrolled || pathname !== `/${lang}` ? ' scrolled' : ''}`}>
         <div className="container-x flex items-center justify-between gap-4 md:gap-6 py-[18px] md:py-[22px]">
-          <Link href={`/${lang}`} className="flex items-baseline gap-2.5 cursor-pointer flex-shrink-0">
-            <span className="w-2 h-2 bg-gold rounded-full self-center flex-shrink-0" />
-            <span className="font-serif text-[15px] md:text-lg tracking-[0.08em] font-medium whitespace-nowrap">
-              {dict.brand}
-            </span>
-          </Link>
+          {logoUrl ? (
+            <SiteLogo
+              lang={lang}
+              logoUrl={logoUrl}
+              logoAlt={logoAlt}
+              variant="mark"
+              className="flex-shrink-0"
+            />
+          ) : (
+            <Link href={`/${lang}`} className="flex items-baseline gap-2.5 cursor-pointer flex-shrink-0" aria-label="Gate International">
+              <span className="w-2 h-2 bg-gold rounded-full self-center flex-shrink-0" />
+              <span className="font-serif text-[15px] md:text-lg tracking-[0.08em] font-medium whitespace-nowrap">
+                {dict.brand}
+              </span>
+            </Link>
+          )}
 
           <div className="flex items-center gap-3 flex-shrink-0">
             <ThemeToggle />

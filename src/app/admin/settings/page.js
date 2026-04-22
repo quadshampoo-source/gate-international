@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import AdminFrame from '../_components/frame';
 import { currentProfile } from '@/lib/supabase/server';
@@ -23,7 +24,10 @@ export default async function AdminSettingsPage({ searchParams }) {
 
   return (
     <AdminFrame active="settings" userEmail={user?.email} role="admin">
-      <h1>Site Settings</h1>
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <h1 className="mb-0">Site Settings</h1>
+        <Link href="/admin/settings/branding" className="admin-btn secondary">Branding & logo →</Link>
+      </div>
 
       {sp?.saved && (
         <div className="text-[#4ade80] text-sm mb-6">✓ Theme saved. Public pages revalidated.</div>

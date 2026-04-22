@@ -3,6 +3,7 @@ import './theme.css';
 import { getProjects, getDistricts } from '@/lib/data';
 import { getTestimonials } from '@/lib/testimonials';
 import { getAllTeamMembers } from '@/lib/team';
+import { getSiteSettings } from '@/lib/site-settings';
 import LegacyNav from './nav';
 import LegacySearchBar from './search-bar';
 import LegacyProperties from './properties';
@@ -68,11 +69,12 @@ const NEWS = [
 ];
 
 export default async function LegacyHome({ lang = 'en' }) {
-  const [projects, districts, testimonials, team] = await Promise.all([
+  const [projects, districts, testimonials, team, settings] = await Promise.all([
     getProjects(),
     getDistricts(),
     getTestimonials(),
     getAllTeamMembers().catch(() => []),
+    getSiteSettings(),
   ]);
 
   const isRtl = RTL_LANGS.has(lang);
@@ -97,7 +99,7 @@ export default async function LegacyHome({ lang = 'en' }) {
 
   return (
     <div className="legacy" dir={isRtl ? 'rtl' : 'ltr'}>
-      <LegacyNav lang={lang} labels={labels} />
+      <LegacyNav lang={lang} labels={labels} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
 
       {/* Hero */}
       <section className="hero">

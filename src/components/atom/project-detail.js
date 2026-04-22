@@ -3,6 +3,7 @@ import AtomNav from './nav';
 import AtomFooter from './footer';
 import AtomProjectCard from './project-card';
 import { Button, Card } from '@/components/ui';
+import { getSiteSettings } from '@/lib/site-settings';
 
 function fmtUsd(n) {
   if (!n) return '—';
@@ -15,7 +16,8 @@ function cover(p) {
   return p.img || null;
 }
 
-export default function AtomProjectDetail({ project, lang = 'en', allProjects = [] }) {
+export default async function AtomProjectDetail({ project, lang = 'en', allProjects = [] }) {
+  const settings = await getSiteSettings();
   const img = cover(project);
   const price = project.priceUsd ?? project.price_usd;
   const options = Array.isArray(project.options) ? project.options.filter((o) => o && (o.type || o.size || o.price)) : [];
@@ -32,7 +34,7 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
 
   return (
     <div style={{ background: 'var(--neutral-50)', color: 'var(--neutral-900)', fontFamily: 'var(--atom-font-sans)' }}>
-      <AtomNav lang={lang} />
+      <AtomNav lang={lang} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
 
       {/* Hero */}
       <section className="pt-28 md:pt-36 pb-8 md:pb-12">

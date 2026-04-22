@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import SiteLogo from '@/components/site-logo';
 
-export default function LegacyNav({ lang, labels }) {
+export default function LegacyNav({ lang, labels, logoUrl = null, logoAlt = null }) {
   const [scrolled, setScrolled] = useState(false);
   const [dark, setDark] = useState(false);
 
@@ -31,13 +32,14 @@ export default function LegacyNav({ lang, labels }) {
 
   return (
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
-      <Link href={`/${lang}`} className="logo-group" aria-label="Gate International">
-        <span className="logo-mark">G</span>
-        <span>
-          <span className="logo-text">Gate International</span>
-          <span className="logo-sub" style={{ display: 'block' }}>EST. 2009</span>
-        </span>
-      </Link>
+      <SiteLogo
+        lang={lang}
+        logoUrl={logoUrl}
+        logoAlt={logoAlt}
+        variant="legacy"
+        height={32}
+        className="logo-group"
+      />
 
       <ul className="nav-links">
         <li><Link href={`/${lang}/projects`}>{labels.projects}</Link></li>
