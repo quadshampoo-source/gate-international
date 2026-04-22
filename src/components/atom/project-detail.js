@@ -1,9 +1,6 @@
 import Link from 'next/link';
-import AtomNav from './nav';
-import AtomFooter from './footer';
 import AtomProjectCard from './project-card';
 import { Button, Card } from '@/components/ui';
-import { getSiteSettings } from '@/lib/site-settings';
 
 function fmtUsd(n) {
   if (!n) return '—';
@@ -16,8 +13,7 @@ function cover(p) {
   return p.img || null;
 }
 
-export default async function AtomProjectDetail({ project, lang = 'en', allProjects = [] }) {
-  const settings = await getSiteSettings();
+export default function AtomProjectDetail({ project, lang = 'en', allProjects = [] }) {
   const img = cover(project);
   const price = project.priceUsd ?? project.price_usd;
   const options = Array.isArray(project.options) ? project.options.filter((o) => o && (o.type || o.size || o.price)) : [];
@@ -33,9 +29,7 @@ export default async function AtomProjectDetail({ project, lang = 'en', allProje
   const similar = (allProjects || []).filter((p) => p.id !== project.id && p.district === project.district).slice(0, 3);
 
   return (
-    <div style={{ background: 'var(--neutral-50)', color: 'var(--neutral-900)', fontFamily: 'var(--atom-font-sans)' }}>
-      <AtomNav lang={lang} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
-
+    <>
       {/* Hero */}
       <section className="pt-28 md:pt-36 pb-8 md:pb-12">
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">
@@ -177,8 +171,7 @@ export default async function AtomProjectDetail({ project, lang = 'en', allProje
         </section>
       )}
 
-      <AtomFooter lang={lang} />
-    </div>
+    </>
   );
 }
 

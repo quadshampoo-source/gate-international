@@ -1,26 +1,12 @@
 import Link from 'next/link';
-import './theme.css';
 import { getProjects, getDistricts } from '@/lib/data';
 import { getTestimonials } from '@/lib/testimonials';
 import { getAllTeamMembers } from '@/lib/team';
-import { getSiteSettings } from '@/lib/site-settings';
-import LegacyNav from './nav';
 import LegacySearchBar from './search-bar';
 import LegacyProperties from './properties';
 import LegacyTestimonials from './testimonials';
 import LegacyFaqs from './faqs';
 import LegacyCta from './cta';
-
-const RTL_LANGS = new Set(['ar', 'fa']);
-
-const NAV_LABELS = {
-  en: { projects: 'Projects', services: 'Services', citizenship: 'Citizenship', about: 'About', contact: 'Contact', cta: 'Book Consultation' },
-  ar: { projects: 'المشاريع', services: 'الخدمات', citizenship: 'الجنسية', about: 'من نحن', contact: 'تواصل', cta: 'احجز استشارة' },
-  zh: { projects: '项目', services: '服务', citizenship: '护照项目', about: '关于', contact: '联系', cta: '预约咨询' },
-  ru: { projects: 'Проекты', services: 'Услуги', citizenship: 'Гражданство', about: 'О нас', contact: 'Контакт', cta: 'Консультация' },
-  fa: { projects: 'پروژه\u200cها', services: 'خدمات', citizenship: 'شهروندی', about: 'درباره', contact: 'تماس', cta: 'مشاوره' },
-  fr: { projects: 'Projets', services: 'Services', citizenship: 'Citoyenneté', about: 'À propos', contact: 'Contact', cta: 'Consultation' },
-};
 
 const CITIES = [
   { name: 'Istanbul', coord: '41.0082° N' },
@@ -69,16 +55,13 @@ const NEWS = [
 ];
 
 export default async function LegacyHome({ lang = 'en' }) {
-  const [projects, districts, testimonials, team, settings] = await Promise.all([
+  const [projects, districts, testimonials, team] = await Promise.all([
     getProjects(),
     getDistricts(),
     getTestimonials(),
     getAllTeamMembers().catch(() => []),
-    getSiteSettings(),
   ]);
 
-  const isRtl = RTL_LANGS.has(lang);
-  const labels = NAV_LABELS[lang] || NAV_LABELS.en;
   const districtNames = (districts || []).map((d) => d.name).filter(Boolean).slice(0, 14);
 
   // Hero background image — first project exterior if available.
@@ -98,9 +81,7 @@ export default async function LegacyHome({ lang = 'en' }) {
   const agents = (team || []).filter((m) => m.active !== false).slice(0, 4);
 
   return (
-    <div className="legacy" dir={isRtl ? 'rtl' : 'ltr'}>
-      <LegacyNav lang={lang} labels={labels} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
-
+    <>
       {/* Hero */}
       <section className="hero">
         <div className="hero-bg">
@@ -295,64 +276,6 @@ export default async function LegacyHome({ lang = 'en' }) {
 
       {/* CTA */}
       <LegacyCta lang={lang} />
-
-      {/* Footer */}
-      <footer className="foot">
-        <div className="container">
-          <div className="foot-top">
-            <div className="foot-brand">
-              <span className="logo-group">
-                <span className="logo-mark">G</span>
-                <span>
-                  <span className="logo-text">Gate International</span>
-                  <span className="logo-sub" style={{ display: 'block' }}>EST. 2009</span>
-                </span>
-              </span>
-              <p>A boutique advisory for premium Turkish residences. Istanbul, Bodrum and Bursa — sourced privately, underwritten carefully.</p>
-            </div>
-            <div className="foot-col">
-              <h4>Properties</h4>
-              <ul>
-                <li><Link href={`/${lang}/projects?district=Beşiktaş`}>Istanbul</Link></li>
-                <li><Link href={`/${lang}/districts/bodrum`}>Bodrum</Link></li>
-                <li><Link href={`/${lang}/districts/bursa`}>Bursa</Link></li>
-                <li><Link href={`/${lang}/projects`}>All Properties</Link></li>
-              </ul>
-            </div>
-            <div className="foot-col">
-              <h4>Services</h4>
-              <ul>
-                <li><Link href={`/${lang}/citizenship`}>Citizenship</Link></li>
-                <li><Link href={`/${lang}/about`}>Legal</Link></li>
-                <li><Link href={`/${lang}/about`}>After-Sale</Link></li>
-                <li><Link href={`/${lang}/about`}>Concierge</Link></li>
-              </ul>
-            </div>
-            <div className="foot-col">
-              <h4>Company</h4>
-              <ul>
-                <li><Link href={`/${lang}/about`}>About</Link></li>
-                <li><Link href={`/${lang}/about`}>Team</Link></li>
-                <li><Link href={`/${lang}/about`}>Blog</Link></li>
-                <li><Link href={`/${lang}/contact`}>Contact</Link></li>
-              </ul>
-            </div>
-            <div className="foot-col">
-              <h4>Connect</h4>
-              <ul>
-                <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-                <li><a href="https://wa.me/" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
-                <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-                <li><a href="https://youtube.com" target="_blank" rel="noopener noreferrer">YouTube</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="foot-bot">
-            <span>© 2026 Gate International</span>
-            <span>Privacy · Terms · Cookies</span>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </>
   );
 }

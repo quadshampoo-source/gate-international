@@ -1,14 +1,9 @@
 import Link from 'next/link';
 import { getProjects, getDistricts } from '@/lib/data';
 import { getTestimonials } from '@/lib/testimonials';
-import { getSiteSettings } from '@/lib/site-settings';
-import AtomNav from './nav';
-import AtomFooter from './footer';
 import AtomProjectCard from './project-card';
 import AtomHeroSearch from './hero-search';
 import { Button, Card, StatCard, PillTag, IconContainer } from '@/components/ui';
-
-const RTL_LANGS = new Set(['ar', 'fa']);
 
 const SERVICES = [
   { title: 'Citizenship pathway', body: 'End-to-end legal guidance from purchase to passport — drafting, filing, follow-up with Nüfus.', link: 'Learn more' },
@@ -20,20 +15,16 @@ const SERVICES = [
 ];
 
 export default async function AtomHome({ lang = 'en' }) {
-  const [projects, districts, testimonials, settings] = await Promise.all([
+  const [projects, districts, testimonials] = await Promise.all([
     getProjects(),
     getDistricts(),
     getTestimonials(),
-    getSiteSettings(),
   ]);
-  const isRtl = RTL_LANGS.has(lang);
   const featured = projects.slice(0, 6);
   const districtNames = (districts || []).map((d) => d.name).filter(Boolean);
 
   return (
-    <div dir={isRtl ? 'rtl' : 'ltr'} style={{ background: 'var(--neutral-50)', color: 'var(--neutral-900)', fontFamily: 'var(--atom-font-sans)' }}>
-      <AtomNav lang={lang} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
-
+    <>
       {/* Hero */}
       <section className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
         <AtomHero aura />
@@ -234,8 +225,7 @@ export default async function AtomHome({ lang = 'en' }) {
         </div>
       </section>
 
-      <AtomFooter lang={lang} />
-    </div>
+    </>
   );
 }
 

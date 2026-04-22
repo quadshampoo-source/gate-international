@@ -12,10 +12,9 @@ export default async function ProjectsPage({ params }) {
   const { lang } = await params;
   const [projects, theme] = await Promise.all([getProjects(), getActiveTheme()]);
   if (theme === 'atom') {
-    const settings = await getSiteSettings();
     return (
       <Suspense fallback={<div className="pt-[180px] px-6">Loading…</div>}>
-        <AtomProjectsList lang={lang} projects={projects} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
+        <AtomProjectsList lang={lang} projects={projects} />
       </Suspense>
     );
   }

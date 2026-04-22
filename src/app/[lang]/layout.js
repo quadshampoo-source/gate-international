@@ -1,11 +1,9 @@
-import Header from '@/components/header';
-import Footer from '@/components/footer';
+import ThemeShell from '@/components/theme-shell';
 import PageTransition from '@/components/page-transition';
 import Analytics from '@/components/analytics';
 import WhatsappFab from '@/components/whatsapp-fab';
 import { LOCALES, DEFAULT_LOCALE, dirOf, getDict } from '@/lib/i18n';
 import { getActiveTheme } from '@/lib/theme';
-import { getSiteSettings } from '@/lib/site-settings';
 import { getTeam } from '@/lib/team';
 import { notFound } from 'next/navigation';
 
@@ -58,7 +56,7 @@ export default async function LangLayout({ children, params }) {
   const { lang } = await params;
   if (!LOCALES.includes(lang)) notFound();
   const dir = dirOf(lang);
-  const [team, theme, settings] = await Promise.all([getTeam(), getActiveTheme(), getSiteSettings()]);
+  const [team, theme] = await Promise.all([getTeam(), getActiveTheme()]);
   const bodyClass = theme === 'editorial' ? 'theme-editorial' : '';
   return (
     <html lang={lang} dir={dir} data-theme="light" data-active-theme={theme}>
@@ -67,11 +65,9 @@ export default async function LangLayout({ children, params }) {
       </head>
       <body className={bodyClass}>
         <Analytics />
-        <Header lang={lang} theme={theme} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
-        <main className="pt-0">
+        <ThemeShell theme={theme} lang={lang}>
           <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer lang={lang} theme={theme} />
+        </ThemeShell>
         <WhatsappFab lang={lang} team={team} />
       </body>
     </html>

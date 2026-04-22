@@ -1,30 +1,11 @@
-import AtomNav from './nav';
-import AtomFooter from './footer';
-import { getSiteSettings } from '@/lib/site-settings';
-
-const RTL_LANGS = new Set(['ar', 'fa']);
-
-/**
- * Common shell for every inner Atom page — renders the nav, page body slot,
- * and footer with a consistent cream background and Inter font. Async so it
- * can pull the current logo from Supabase and pass it into the nav.
- */
-export default async function AtomShell({ lang = 'en', children, containerless = false }) {
-  const settings = await getSiteSettings();
-  const isRtl = RTL_LANGS.has(lang);
+// Thin wrapper for Atom inner pages. The outer chrome (nav + footer) now
+// comes from `components/shells/atom-shell.js` via the global ThemeShell in
+// [lang]/layout.js — this only provides top padding for nav clearance on
+// pages whose content starts without a hero of its own.
+export default function AtomShell({ children, containerless = false }) {
   return (
-    <div
-      dir={isRtl ? 'rtl' : 'ltr'}
-      style={{
-        background: 'var(--neutral-50)',
-        color: 'var(--neutral-900)',
-        fontFamily: 'var(--atom-font-sans)',
-        minHeight: '100vh',
-      }}
-    >
-      <AtomNav lang={lang} logoUrl={settings.logoUrl} logoAlt={settings.logoAlt} />
-      <main className={containerless ? '' : 'pt-24 md:pt-32'}>{children}</main>
-      <AtomFooter lang={lang} />
+    <div className={containerless ? '' : 'pt-24 md:pt-32'}>
+      {children}
     </div>
   );
 }

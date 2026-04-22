@@ -1,8 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import AtomNav from './nav';
-import AtomFooter from './footer';
 import AtomProjectCard from './project-card';
 import { PillTag } from '@/components/ui';
 
@@ -30,7 +28,7 @@ const SORTS = [
 
 const priceOf = (p) => Number(p.priceUsd ?? p.price_usd) || 0;
 
-export default function AtomProjectsList({ lang = 'en', projects = [], logoUrl = null, logoAlt = null }) {
+export default function AtomProjectsList({ lang = 'en', projects = [] }) {
   const [city, setCity] = useState('all');
   const [type, setType] = useState('all');
   const [sortKey, setSortKey] = useState('sort');
@@ -46,9 +44,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [], logoUrl =
   }, [projects, city, type, sortKey]);
 
   return (
-    <div style={{ background: 'var(--neutral-50)', color: 'var(--neutral-900)', fontFamily: 'var(--atom-font-sans)' }}>
-      <AtomNav lang={lang} logoUrl={logoUrl} logoAlt={logoAlt} />
-
+    <>
       <section className="pt-32 md:pt-40 pb-10 md:pb-14">
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">
           <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— Portfolio —</span>
@@ -107,7 +103,6 @@ export default function AtomProjectsList({ lang = 'en', projects = [], logoUrl =
         </div>
       </section>
 
-      <AtomFooter lang={lang} />
-    </div>
+    </>
   );
 }
