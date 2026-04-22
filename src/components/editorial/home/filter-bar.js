@@ -82,7 +82,10 @@ export default function FilterBar({ lang, cities = [], districtsBy = {} }) {
       ref={ref}
       className="filter-bar relative z-20"
       style={{
-        margin: '-28px 20px 0',
+        marginTop: '-140px',
+        marginInline: 'auto',
+        maxWidth: 1040,
+        paddingInline: 20,
         opacity: revealed ? 1 : 0,
         transform: revealed ? 'translateY(0)' : 'translateY(30px)',
         transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',

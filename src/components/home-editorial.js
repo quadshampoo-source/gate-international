@@ -75,15 +75,11 @@ export default async function HomeEditorial({ lang }) {
     { big: '$400K', caption: 'Minimum investment for the Turkish citizenship pathway.' },
   ];
 
-  // Wrap the last word of the hero title in {word} so WordReveal emits
-  // it as <em>. Matches the existing italic accent (e.g. "view.").
-  const heroTitleMarked = (() => {
-    const raw = t.home.heroTitle || '';
-    const parts = raw.trim().split(/\s+/);
-    if (parts.length < 2) return raw;
-    parts[parts.length - 1] = `{${parts[parts.length - 1]}}`;
-    return parts.join(' ');
-  })();
+  // Short, Istanbul-focused hero copy. Last word italicised via WordReveal's
+  // {word} marker. Hardcoded (not dict-driven) so it stays identical across
+  // locales for now.
+  const heroTitleMarked = 'Istanbul, {refined.}';
+  const heroSubCopy = 'A curated portfolio of premium residences along the Bosphorus.';
 
   // Build {city → districts} for the filter bar.
   const byCity = { Istanbul: [], Bodrum: [], Bursa: [] };
@@ -192,7 +188,7 @@ export default async function HomeEditorial({ lang }) {
             />
             <FadeIn delay={0.55}>
               <p className="text-[15px] md:text-[17px] leading-relaxed text-[#273C46] max-w-[540px] mx-auto mt-6 md:mt-8">
-                {t.home.heroSub}
+                {heroSubCopy}
               </p>
             </FadeIn>
             <FadeIn delay={0.75}>
