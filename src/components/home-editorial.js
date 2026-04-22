@@ -157,16 +157,20 @@ export default async function HomeEditorial({ lang }) {
       {/* ── Hero ───────────────────────────────────────────────────────── */}
       <section className="relative min-h-[100svh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center ken-burns"
-            style={{
-              backgroundImage: "url('https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=2400&q=85')",
-              transform: 'scale(1.05)',
-            }}
+          <video
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260302_085640_276ea93b-d7da-4418-a09b-2aa5b490e838.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=2400&q=85"
+            aria-hidden
+            className="absolute inset-0 w-full h-full object-cover"
           />
           <div
             className="absolute inset-0 backdrop-blur-[2px]"
-            style={{ background: 'rgba(255,255,255,0.78)' }}
+            style={{ background: 'rgba(255,255,255,0.55)' }}
           />
         </div>
 
