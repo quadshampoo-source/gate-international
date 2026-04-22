@@ -4,6 +4,7 @@ export const THEMES = [
   { key: 'classic', label: 'Classic', description: 'Dark, gold hairlines — the flagship portfolio aesthetic.' },
   { key: 'cinematic', label: 'Cinematic', description: 'Liquid glass surfaces, animated gradient orbs, softer motion.' },
   { key: 'editorial', label: 'Editorial', description: 'Northbound-inspired: white ground, serif + mono, pill glass navigation.' },
+  { key: 'legacy', label: 'Legacy Editorial', description: 'Cormorant Garamond + warm cream. Hero with search bar overlap, city ticker, editorial long-form.' },
 ];
 
 export const DEFAULT_THEME = 'classic';
