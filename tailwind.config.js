@@ -4,6 +4,7 @@ module.exports = {
     "./src/components/**/*.{js,jsx}",
     "./src/app/**/*.{js,jsx}",
     "./src/lib/**/*.{js,jsx}",
+    "./src/styles/**/*.css",
   ],
   theme: {
     extend: {
@@ -19,6 +20,50 @@ module.exports = {
         'fg-dim': 'rgb(var(--c-fg-dim) / <alpha-value>)',
         gold: 'rgb(var(--c-gold) / <alpha-value>)',
         'gold-dim': 'rgb(var(--c-gold-dim) / <alpha-value>)',
+        atom: {
+          primary: {
+            50:  'var(--primary-50)',
+            100: 'var(--primary-100)',
+            200: 'var(--primary-200)',
+            400: 'var(--primary-400)',
+            500: 'var(--primary-500)',
+            600: 'var(--primary-600)',
+            700: 'var(--primary-700)',
+          },
+          neutral: {
+            50:  'var(--neutral-50)',
+            100: 'var(--neutral-100)',
+            200: 'var(--neutral-200)',
+            400: 'var(--neutral-400)',
+            500: 'var(--neutral-500)',
+            700: 'var(--neutral-700)',
+            800: 'var(--neutral-800)',
+            900: 'var(--neutral-900)',
+          },
+          coral: 'var(--accent-coral)',
+          'coral-hover': 'var(--accent-coral-hover)',
+          cyan: 'var(--accent-cyan)',
+          white: 'var(--atom-white)',
+        },
+      },
+      backgroundImage: {
+        'atom-primary': 'var(--gradient-primary)',
+        'atom-border': 'var(--gradient-border)',
+        'atom-cta': 'var(--gradient-cta)',
+      },
+      borderRadius: {
+        'atom-sm': 'var(--atom-radius-sm)',
+        'atom-md': 'var(--atom-radius-md)',
+        'atom-lg': 'var(--atom-radius-lg)',
+        'atom-xl': 'var(--atom-radius-xl)',
+        'atom-2xl': 'var(--atom-radius-2xl)',
+      },
+      boxShadow: {
+        'atom-sm':  'var(--atom-shadow-sm)',
+        'atom-md':  'var(--atom-shadow-md)',
+        'atom-lg':  'var(--atom-shadow-lg)',
+        'atom-cta': 'var(--atom-shadow-cta)',
+        'atom-cta-hover': 'var(--atom-shadow-cta-hover)',
       },
       fontFamily: {
         serif: ['var(--font-serif)', 'Georgia', 'serif'],
