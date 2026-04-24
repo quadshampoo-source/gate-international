@@ -87,6 +87,7 @@ function payloadFrom(formData) {
     district: str('district'),
     district_ar: str('district_ar'),
     district_zh: str('district_zh'),
+    sub_district: str('sub_district') || null,
     developer: str('developer'),
     price_usd: num('price_usd'),
     bedrooms: str('bedrooms'),

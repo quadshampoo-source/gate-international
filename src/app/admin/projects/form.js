@@ -1,7 +1,8 @@
-import { DISTRICTS, TYPOLOGIES, CATEGORIES } from '@/lib/projects';
+import { TYPOLOGIES, CATEGORIES } from '@/lib/projects';
 import GalleryUpload from '@/components/admin/gallery-upload';
 import SpecsPicker from './_components/specs-picker';
 import OptionsEditor from './_components/options-editor';
+import DistrictPicker from './_components/district-picker';
 
 export default function ProjectForm({ action, project = {}, isNew = false, deleteAction }) {
   const v = (k, fallback = '') => project[k] ?? fallback;
@@ -29,9 +30,10 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       <Row label="Name (AR)"><input name="name_ar" defaultValue={v('name_ar')} className="admin-input" /></Row>
       <Row label="Name (ZH)"><input name="name_zh" defaultValue={v('name_zh')} className="admin-input" /></Row>
       <Row label="District">
-        <select name="district" required defaultValue={v('district')} className="admin-select">
-          {DISTRICTS.map((d) => <option key={d} value={d}>{d}</option>)}
-        </select>
+        <DistrictPicker
+          initialDistrict={v('district')}
+          initialSubDistrict={v('sub_district')}
+        />
       </Row>
       <Row label="District (AR)"><input name="district_ar" defaultValue={v('district_ar')} className="admin-input" /></Row>
       <Row label="District (ZH)"><input name="district_zh" defaultValue={v('district_zh')} className="admin-input" /></Row>

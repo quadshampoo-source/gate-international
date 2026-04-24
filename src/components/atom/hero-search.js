@@ -96,15 +96,18 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
 
   const submit = () => {
     const qs = new URLSearchParams();
-    if (district !== ANY_DISTRICT) qs.set('district', district);
-    else if (city !== ANY_CITY) qs.set('city', city);
-    if (beds !== 'Any') qs.set('bedrooms', beds);
-    const href = `/${lang}/projects${qs.toString() ? `?${qs}` : ''}`;
-    if (typeof window !== 'undefined') {
-      // eslint-disable-next-line no-console
-      console.log('[hero-search] submit', { city, district, beds, href });
+    // If a district is picked without a city, infer the city from the
+    // districts prop so /projects knows which column to match against
+    // (district for Istanbul, sub_district for Bodrum/Bursa).
+    let effectiveCity = city;
+    if (district !== ANY_DISTRICT && city === ANY_CITY) {
+      const match = districts.find((d) => d?.name === district);
+      if (match?.city) effectiveCity = match.city;
     }
-    router.push(href);
+    if (effectiveCity !== ANY_CITY) qs.set('city', effectiveCity);
+    if (district !== ANY_DISTRICT) qs.set('district', district);
+    if (beds !== 'Any') qs.set('bedrooms', beds);
+    router.push(`/${lang}/projects${qs.toString() ? `?${qs}` : ''}`);
   };
 
   const pickCity = (c) => {

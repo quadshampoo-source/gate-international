@@ -33,6 +33,17 @@ const priceOf = (p) => Number(p.priceUsd ?? p.price_usd) || 0;
 // treats İ/ı correctly (plain toLowerCase() on İ produces a combining dot).
 const norm = (s) => (s == null ? '' : String(s)).trim().toLocaleLowerCase('tr');
 
+// District semantics differ per city: for Istanbul the `district` column is
+// the neighborhood (Beşiktaş, Şişli, ...); for Bodrum/Bursa `district` is the
+// city name itself and `subDistrict` holds the real neighborhood (Yalıkavak,
+// Mudanya, ...). This helper returns the neighborhood-level value regardless.
+const cityTag = (p) => {
+  if (p?.district === 'Bodrum') return 'Bodrum';
+  if (p?.district === 'Bursa') return 'Bursa';
+  return 'Istanbul';
+};
+const neighborhood = (p) => (cityTag(p) === 'Istanbul' ? p?.district : p?.subDistrict || p?.district);
+
 function resolveCity(raw) {
   if (!raw) return 'any';
   const lc = norm(raw);
@@ -46,8 +57,8 @@ function resolveCity(raw) {
 function resolveDistrict(raw, projects) {
   if (!raw) return 'any';
   const target = norm(raw);
-  const canonical = projects.find((p) => norm(p.district) === target)?.district;
-  return canonical || raw;
+  const match = projects.find((p) => norm(neighborhood(p)) === target);
+  return match ? neighborhood(match) : raw;
 }
 
 export default function AtomProjectsList({ lang = 'en', projects = [] }) {
@@ -68,10 +79,8 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
   const districtsByCity = useMemo(() => {
     const buckets = { Istanbul: new Set(), Bodrum: new Set(), Bursa: new Set() };
     for (const p of projects) {
-      if (!p.district) continue;
-      if (p.district === 'Bodrum') buckets.Bodrum.add(p.district);
-      else if (p.district === 'Bursa') buckets.Bursa.add(p.district);
-      else buckets.Istanbul.add(p.district);
+      const n = neighborhood(p);
+      if (n) buckets[cityTag(p)].add(n);
     }
     return {
       Istanbul: [...buckets.Istanbul].sort((a, b) => a.localeCompare(b, 'tr')),
@@ -109,7 +118,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
     if (cityFilter?.test) list = list.filter(cityFilter.test);
     if (district !== 'any') {
       const d = norm(district);
-      list = list.filter((p) => norm(p.district) === d);
+      list = list.filter((p) => norm(neighborhood(p)) === d);
     }
     if (bedrooms !== 'any') {
       const min = parseInt(bedrooms, 10);
