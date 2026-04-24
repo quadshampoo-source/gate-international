@@ -29,13 +29,25 @@ const SORTS = [
 
 const priceOf = (p) => Number(p.priceUsd ?? p.price_usd) || 0;
 
-// Match a URL param value case-insensitively to a canonical CITY_FILTERS key.
-// Returns 'any' if nothing matches (so a bad param doesn't silently bypass).
+// Turkish-aware case fold. 'Şişli'.toLocaleLowerCase('tr') === 'şişli', and it
+// treats İ/ı correctly (plain toLowerCase() on İ produces a combining dot).
+const norm = (s) => (s == null ? '' : String(s)).trim().toLocaleLowerCase('tr');
+
 function resolveCity(raw) {
   if (!raw) return 'any';
-  const lc = raw.toLowerCase();
-  const hit = CITY_FILTERS.find((f) => f.key.toLowerCase() === lc);
+  const lc = norm(raw);
+  const hit = CITY_FILTERS.find((f) => norm(f.key) === lc);
   return hit ? hit.key : 'any';
+}
+
+// Map a raw URL district value to the canonical spelling used in the project
+// data, so case/accents from the URL still hit the filter. Falls back to the
+// raw value when no match is found (so the "no matches" state still shows).
+function resolveDistrict(raw, projects) {
+  if (!raw) return 'any';
+  const target = norm(raw);
+  const canonical = projects.find((p) => norm(p.district) === target)?.district;
+  return canonical || raw;
 }
 
 export default function AtomProjectsList({ lang = 'en', projects = [] }) {
@@ -44,11 +56,42 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
   const pathname = usePathname();
 
   const [city, setCity] = useState(() => resolveCity(searchParams.get('city')));
-  const [district, setDistrict] = useState(() => searchParams.get('district') || 'any');
+  const [district, setDistrict] = useState(() => resolveDistrict(searchParams.get('district'), projects));
   const [bedrooms, setBedrooms] = useState(() => searchParams.get('bedrooms') || 'any');
   const [type, setType] = useState('all');
   const [sortKey, setSortKey] = useState('sort');
 
+  // Districts available per city, derived from the live project data so the
+  // chip row always reflects what actually has listings. Bodrum/Bursa end up
+  // with just one district (same as their city name), so we hide the row for
+  // those — the city chip is already enough.
+  const districtsByCity = useMemo(() => {
+    const buckets = { Istanbul: new Set(), Bodrum: new Set(), Bursa: new Set() };
+    for (const p of projects) {
+      if (!p.district) continue;
+      if (p.district === 'Bodrum') buckets.Bodrum.add(p.district);
+      else if (p.district === 'Bursa') buckets.Bursa.add(p.district);
+      else buckets.Istanbul.add(p.district);
+    }
+    return {
+      Istanbul: [...buckets.Istanbul].sort((a, b) => a.localeCompare(b, 'tr')),
+      Bodrum: [...buckets.Bodrum].sort((a, b) => a.localeCompare(b, 'tr')),
+      Bursa: [...buckets.Bursa].sort((a, b) => a.localeCompare(b, 'tr')),
+    };
+  }, [projects]);
+
+  const districtsForCurrentCity = city === 'any' ? [] : (districtsByCity[city] || []);
+  const showDistrictRow = districtsForCurrentCity.length > 1;
+
+  // If city and district disagree (e.g. city=Bodrum but district=Beşiktaş from
+  // an old URL), drop the district. Keeps state consistent with the chip UI.
+  useEffect(() => {
+    if (district === 'any' || city === 'any') return;
+    const belongs = (districtsByCity[city] || []).some((d) => norm(d) === norm(district));
+    if (!belongs) setDistrict('any');
+  }, [city, district, districtsByCity]);
+
+  // Write the active filter state back to the URL so links are shareable.
   useEffect(() => {
     const params = new URLSearchParams();
     if (city !== 'any') params.set('city', city);
@@ -65,8 +108,8 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
     const cityFilter = CITY_FILTERS.find((f) => f.key === city);
     if (cityFilter?.test) list = list.filter(cityFilter.test);
     if (district !== 'any') {
-      const dLc = district.toLowerCase();
-      list = list.filter((p) => (p.district || '').toLowerCase() === dLc);
+      const d = norm(district);
+      list = list.filter((p) => norm(p.district) === d);
     }
     if (bedrooms !== 'any') {
       const min = parseInt(bedrooms, 10);
@@ -88,6 +131,12 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
     setDistrict('any');
   };
 
+  const toggleDistrict = (d) => {
+    setDistrict((prev) => (norm(prev) === norm(d) ? 'any' : d));
+  };
+
+  const hasFilters = city !== 'any' || district !== 'any' || bedrooms !== 'any';
+
   return (
     <>
       <section className="pt-32 md:pt-40 pb-10 md:pb-14">
@@ -98,65 +147,66 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
           </h1>
           <p className="atom-body-lg mt-4 max-w-[560px]" style={{ color: 'var(--neutral-500)' }}>
             {visible.length} {visible.length === 1 ? 'project' : 'projects'}
-            {(district !== 'any' || bedrooms !== 'any' || city !== 'any') ? ' matching your filters' : ' across Istanbul, Bodrum, and Bursa'}
+            {hasFilters ? ' matching your filters' : ' across Istanbul, Bodrum, and Bursa'}
             {' '}— filter, compare, shortlist.
           </p>
-          {(district !== 'any' || bedrooms !== 'any') && (
+          {bedrooms !== 'any' && (
             <div className="flex flex-wrap items-center gap-2 mt-4 text-sm" style={{ color: 'var(--neutral-500)' }}>
-              {district !== 'any' && (
-                <button
-                  type="button"
-                  onClick={() => setDistrict('any')}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full"
-                  style={{ background: 'var(--primary-50)', color: 'var(--primary-700)', border: '1px solid var(--primary-200)' }}
-                >
-                  District: {district}
-                  <span aria-hidden>×</span>
-                </button>
-              )}
-              {bedrooms !== 'any' && (
-                <button
-                  type="button"
-                  onClick={() => setBedrooms('any')}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full"
-                  style={{ background: 'var(--primary-50)', color: 'var(--primary-700)', border: '1px solid var(--primary-200)' }}
-                >
-                  Bedrooms: {bedrooms}+
-                  <span aria-hidden>×</span>
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => setBedrooms('any')}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full"
+                style={{ background: 'var(--primary-50)', color: 'var(--primary-700)', border: '1px solid var(--primary-200)' }}
+              >
+                Bedrooms: {bedrooms}+
+                <span aria-hidden>×</span>
+              </button>
             </div>
           )}
         </div>
       </section>
 
       <section className="sticky top-[72px] z-30" style={{ background: 'rgba(248,250,252,0.88)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--neutral-200)' }}>
-        <div className="max-w-[1360px] mx-auto px-6 md:px-10 py-4 flex items-center justify-between gap-6 flex-wrap">
-          <div className="flex flex-wrap gap-2">
-            {CITY_FILTERS.map((f) => (
-              <PillTag key={f.key} active={city === f.key} onClick={() => pickCity(f.key)}>
-                {f.label}
+        <div className="max-w-[1360px] mx-auto px-6 md:px-10 py-4 flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-6 flex-wrap">
+            <div className="flex flex-wrap gap-2">
+              {CITY_FILTERS.map((f) => (
+                <PillTag key={f.key} active={city === f.key} onClick={() => pickCity(f.key)}>
+                  {f.label}
+                </PillTag>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <select
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                className="text-sm font-medium rounded-atom-md px-3 py-2"
+                style={{ border: '1px solid var(--neutral-200)', background: '#fff', color: 'var(--neutral-700)' }}
+              >
+                {TYPE_FILTERS.map((f) => <option key={f.key} value={f.key}>{f.label}</option>)}
+              </select>
+              <select
+                value={sortKey}
+                onChange={(e) => setSortKey(e.target.value)}
+                className="text-sm font-medium rounded-atom-md px-3 py-2"
+                style={{ border: '1px solid var(--neutral-200)', background: '#fff', color: 'var(--neutral-700)' }}
+              >
+                {SORTS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
+              </select>
+            </div>
+          </div>
+          {showDistrictRow && (
+            <div className="flex flex-wrap gap-2 pt-1" style={{ borderTop: '1px solid var(--neutral-100)' }}>
+              <PillTag active={district === 'any'} onClick={() => setDistrict('any')}>
+                All districts
               </PillTag>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="text-sm font-medium rounded-atom-md px-3 py-2"
-              style={{ border: '1px solid var(--neutral-200)', background: '#fff', color: 'var(--neutral-700)' }}
-            >
-              {TYPE_FILTERS.map((f) => <option key={f.key} value={f.key}>{f.label}</option>)}
-            </select>
-            <select
-              value={sortKey}
-              onChange={(e) => setSortKey(e.target.value)}
-              className="text-sm font-medium rounded-atom-md px-3 py-2"
-              style={{ border: '1px solid var(--neutral-200)', background: '#fff', color: 'var(--neutral-700)' }}
-            >
-              {SORTS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
-            </select>
-          </div>
+              {districtsForCurrentCity.map((d) => (
+                <PillTag key={d} active={norm(district) === norm(d)} onClick={() => toggleDistrict(d)}>
+                  {d}
+                </PillTag>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
