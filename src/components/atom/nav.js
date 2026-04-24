@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import SiteLogo from '@/components/site-logo';
-import ThemeToggle from '@/components/theme-toggle';
-import LangDropdown from '@/components/lang-dropdown';
+import AtomThemeToggle from './theme-toggle';
+import AtomLangDropdown from './lang-dropdown';
+import HeaderAction from './header-action';
 import { getDict } from '@/lib/i18n';
 
 // Primary links stay inline on desktop (md+); the hamburger drawer mirrors
@@ -85,40 +86,36 @@ export default function AtomNav({ lang = 'en', logoUrl = null, logoAlt = null })
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 md:gap-3">
-            <ThemeToggle />
-            <LangDropdown lang={lang} />
-            <div className="hidden sm:block">
+          <div className="flex items-center gap-2">
+            <AtomThemeToggle />
+            <AtomLangDropdown lang={lang} />
+            <div className="hidden sm:block ml-1">
               <Button href={href('contact')} variant="primary" size="md" arrow>
                 {labels.contact}
               </Button>
             </div>
-            <button
-              type="button"
+            <HeaderAction
               onClick={() => setOpen((o) => !o)}
               aria-label="Toggle menu"
               aria-expanded={open}
-              className="w-10 h-10 rounded-full flex flex-col items-center justify-center gap-[5px] transition-colors"
-              style={{
-                background: open ? 'var(--primary-50)' : 'transparent',
-                border: '1px solid var(--neutral-200)',
-              }}
+              active={open}
+              className="w-10 px-0 flex-col gap-[5px]"
             >
               <span
                 className="block w-4 h-px transition-transform"
                 style={{
-                  background: 'var(--neutral-900)',
+                  background: 'currentColor',
                   transform: open ? 'translateY(3px) rotate(45deg)' : 'none',
                 }}
               />
               <span
                 className="block w-4 h-px transition-transform"
                 style={{
-                  background: 'var(--neutral-900)',
+                  background: 'currentColor',
                   transform: open ? 'translateY(-3px) rotate(-45deg)' : 'none',
                 }}
               />
-            </button>
+            </HeaderAction>
           </div>
         </div>
       </header>
