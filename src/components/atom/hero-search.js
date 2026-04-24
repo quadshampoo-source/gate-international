@@ -1,15 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
-const PRICE_RANGES = [
-  { label: 'Any budget', min: 0, max: Infinity },
-  { label: '$400K – $1M', min: 400_000, max: 1_000_000 },
-  { label: '$1M – $3M', min: 1_000_000, max: 3_000_000 },
-  { label: '$3M – $8M', min: 3_000_000, max: 8_000_000 },
-  { label: '$8M+', min: 8_000_000, max: Infinity },
-];
 const BEDROOMS = ['Any', '1+', '2+', '3+', '4+', '5+'];
 
 function Field({ label, value, open, onToggle, children }) {
@@ -76,24 +69,43 @@ function Option({ active, onClick, children }) {
   );
 }
 
+const ANY_CITY = 'Any city';
+const ANY_DISTRICT = 'Any district';
+
 export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
   const router = useRouter();
-  const locations = ['Any city', ...districts];
-  const [loc, setLoc] = useState('Any city');
-  const [priceIdx, setPriceIdx] = useState(0);
+
+  const cities = useMemo(() => {
+    const set = new Set();
+    districts.forEach((d) => { if (d?.city) set.add(d.city); });
+    return [ANY_CITY, ...Array.from(set).sort()];
+  }, [districts]);
+
+  const [city, setCity] = useState(ANY_CITY);
+  const [district, setDistrict] = useState(ANY_DISTRICT);
   const [beds, setBeds] = useState('Any');
   const [openIdx, setOpenIdx] = useState(-1);
 
+  const districtOptions = useMemo(() => {
+    const scoped = city === ANY_CITY
+      ? districts
+      : districts.filter((d) => d.city === city);
+    const names = scoped.map((d) => d.name).filter(Boolean);
+    return [ANY_DISTRICT, ...names];
+  }, [city, districts]);
+
   const submit = () => {
     const qs = new URLSearchParams();
-    if (loc && loc !== 'Any city') qs.set('district', loc);
-    const price = PRICE_RANGES[priceIdx];
-    if (priceIdx > 0) {
-      qs.set('price_min', String(price.min));
-      if (Number.isFinite(price.max)) qs.set('price_max', String(price.max));
-    }
+    if (district !== ANY_DISTRICT) qs.set('district', district);
+    else if (city !== ANY_CITY) qs.set('city', city);
     if (beds !== 'Any') qs.set('bedrooms', beds);
     router.push(`/${lang}/projects${qs.toString() ? `?${qs}` : ''}`);
+  };
+
+  const pickCity = (c) => {
+    setCity(c);
+    setDistrict(ANY_DISTRICT);
+    setOpenIdx(-1);
   };
 
   return (
@@ -112,15 +124,15 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
         className="flex items-stretch gap-1 md:gap-2 bg-white rounded-full p-2"
         style={{ boxShadow: 'var(--atom-shadow-md)' }}
       >
-        <Field label="Where" value={loc} open={openIdx === 0} onToggle={(o) => setOpenIdx(o ? 0 : -1)}>
-          {locations.map((d) => (
-            <Option key={d} active={loc === d} onClick={() => { setLoc(d); setOpenIdx(-1); }}>{d}</Option>
+        <Field label="City" value={city} open={openIdx === 0} onToggle={(o) => setOpenIdx(o ? 0 : -1)}>
+          {cities.map((c) => (
+            <Option key={c} active={city === c} onClick={() => pickCity(c)}>{c}</Option>
           ))}
         </Field>
         <div className="hidden md:block self-center" style={{ width: 1, background: 'var(--neutral-200)', height: 32 }} />
-        <Field label="Budget" value={PRICE_RANGES[priceIdx].label} open={openIdx === 1} onToggle={(o) => setOpenIdx(o ? 1 : -1)}>
-          {PRICE_RANGES.map((r, i) => (
-            <Option key={r.label} active={priceIdx === i} onClick={() => { setPriceIdx(i); setOpenIdx(-1); }}>{r.label}</Option>
+        <Field label="District" value={district} open={openIdx === 1} onToggle={(o) => setOpenIdx(o ? 1 : -1)}>
+          {districtOptions.map((d) => (
+            <Option key={d} active={district === d} onClick={() => { setDistrict(d); setOpenIdx(-1); }}>{d}</Option>
           ))}
         </Field>
         <div className="hidden md:block self-center" style={{ width: 1, background: 'var(--neutral-200)', height: 32 }} />

@@ -21,7 +21,9 @@ export default async function AtomHome({ lang = 'en' }) {
     getTestimonials(),
   ]);
   const featured = projects.slice(0, 6);
-  const districtNames = (districts || []).map((d) => d.name).filter(Boolean);
+  const districtList = (districts || [])
+    .filter((d) => d?.name)
+    .map((d) => ({ name: d.name, city: d.city || 'Istanbul' }));
 
   return (
     <>
@@ -51,7 +53,7 @@ export default async function AtomHome({ lang = 'en' }) {
           </p>
 
           <div className="mt-10">
-            <AtomHeroSearch lang={lang} districts={districtNames} />
+            <AtomHeroSearch lang={lang} districts={districtList} />
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6 mt-10 text-sm" style={{ color: 'var(--neutral-500)' }}>

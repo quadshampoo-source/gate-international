@@ -1,5 +1,11 @@
 import { supabaseServer } from '@/lib/supabase/server';
-import { PROJECTS as staticProjects } from '@/lib/projects';
+import { PROJECTS as staticProjects, DISTRICTS as staticDistricts } from '@/lib/projects';
+
+const staticDistrictRows = staticDistricts.map((name, i) => ({
+  name,
+  is_visible: true,
+  sort_order: i,
+}));
 
 function fromRow(r) {
   return {
@@ -78,10 +84,10 @@ export async function getDistricts() {
       .eq('is_visible', true)
       .order('sort_order', { ascending: true })
       .order('name', { ascending: true });
-    if (error || !data) return [];
+    if (error || !data || data.length === 0) return staticDistrictRows;
     return data;
   } catch {
-    return [];
+    return staticDistrictRows;
   }
 }
 
