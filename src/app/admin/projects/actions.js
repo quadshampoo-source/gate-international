@@ -77,6 +77,48 @@ function payloadFrom(formData) {
   };
 
   const options = parseJsonOrNull(String(formData.get('options_json') || ''));
+  const amenitiesJson = parseJsonOrNull(String(formData.get('amenities_json') || ''));
+  const faqsJson = parseJsonOrNull(String(formData.get('faqs_json') || ''));
+
+  // Build the developer object from the split inputs. Legacy `developer` text
+  // column still written — derived from the object's name so existing readers
+  // (projects-client, cards, etc.) keep working.
+  const developerFields = {
+    name: str('developer_name'),
+    logo_url: str('developer_logo_url'),
+    founded_year: num('developer_founded_year'),
+    website_url: str('developer_website_url'),
+    description: str('developer_description'),
+    past_projects_count: num('developer_past_projects_count'),
+  };
+  const developerEntries = Object.entries(developerFields).filter(([, value]) => value != null);
+  const developerInfo = developerEntries.length
+    ? Object.fromEntries(developerEntries)
+    : null;
+  const developerText = developerInfo?.name ?? str('developer');
+
+  // Structured distances — 9 named fields now replace the old JSON textarea.
+  const distanceKeys = [
+    'metro_km', 'mall_km', 'school_km', 'airport_min', 'bosphorus_min',
+    'beach_km', 'hospital_km', 'business_district_min', 'city_center_min',
+  ];
+  const distancesEntries = distanceKeys
+    .map((k) => [k, num(`distance_${k}`)])
+    .filter(([, value]) => value != null);
+  const distancesValue = distancesEntries.length ? Object.fromEntries(distancesEntries) : null;
+
+  // Investment sub-object. Checkbox always present; only include when the box
+  // is actually checked so the field stays truly optional.
+  const citizenshipEligible = formData.get('investment_citizenship_eligible') === 'on';
+  const investmentFields = {
+    rental_yield_pct: num('investment_rental_yield_pct'),
+    appreciation_pct_5yr: num('investment_appreciation_pct_5yr'),
+    roi_notes: str('investment_roi_notes'),
+    min_investment_for_citizenship: num('investment_min_investment_for_citizenship'),
+  };
+  const investmentEntries = Object.entries(investmentFields).filter(([, value]) => value != null);
+  if (citizenshipEligible) investmentEntries.push(['citizenship_eligible', true]);
+  const investmentValue = investmentEntries.length ? Object.fromEntries(investmentEntries) : null;
 
   return {
     id: String(formData.get('id') || '').trim().toLowerCase(),
@@ -88,7 +130,14 @@ function payloadFrom(formData) {
     district_ar: str('district_ar'),
     district_zh: str('district_zh'),
     sub_district: str('sub_district') || null,
-    developer: str('developer'),
+    developer: developerText,
+    developer_info: developerInfo,
+    hero_tagline: str('hero_tagline'),
+    description: str('description'),
+    amenities: Array.isArray(amenitiesJson) ? amenitiesJson : null,
+    faqs: Array.isArray(faqsJson) ? faqsJson : null,
+    investment: investmentValue,
+    brochure_url: str('brochure_url'),
     price_usd: num('price_usd'),
     bedrooms: str('bedrooms'),
     bathrooms: str('bathrooms'),
@@ -115,7 +164,7 @@ function payloadFrom(formData) {
     unit_types: unitTypesCsv ? unitTypesCsv.split(',').map((s) => s.trim()).filter(Boolean) : null,
     payment_plan: parseJsonOrNull(String(formData.get('payment_plan') || '')),
     price_table: parseJsonOrNull(String(formData.get('price_table') || '')),
-    distances: parseJsonOrNull(String(formData.get('distances') || '')),
+    distances: distancesValue,
     reasons: reasonsLines ? reasonsLines.split('\n').map((s) => s.trim()).filter(Boolean) : null,
     gallery: galleryUrls,
     exterior_images: combinedExterior,

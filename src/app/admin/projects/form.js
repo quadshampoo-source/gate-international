@@ -3,10 +3,15 @@ import GalleryUpload from '@/components/admin/gallery-upload';
 import SpecsPicker from './_components/specs-picker';
 import OptionsEditor from './_components/options-editor';
 import DistrictPicker from './_components/district-picker';
+import AmenitiesEditor from './_components/amenities-editor';
+import FaqsEditor from './_components/faqs-editor';
 
 export default function ProjectForm({ action, project = {}, isNew = false, deleteAction }) {
   const v = (k, fallback = '') => project[k] ?? fallback;
   const jsonVal = (k) => (project[k] != null ? JSON.stringify(project[k], null, 2) : '');
+  const dev = (project.developer_info && typeof project.developer_info === 'object') ? project.developer_info : {};
+  const inv = (project.investment && typeof project.investment === 'object') ? project.investment : {};
+  const dist = (project.distances && typeof project.distances === 'object') ? project.distances : {};
 
   return (
     <form action={action} encType="multipart/form-data" className="max-w-[860px]">
@@ -37,7 +42,26 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       </Row>
       <Row label="District (AR)"><input name="district_ar" defaultValue={v('district_ar')} className="admin-input" /></Row>
       <Row label="District (ZH)"><input name="district_zh" defaultValue={v('district_zh')} className="admin-input" /></Row>
-      <Row label="Developer"><input name="developer" defaultValue={v('developer')} className="admin-input" /></Row>
+
+      <h3 className="font-serif text-[22px] mt-8 mb-4">Hero & Description</h3>
+      <Row label="Hero tagline">
+        <input
+          name="hero_tagline"
+          defaultValue={v('hero_tagline')}
+          maxLength={120}
+          className="admin-input"
+          placeholder="One-line pitch shown in the hero (max 120 chars)"
+        />
+      </Row>
+      <Row label="Description">
+        <textarea
+          name="description"
+          defaultValue={v('description')}
+          rows="10"
+          className="admin-textarea"
+          placeholder="Long-form description. Markdown supported."
+        />
+      </Row>
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Property Specs</h3>
       <SpecsPicker
@@ -138,7 +162,19 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           placeholder="https://www.youtube.com/watch?v=XXXXX  veya  https://youtu.be/XXXXX"
         />
         <p className="text-[11px] text-fg-dim mt-1.5">
-          Vimeo ID doluyken YouTube yok sayılır. YouTube için shorts, embed ve youtu.be kısa linkleri de desteklenir.
+          Vimeo ID doluyken YouTube yok sayılır.
+        </p>
+      </Row>
+      <Row label="Brochure URL (PDF)">
+        <input
+          name="brochure_url"
+          type="url"
+          defaultValue={v('brochure_url')}
+          className="admin-input font-mono"
+          placeholder="https://.../brochure.pdf"
+        />
+        <p className="text-[11px] text-fg-dim mt-1.5">
+          Direct link to a PDF (max ~20 MB). Upload to storage first, then paste the public URL here.
         </p>
       </Row>
 
@@ -148,6 +184,36 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       <Row label="Land area (m²)"><input name="land_area" type="number" defaultValue={v('land_area')} className="admin-input" /></Row>
       <Row label="Unit types (comma)"><input name="unit_types_csv" defaultValue={(project.unit_types || []).join(', ')} className="admin-input" placeholder="1+1, 2+1, 3+1" /></Row>
 
+      <h3 className="font-serif text-[22px] mt-8 mb-4">Amenities & Features</h3>
+      <AmenitiesEditor initialAmenities={Array.isArray(project.amenities) ? project.amenities : []} />
+
+      <h3 className="font-serif text-[22px] mt-8 mb-4">Developer</h3>
+      <Row label="Name">
+        <input name="developer_name" defaultValue={dev.name ?? v('developer')} className="admin-input" />
+      </Row>
+      <Row label="Logo URL">
+        <input name="developer_logo_url" type="url" defaultValue={dev.logo_url ?? ''} className="admin-input font-mono" placeholder="https://..." />
+      </Row>
+      <Row label="Founded year">
+        <input name="developer_founded_year" type="number" min="1800" max="2100" defaultValue={dev.founded_year ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="Website">
+        <input name="developer_website_url" type="url" defaultValue={dev.website_url ?? ''} className="admin-input font-mono" placeholder="https://..." />
+      </Row>
+      <Row label="Past projects count">
+        <input name="developer_past_projects_count" type="number" min="0" defaultValue={dev.past_projects_count ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="Description">
+        <textarea
+          name="developer_description"
+          defaultValue={dev.description ?? ''}
+          maxLength={500}
+          rows="4"
+          className="admin-textarea"
+          placeholder="Max 500 chars"
+        />
+      </Row>
+
       <h3 className="font-serif text-[22px] mt-8 mb-4">Scores</h3>
       <Row label="China score (1–5)"><input name="china_score" type="number" min="1" max="5" defaultValue={v('china_score')} className="admin-input w-24" /></Row>
       <Row label="Arab score (1–5)"><input name="arab_score" type="number" min="1" max="5" defaultValue={v('arab_score')} className="admin-input w-24" /></Row>
@@ -155,11 +221,93 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       <h3 className="font-serif text-[22px] mt-8 mb-4">Available Options</h3>
       <OptionsEditor initialOptions={Array.isArray(project.options) ? project.options : []} />
 
+      <h3 className="font-serif text-[22px] mt-8 mb-4">Investment Info</h3>
+      <Row label="Rental yield (%)">
+        <input
+          name="investment_rental_yield_pct"
+          type="number"
+          step="0.1"
+          defaultValue={inv.rental_yield_pct ?? ''}
+          className="admin-input w-40"
+        />
+      </Row>
+      <Row label="5-yr appreciation (%)">
+        <input
+          name="investment_appreciation_pct_5yr"
+          type="number"
+          step="0.1"
+          defaultValue={inv.appreciation_pct_5yr ?? ''}
+          className="admin-input w-40"
+        />
+      </Row>
+      <Row label="Min investment for citizenship (USD)">
+        <input
+          name="investment_min_investment_for_citizenship"
+          type="number"
+          min="0"
+          defaultValue={inv.min_investment_for_citizenship ?? ''}
+          className="admin-input w-48"
+          placeholder="400000"
+        />
+      </Row>
+      <Row label="Citizenship eligible">
+        <label className="flex items-center gap-2">
+          <input
+            name="investment_citizenship_eligible"
+            type="checkbox"
+            defaultChecked={!!inv.citizenship_eligible}
+            className="w-4 h-4 accent-gold"
+          />
+          <span className="text-sm">Qualifies for Turkish Citizenship by Investment</span>
+        </label>
+      </Row>
+      <Row label="ROI notes">
+        <textarea
+          name="investment_roi_notes"
+          defaultValue={inv.roi_notes ?? ''}
+          maxLength={500}
+          rows="4"
+          className="admin-textarea"
+          placeholder="Max 500 chars"
+        />
+      </Row>
+
+      <h3 className="font-serif text-[22px] mt-8 mb-4">Distances</h3>
+      <Row label="Metro (km)">
+        <input name="distance_metro_km" type="number" step="0.1" min="0" defaultValue={dist.metro_km ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="Mall (km)">
+        <input name="distance_mall_km" type="number" step="0.1" min="0" defaultValue={dist.mall_km ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="School (km)">
+        <input name="distance_school_km" type="number" step="0.1" min="0" defaultValue={dist.school_km ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="Airport (min)">
+        <input name="distance_airport_min" type="number" min="0" defaultValue={dist.airport_min ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="Bosphorus (min)">
+        <input name="distance_bosphorus_min" type="number" min="0" defaultValue={dist.bosphorus_min ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="Beach (km)">
+        <input name="distance_beach_km" type="number" step="0.1" min="0" defaultValue={dist.beach_km ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="Hospital (km)">
+        <input name="distance_hospital_km" type="number" step="0.1" min="0" defaultValue={dist.hospital_km ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="Business district (min)">
+        <input name="distance_business_district_min" type="number" min="0" defaultValue={dist.business_district_min ?? ''} className="admin-input w-40" />
+      </Row>
+      <Row label="City center (min)">
+        <input name="distance_city_center_min" type="number" min="0" defaultValue={dist.city_center_min ?? ''} className="admin-input w-40" />
+      </Row>
+
       <h3 className="font-serif text-[22px] mt-8 mb-4">Rich fields (JSON)</h3>
       <Row label="Price table"><textarea name="price_table" defaultValue={jsonVal('price_table')} rows="4" className="admin-textarea font-mono text-[12px]" placeholder='[{"type":"2+1","priceUsd":450000}]' /></Row>
       <Row label="Payment plan"><textarea name="payment_plan" defaultValue={jsonVal('payment_plan')} rows="3" className="admin-textarea font-mono text-[12px]" placeholder='{"downPct":30,"termMonths":18,"interestPct":0}' /></Row>
-      <Row label="Distances"><textarea name="distances" defaultValue={jsonVal('distances')} rows="3" className="admin-textarea font-mono text-[12px]" placeholder='{"metro_km":0.3,"mall_km":0.8}' /></Row>
       <Row label="Reasons (one per line)"><textarea name="reasons_lines" defaultValue={(project.reasons || []).join('\n')} rows="5" className="admin-textarea" /></Row>
+
+      <h3 className="font-serif text-[22px] mt-8 mb-4">FAQ</h3>
+      <FaqsEditor initialFaqs={Array.isArray(project.faqs) ? project.faqs : []} />
 
       <div className="flex gap-3 mt-10 pt-6 border-t border-line">
         <button type="submit" className="admin-btn">{isNew ? 'Create project' : 'Save changes'}</button>

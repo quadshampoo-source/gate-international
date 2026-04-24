@@ -57,6 +57,13 @@ function fromRow(r) {
     reasons: r.reasons,
     chinaScore: r.china_score,
     arabScore: r.arab_score,
+    heroTagline: r.hero_tagline,
+    description: r.description,
+    amenities: r.amenities,
+    developerInfo: r.developer_info,
+    faqs: r.faqs,
+    investment: r.investment,
+    brochureUrl: r.brochure_url,
   };
 }
 
