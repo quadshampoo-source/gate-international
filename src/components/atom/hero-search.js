@@ -99,7 +99,12 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
     if (district !== ANY_DISTRICT) qs.set('district', district);
     else if (city !== ANY_CITY) qs.set('city', city);
     if (beds !== 'Any') qs.set('bedrooms', beds);
-    router.push(`/${lang}/projects${qs.toString() ? `?${qs}` : ''}`);
+    const href = `/${lang}/projects${qs.toString() ? `?${qs}` : ''}`;
+    if (typeof window !== 'undefined') {
+      // eslint-disable-next-line no-console
+      console.log('[hero-search] submit', { city, district, beds, href });
+    }
+    router.push(href);
   };
 
   const pickCity = (c) => {
@@ -143,6 +148,7 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
         </Field>
         <button
           type="submit"
+          onClick={(e) => { e.preventDefault(); submit(); }}
           aria-label="Search"
           className="flex-shrink-0 inline-grid place-items-center transition-transform hover:scale-105 rounded-full"
           style={{
