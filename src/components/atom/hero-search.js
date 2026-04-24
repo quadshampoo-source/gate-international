@@ -13,7 +13,7 @@ function Field({ label, value, open, onToggle, children }) {
     return () => document.removeEventListener('mousedown', onDoc);
   }, [open, onToggle]);
   return (
-    <div ref={ref} className="relative flex-1 min-w-[120px]">
+    <div ref={ref} className="relative w-full md:flex-1 md:min-w-[120px]">
       <button
         type="button"
         onClick={() => onToggle(!open)}
@@ -120,16 +120,15 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
     <form
       onSubmit={(e) => { e.preventDefault(); submit(); }}
       role="search"
-      className="mx-auto"
+      className="mx-auto w-full rounded-2xl md:rounded-full"
       style={{
         maxWidth: 860,
         padding: 2,
-        borderRadius: 'var(--atom-radius-pill)',
         background: 'var(--gradient-border)',
       }}
     >
       <div
-        className="flex items-stretch gap-1 md:gap-2 bg-white rounded-full p-2"
+        className="flex flex-col md:flex-row md:items-stretch gap-3 md:gap-2 bg-white p-3 md:p-2 rounded-[14px] md:rounded-full"
         style={{ boxShadow: 'var(--atom-shadow-md)' }}
       >
         <Field label="City" value={city} open={openIdx === 0} onToggle={(o) => setOpenIdx(o ? 0 : -1)}>
@@ -153,19 +152,17 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
           type="submit"
           onClick={(e) => { e.preventDefault(); submit(); }}
           aria-label="Search"
-          className="flex-shrink-0 inline-grid place-items-center transition-transform hover:scale-105 rounded-full"
+          className="w-full h-12 md:w-[52px] md:h-[52px] rounded-xl md:rounded-full inline-flex md:inline-grid items-center justify-center gap-2 md:gap-0 text-sm md:text-[0px] font-semibold text-white transition-transform hover:scale-[1.02] md:hover:scale-105 md:self-center md:flex-shrink-0"
           style={{
-            width: 52, height: 52,
             background: 'var(--accent-coral)',
-            color: '#fff',
             boxShadow: '0 6px 18px rgba(255, 107, 92, 0.35)',
-            alignSelf: 'center',
           }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
+          <span className="md:hidden">Search</span>
         </button>
       </div>
     </form>
