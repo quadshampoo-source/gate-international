@@ -24,6 +24,8 @@ export default function SearchBottomSheet({
   const sheetRef = useRef(null);
 
   // ESC to close, body scroll lock while open, focus first field on open.
+  // The data-search-sheet attribute lets other fixed widgets (e.g. the
+  // WhatsApp FAB) hide themselves via CSS while the sheet is up.
   useEffect(() => {
     if (!open) return undefined;
     const onKey = (e) => {
@@ -32,12 +34,14 @@ export default function SearchBottomSheet({
     document.addEventListener('keydown', onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.documentElement.setAttribute('data-search-sheet', 'open');
     const focusTimer = window.setTimeout(() => {
       firstFieldRef.current?.focus();
     }, 60);
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prevOverflow;
+      document.documentElement.removeAttribute('data-search-sheet');
       window.clearTimeout(focusTimer);
     };
   }, [open, onClose]);
@@ -50,6 +54,9 @@ export default function SearchBottomSheet({
 
   return (
     <div className="md:hidden">
+      <style>{`
+        html[data-search-sheet="open"] .wa-widget { display: none !important; }
+      `}</style>
       <div
         aria-hidden
         onClick={onClose}
@@ -72,7 +79,7 @@ export default function SearchBottomSheet({
           background: '#fff',
           borderTopLeftRadius: 'var(--atom-radius-2xl)',
           borderTopRightRadius: 'var(--atom-radius-2xl)',
-          maxHeight: '85vh',
+          maxHeight: '60vh',
           overflowY: 'auto',
           boxShadow: '0 -20px 60px rgba(15,22,36,0.18)',
           paddingBottom: 'env(safe-area-inset-bottom)',
@@ -112,7 +119,7 @@ export default function SearchBottomSheet({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-5 pb-8 pt-2 flex flex-col gap-3">
+        <form onSubmit={handleSubmit} className="px-5 pb-4 pt-2 flex flex-col gap-[10px]">
           <SheetSelect
             ref={firstFieldRef}
             label="City"
@@ -137,7 +144,7 @@ export default function SearchBottomSheet({
             className="mt-2 w-full inline-flex items-center justify-center gap-2 text-white text-sm font-semibold transition-transform hover:scale-[1.01]"
             style={{
               height: 52,
-              borderRadius: 'var(--atom-radius-md)',
+              borderRadius: 'var(--atom-radius-pill)',
               background: 'var(--accent-coral)',
               boxShadow: '0 6px 18px rgba(255, 107, 92, 0.35)',
             }}
@@ -166,7 +173,7 @@ const SheetSelect = forwardRef(function SheetSelect(
   ref,
 ) {
   return (
-    <label className="flex flex-col gap-1.5">
+    <label className="flex flex-col gap-1">
       <span
         className="text-[11px] font-semibold uppercase tracking-wider"
         style={{ color: 'var(--neutral-400)' }}
