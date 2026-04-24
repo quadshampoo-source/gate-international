@@ -5,13 +5,11 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import ProjectCard from '@/components/project-card';
 import { getDict } from '@/lib/i18n';
-import { DISTRICTS, TYPOLOGIES, CATEGORIES, BUDGET_OPTS, BADGES, REGIONS, badgesFor } from '@/lib/projects';
+import { DISTRICTS, TYPOLOGIES, CATEGORIES, BUDGET_OPTS, BADGES, badgesFor } from '@/lib/projects';
 
 function countActive(f) {
   let n = 0;
-  if (f.city !== 'any') n++;
   if (f.district !== 'any') n++;
-  if (f.bedrooms !== 'any') n++;
   if (f.budget !== 'any') n++;
   if (f.market !== 'any') n++;
   if (f.type !== 'any') n++;
@@ -23,8 +21,6 @@ function countActive(f) {
   return n;
 }
 
-const cityDistricts = (city) => REGIONS.find((r) => r.label === city)?.districts || [];
-
 const SORT_OPTS = ['priceDesc', 'priceAsc', 'newest'];
 
 export default function ProjectsClient({ lang, projects = [] }) {
@@ -35,9 +31,7 @@ export default function ProjectsClient({ lang, projects = [] }) {
   const pathname = usePathname();
 
   const [filters, setFilters] = useState({
-    city: searchParams.get('city') || 'any',
     district: searchParams.get('district') || 'any',
-    bedrooms: searchParams.get('bedrooms') || 'any',
     budget: searchParams.get('budget') || 'any',
     market: searchParams.get('market') || 'any',
     type: searchParams.get('type') || 'any',
@@ -61,16 +55,7 @@ export default function ProjectsClient({ lang, projects = [] }) {
 
   const filtered = useMemo(() => {
     const list = projects.filter((p) => {
-      if (filters.city !== 'any') {
-        const allowed = cityDistricts(filters.city);
-        if (allowed.length && !allowed.includes(p.district)) return false;
-      }
       if (filters.district !== 'any' && p.district !== filters.district) return false;
-      if (filters.bedrooms !== 'any') {
-        const n = parseInt(p.bedrooms, 10);
-        const min = parseInt(filters.bedrooms, 10);
-        if (Number.isNaN(n) || Number.isNaN(min) || n < min) return false;
-      }
       if (filters.type !== 'any' && p.typology !== filters.type) return false;
       if (filters.status !== 'any' && p.status !== filters.status) return false;
       if (filters.category !== 'any' && p.category !== filters.category) return false;
@@ -107,7 +92,7 @@ export default function ProjectsClient({ lang, projects = [] }) {
   }, [filters, projects]);
 
   const reset = () => setFilters({
-    city: 'any', district: 'any', bedrooms: 'any', budget: 'any', market: 'any', type: 'any',
+    district: 'any', budget: 'any', market: 'any', type: 'any',
     status: 'any', category: 'any', badge: 'any', metro: false, q: '', sort: 'priceDesc',
   });
   const set = (k, v) => setFilters((f) => ({ ...f, [k]: v }));
