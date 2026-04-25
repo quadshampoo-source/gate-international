@@ -185,11 +185,6 @@ export default function ProjectReels({ reels, lang = 'en' }) {
                   embed={isActive && shouldEmbedActive}
                   expandLabel={labels.expand}
                   playLabel={labels.play}
-                  prevLabel={labels.prev}
-                  nextLabel={labels.next}
-                  onPrev={prev}
-                  onNext={next}
-                  reelsCount={list.length}
                 />
               );
             })}
@@ -215,33 +210,72 @@ export default function ProjectReels({ reels, lang = 'en' }) {
         )}
       </div>
 
-      {/* Dot indicator */}
+      {/* Mobile control row: prev · dots · next. Desktop just shows dots
+          since arrows already flank the carousel. */}
       {list.length > 1 && (
-        <div
-          className="flex items-center justify-center gap-2 mt-5"
-          role="tablist"
-          aria-label={`Reel ${index + 1} of ${list.length}`}
-        >
-          {list.map((r, i) => (
-            <button
-              key={r.id}
-              type="button"
-              role="tab"
-              aria-selected={i === index}
-              aria-label={`Reel ${i + 1}${r.title ? ` — ${r.title}` : ''}`}
-              onClick={() => setIndex(i)}
-              className="transition-all"
-              style={{
-                width: i === index ? 28 : 8,
-                height: 8,
-                borderRadius: 999,
-                background: i === index ? 'var(--accent-coral)' : 'var(--neutral-300)',
-                border: 0,
-                cursor: 'pointer',
-                padding: 0,
-              }}
-            />
-          ))}
+        <div className="flex items-center justify-center gap-3 mt-5">
+          <button
+            type="button"
+            onClick={prev}
+            aria-label={labels.prev}
+            className="md:hidden inline-flex items-center justify-center"
+            style={{
+              width: 40, height: 40, borderRadius: '50%',
+              background: '#fff',
+              border: '1px solid var(--neutral-200)',
+              color: 'var(--neutral-900)',
+              boxShadow: '0 4px 12px rgba(15,22,36,0.08)',
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+
+          <div
+            className="flex items-center gap-2"
+            role="tablist"
+            aria-label={`Reel ${index + 1} of ${list.length}`}
+          >
+            {list.map((r, i) => (
+              <button
+                key={r.id}
+                type="button"
+                role="tab"
+                aria-selected={i === index}
+                aria-label={`Reel ${i + 1}${r.title ? ` — ${r.title}` : ''}`}
+                onClick={() => setIndex(i)}
+                className="transition-all"
+                style={{
+                  width: i === index ? 28 : 8,
+                  height: 8,
+                  borderRadius: 999,
+                  background: i === index ? 'var(--accent-coral)' : 'var(--neutral-300)',
+                  border: 0,
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={next}
+            aria-label={labels.next}
+            className="md:hidden inline-flex items-center justify-center"
+            style={{
+              width: 40, height: 40, borderRadius: '50%',
+              background: '#fff',
+              border: '1px solid var(--neutral-200)',
+              color: 'var(--neutral-900)',
+              boxShadow: '0 4px 12px rgba(15,22,36,0.08)',
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
         </div>
       )}
 
@@ -274,11 +308,6 @@ function ReelCard({
   embed,
   expandLabel,
   playLabel,
-  prevLabel,
-  nextLabel,
-  onPrev,
-  onNext,
-  reelsCount,
 }) {
   const poster = posterFallback
     ? youtubeThumbnail(reel.id, 'hqdefault')
@@ -358,34 +387,6 @@ function ReelCard({
             </svg>
           </span>
         </button>
-      )}
-
-      {/* Active-only overlays: mobile prev/next at top corners + expand. */}
-      {isActive && reelsCount > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); onPrev(); }}
-            aria-label={prevLabel}
-            className="md:hidden absolute top-3 left-3 w-9 h-9 rounded-full inline-flex items-center justify-center text-white"
-            style={{ background: 'rgba(0,0,0,0.55)' }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); onNext(); }}
-            aria-label={nextLabel}
-            className="md:hidden absolute top-3 right-3 w-9 h-9 rounded-full inline-flex items-center justify-center text-white"
-            style={{ background: 'rgba(0,0,0,0.55)', marginRight: 44 }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-        </>
       )}
 
       {isActive && (
