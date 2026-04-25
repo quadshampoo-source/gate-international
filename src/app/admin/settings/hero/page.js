@@ -37,6 +37,20 @@ export default async function AdminHeroPage({ searchParams }) {
         <div className="mb-5 text-[13px] text-[#ef4444]">{decodeURIComponent(sp.error)}</div>
       )}
 
+      {/* TEMP debug strip — shows the exact values getSiteSettings returned
+          on this server render. Remove once the read path is confirmed. */}
+      <div
+        className="mb-5 p-3 font-mono text-[11px] leading-relaxed"
+        style={{ background: '#0B1220', border: '1px dashed #334', color: '#9ca3af' }}
+      >
+        <div>DEBUG · server read</div>
+        <div>heroVersion = <span style={{ color: '#fff' }}>{String(settings.heroVersion)}</span></div>
+        <div>heroImageUrl = <span style={{ color: '#fff' }}>{settings.heroImageUrl ?? 'null'}</span></div>
+        <div>heroImageMobileUrl = <span style={{ color: '#fff' }}>{settings.heroImageMobileUrl ?? 'null'}</span></div>
+        <div>heroOverlayOpacity = <span style={{ color: '#fff' }}>{String(settings.heroOverlayOpacity)}</span></div>
+        <div>updatedAt = <span style={{ color: '#fff' }}>{settings.updatedAt ?? 'null'}</span></div>
+      </div>
+
       <HeroForm action={saveHeroSettings} initial={settings} />
     </AdminFrame>
   );

@@ -27,12 +27,19 @@ const DEFAULTS = {
 export const getSiteSettings = cache(async () => {
   try {
     const s = supabaseAdmin();
-    const { data } = await s
+    const { data, error } = await s
       .from('site_settings')
       .select('active_theme, logo_url, logo_alt, hero_version, hero_image_url, hero_image_mobile_url, hero_overlay_opacity, updated_at')
       .eq('id', 1)
       .single();
-    if (!data) return { ...DEFAULTS };
+    if (error) {
+      console.error('[getSiteSettings] supabase error', error);
+      return { ...DEFAULTS };
+    }
+    if (!data) {
+      console.error('[getSiteSettings] no row at id=1');
+      return { ...DEFAULTS };
+    }
     return {
       activeTheme: data.active_theme || null,
       logoUrl: data.logo_url || null,
@@ -44,7 +51,8 @@ export const getSiteSettings = cache(async () => {
         data.hero_overlay_opacity != null ? Number(data.hero_overlay_opacity) : 0.4,
       updatedAt: data.updated_at || null,
     };
-  } catch {
+  } catch (e) {
+    console.error('[getSiteSettings] threw', e);
     return { ...DEFAULTS };
   }
 });
