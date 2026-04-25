@@ -16,7 +16,7 @@ export default function AtomHomeHeroV2({ lang = 'en', districtList = [], setting
   }
 
   return (
-    <section className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
+    <section className="relative isolate overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
       {/* Mobile / desktop image stack — single <picture> would also work but
           keeping two layered <img>s keeps the markup zero-JS. */}
       {mobileUrl && (
@@ -25,7 +25,7 @@ export default function AtomHomeHeroV2({ lang = 'en', districtList = [], setting
           src={mobileUrl}
           alt=""
           aria-hidden
-          className="md:hidden absolute inset-0 w-full h-full object-cover -z-10"
+          className="md:hidden absolute inset-0 w-full h-full object-cover z-0"
         />
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -33,15 +33,15 @@ export default function AtomHomeHeroV2({ lang = 'en', districtList = [], setting
         src={desktopUrl}
         alt=""
         aria-hidden
-        className="hidden md:block absolute inset-0 w-full h-full object-cover -z-10"
+        className="hidden md:block absolute inset-0 w-full h-full object-cover z-0"
       />
       <div
         aria-hidden
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0 z-0"
         style={{ background: '#000', opacity: overlay }}
       />
 
-      <div className="relative max-w-[1100px] mx-auto px-6 md:px-10 text-center">
+      <div className="relative z-10 max-w-[1100px] mx-auto px-6 md:px-10 text-center">
         <div
           className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full"
           style={{
