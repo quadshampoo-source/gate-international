@@ -9,7 +9,8 @@ export default function PaymentPlanTimeline({ paymentPlan }) {
   const stages = Array.isArray(paymentPlan.stages) ? paymentPlan.stages.filter(Boolean) : [];
   const hasStages = stages.length > 0;
   const hasLegacy = paymentPlan.downPct != null || paymentPlan.termMonths != null;
-  if (!hasStages && !hasLegacy) return null;
+  const hasNoteOnly = !hasStages && !hasLegacy && !!paymentPlan.deadlineNote;
+  if (!hasStages && !hasLegacy && !hasNoteOnly) return null;
 
   const totalPct = hasStages
     ? stages.reduce((sum, s) => sum + (Number(s.pct) || 0), 0)
@@ -101,7 +102,7 @@ export default function PaymentPlanTimeline({ paymentPlan }) {
             {paymentPlan.deadlineNote && <span style={{ color: 'var(--neutral-700)' }}>{paymentPlan.deadlineNote}</span>}
           </div>
         </>
-      ) : (
+      ) : hasLegacy ? (
         <div
           className="p-5"
           style={{
@@ -117,6 +118,22 @@ export default function PaymentPlanTimeline({ paymentPlan }) {
           {paymentPlan.interestPct != null && (
             <span>{(paymentPlan.downPct != null || paymentPlan.termMonths != null) ? ' · ' : ''}{paymentPlan.interestPct}% interest</span>
           )}
+          {paymentPlan.deadlineNote && (
+            <div className="mt-2 text-xs" style={{ color: 'var(--neutral-500)' }}>{paymentPlan.deadlineNote}</div>
+          )}
+        </div>
+      ) : (
+        // Note-only fallback: Aliée Loft and similar where the plan is TBD.
+        <div
+          className="p-5 text-sm"
+          style={{
+            background: '#fff',
+            border: '1px solid var(--neutral-200)',
+            borderRadius: 'var(--atom-radius-lg)',
+            color: 'var(--neutral-700)',
+          }}
+        >
+          {paymentPlan.deadlineNote}
         </div>
       )}
     </section>
