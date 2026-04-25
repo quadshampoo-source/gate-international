@@ -4,6 +4,7 @@ import StickyInfoCard from './detail/sticky-info-card';
 import HighlightsList from './detail/highlights-list';
 import MarkdownDescription from './detail/markdown-description';
 import ConfigurationsTabs from './detail/configurations-tabs';
+import FloorPlans from './detail/floor-plans';
 import AmenitiesGrid from './detail/amenities-grid';
 import LocationDistances from './detail/location-distances';
 import DeveloperCard from './detail/developer-card';
@@ -12,7 +13,11 @@ import VideoTour from './detail/video-tour';
 import FaqAccordion from './detail/faq-accordion';
 import SimilarProperties from './detail/similar-properties';
 
-function getGallery(project) {
+// Hero gallery is exterior-only. If a project has no exterior images we
+// fall through to the legacy unified `gallery` array, then to the cover
+// `img`. Interior shots never join this set — they get their own
+// FloorPlans section below the configurations.
+function getHeroGallery(project) {
   const seen = new Set();
   const out = [];
   const push = (src) => {
@@ -21,9 +26,8 @@ function getGallery(project) {
     out.push(src);
   };
   if (Array.isArray(project.exteriorImages)) project.exteriorImages.forEach(push);
-  if (Array.isArray(project.interiorImages)) project.interiorImages.forEach(push);
-  if (Array.isArray(project.gallery)) project.gallery.forEach(push);
-  if (project.img) push(project.img);
+  if (out.length === 0 && Array.isArray(project.gallery)) project.gallery.forEach(push);
+  if (out.length === 0 && project.img) push(project.img);
   return out;
 }
 
@@ -41,7 +45,8 @@ function buildSpecs(project) {
 }
 
 export default function AtomProjectDetail({ project, lang = 'en', allProjects = [] }) {
-  const gallery = getGallery(project);
+  const heroGallery = getHeroGallery(project);
+  const interiorImages = Array.isArray(project.interiorImages) ? project.interiorImages.filter(Boolean) : [];
   const specs = buildSpecs(project);
   const developerInfo = project.developerInfo || project.developer_info;
   const distances = project.distances || {};
@@ -68,7 +73,7 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
             <span style={{ color: 'var(--neutral-900)' }}>{project.name}</span>
           </div>
 
-          <GalleryMosaic images={gallery} alt={project.name} />
+          <GalleryMosaic images={heroGallery} alt={project.name} />
         </div>
       </section>
 
@@ -128,6 +133,7 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
               <HighlightsList amenities={amenities} />
               <MarkdownDescription markdown={description} />
               <ConfigurationsTabs options={project.options} unitTypes={project.unit_types || project.unitTypes} />
+              <FloorPlans images={interiorImages} alt={`${project.name} interior`} />
               <AmenitiesGrid amenities={amenities} />
               <LocationDistances
                 distances={distances}
