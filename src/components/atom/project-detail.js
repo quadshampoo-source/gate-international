@@ -1,185 +1,157 @@
 import Link from 'next/link';
-import AtomProjectCard from './project-card';
-import { Button, Card } from '@/components/ui';
+import GalleryMosaic from './detail/gallery-mosaic';
+import StickyInfoCard from './detail/sticky-info-card';
+import HighlightsList from './detail/highlights-list';
+import MarkdownDescription from './detail/markdown-description';
+import ConfigurationsTabs from './detail/configurations-tabs';
+import AmenitiesGrid from './detail/amenities-grid';
+import LocationDistances from './detail/location-distances';
+import DeveloperCard from './detail/developer-card';
+import InvestmentBlock from './detail/investment-block';
+import VideoTour from './detail/video-tour';
+import FaqAccordion from './detail/faq-accordion';
+import SimilarProperties from './detail/similar-properties';
 
-function fmtUsd(n) {
-  if (!n) return '—';
-  return `$${Number(n).toLocaleString()}`;
+function getGallery(project) {
+  const seen = new Set();
+  const out = [];
+  const push = (src) => {
+    if (!src || seen.has(src)) return;
+    seen.add(src);
+    out.push(src);
+  };
+  if (Array.isArray(project.exteriorImages)) project.exteriorImages.forEach(push);
+  if (Array.isArray(project.interiorImages)) project.interiorImages.forEach(push);
+  if (Array.isArray(project.gallery)) project.gallery.forEach(push);
+  if (project.img) push(project.img);
+  return out;
 }
 
-function cover(p) {
-  if (Array.isArray(p.exteriorImages) && p.exteriorImages[0]) return p.exteriorImages[0];
-  if (Array.isArray(p.gallery) && p.gallery[0]) return p.gallery[0];
-  return p.img || null;
+function buildSpecs(project) {
+  const specs = [];
+  if (project.bedrooms) specs.push({ label: 'Bedrooms', value: project.bedrooms });
+  if (project.bathrooms) specs.push({ label: 'Bathrooms', value: project.bathrooms });
+  if (project.area) specs.push({ label: 'Area', value: `${project.area} m²` });
+  if (project.propertyType || project.typology) specs.push({ label: 'Type', value: project.propertyType || project.typology });
+  if (project.deliveryStatus === 'DELIVERED') specs.push({ label: 'Delivery', value: 'Delivered' });
+  else if (project.deliveryMonth && project.deliveryYear) specs.push({ label: 'Delivery', value: `${String(project.deliveryMonth).padStart(2, '0')}/${project.deliveryYear}` });
+  else if (project.delivery) specs.push({ label: 'Delivery', value: project.delivery });
+  if (project.view) specs.push({ label: 'View', value: project.view });
+  return specs;
 }
 
 export default function AtomProjectDetail({ project, lang = 'en', allProjects = [] }) {
-  const img = cover(project);
-  const price = project.priceUsd ?? project.price_usd;
-  const options = Array.isArray(project.options) ? project.options.filter((o) => o && (o.type || o.size || o.price)) : [];
-  const gallery = [
-    ...(Array.isArray(project.exteriorImages) ? project.exteriorImages : []),
-    ...(Array.isArray(project.interiorImages) ? project.interiorImages : []),
-  ].filter(Boolean);
-  const deliveryLabel = (() => {
-    if (project.deliveryStatus === 'DELIVERED') return 'Delivered';
-    if (project.deliveryMonth && project.deliveryYear) return `${String(project.deliveryMonth).padStart(2, '0')}/${project.deliveryYear}`;
-    return project.delivery || null;
-  })();
-  const similar = (allProjects || []).filter((p) => p.id !== project.id && p.district === project.district).slice(0, 3);
+  const gallery = getGallery(project);
+  const specs = buildSpecs(project);
+  const developerInfo = project.developerInfo || project.developer_info;
+  const distances = project.distances || {};
+  const heroTagline = project.heroTagline || project.hero_tagline;
+  const description = project.description;
+  const amenities = Array.isArray(project.amenities) ? project.amenities : [];
+  const faqs = Array.isArray(project.faqs) ? project.faqs : [];
+  const investment = project.investment;
+
+  const districtLabel = (project.subDistrict || project.sub_district) && project.district !== (project.subDistrict || project.sub_district)
+    ? `${project.subDistrict || project.sub_district}, ${project.district}`
+    : project.district;
 
   return (
     <>
-      {/* Hero */}
-      <section className="pt-28 md:pt-36 pb-8 md:pb-12">
+      {/* Breadcrumb + gallery hero */}
+      <section className="pt-24 md:pt-32 pb-6 md:pb-10">
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">
-          <div className="flex items-center gap-3 text-sm mb-4" style={{ color: 'var(--neutral-500)' }}>
-            <Link href={`/${lang}/projects`} className="hover:text-atom-primary-600">All residences</Link>
+          <div className="flex items-center gap-2 text-sm mb-5" style={{ color: 'var(--neutral-500)' }}>
+            <Link href={`/${lang}/projects`} className="hover:text-atom-primary-600 transition-colors">
+              All residences
+            </Link>
             <span>/</span>
             <span style={{ color: 'var(--neutral-900)' }}>{project.name}</span>
           </div>
 
-          <div className="flex items-end justify-between gap-6 mb-6 flex-wrap">
-            <div>
-              <div className="atom-caption" style={{ color: 'var(--primary-600)' }}>{(project.district || '').toUpperCase()}{project.developer ? ` · ${project.developer.toUpperCase()}` : ''}</div>
-              <h1 className="atom-h1 mt-3" style={{ fontSize: 'clamp(36px, 5vw, 56px)' }}>{project.name}</h1>
-            </div>
-            {price && (
-              <div className="text-right">
-                <div className="atom-caption" style={{ color: 'var(--neutral-400)' }}>From</div>
-                <div className="text-3xl md:text-4xl font-bold" style={{ color: 'var(--neutral-900)' }}>{fmtUsd(price)}</div>
-              </div>
-            )}
-          </div>
-
-          {img && (
-            <div className="overflow-hidden" style={{ borderRadius: 'var(--atom-radius-xl)', boxShadow: 'var(--atom-shadow-md)', aspectRatio: '16 / 9', background: 'var(--neutral-100)' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img} alt={project.name} className="w-full h-full object-cover" />
-            </div>
-          )}
+          <GalleryMosaic images={gallery} alt={project.name} />
         </div>
       </section>
 
-      {/* Specs grid */}
-      <section className="py-8 md:py-12">
+      {/* Title + tagline */}
+      <section className="pb-6 md:pb-10">
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {project.bedrooms && <SpecCell label="Bedrooms" value={project.bedrooms} />}
-            {project.bathrooms && <SpecCell label="Bathrooms" value={project.bathrooms} />}
-            {project.area && <SpecCell label="Area" value={`${project.area} m²`} />}
-            {project.propertyType && <SpecCell label="Type" value={project.propertyType} />}
-            {deliveryLabel && <SpecCell label="Delivery" value={deliveryLabel} />}
-            {project.view && <SpecCell label="View" value={project.view} />}
-            {project.totalUnits && <SpecCell label="Total units" value={project.totalUnits} />}
-            {project.blocks && <SpecCell label="Blocks" value={project.blocks} />}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div className="min-w-0">
+              {districtLabel && (
+                <div className="atom-caption mb-3" style={{ color: 'var(--primary-600)' }}>
+                  {districtLabel.toUpperCase()}
+                  {project.developer ? ` · ${project.developer.toUpperCase()}` : ''}
+                </div>
+              )}
+              <h1 className="atom-h1" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.025em' }}>
+                {project.name}
+              </h1>
+              {heroTagline && (
+                <p className="mt-3 max-w-[700px] text-lg" style={{ color: 'var(--neutral-500)', lineHeight: 1.5 }}>
+                  {heroTagline}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Options */}
-      {options.length > 0 && (
-        <section className="py-12 md:py-16" style={{ background: 'var(--neutral-100)' }}>
-          <div className="max-w-[1360px] mx-auto px-6 md:px-10">
-            <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— Options —</span>
-            <h2 className="atom-h2 mt-3 mb-8 md:mb-10" style={{ fontSize: 'clamp(28px, 3.5vw, 40px)' }}>
-              Available <span className="atom-accent">configurations.</span>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {options.map((o, i) => (
-                <Card key={i} padding="md" align="left" hairline={false}>
-                  <div className="flex items-baseline justify-between gap-3 mb-3">
-                    <div className="text-xl font-semibold" style={{ color: 'var(--neutral-900)' }}>{o.type || '—'}</div>
-                    {o.size && (
-                      <div className="atom-caption" style={{ color: 'var(--neutral-400)' }}>{Number(String(o.size).replace(/\D/g, ''))} m²</div>
-                    )}
-                  </div>
-                  {o.price && (
-                    <div className="text-2xl font-bold atom-accent" style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
-                      {fmtUsd(Number(String(o.price).replace(/\D/g, '')))}
+      {/* Main two-column body */}
+      <section className="pb-32 md:pb-24">
+        <div className="max-w-[1360px] mx-auto px-6 md:px-10">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_360px] lg:grid-cols-[1fr_400px] gap-8 md:gap-12">
+            {/* Main column */}
+            <div className="flex flex-col gap-12 md:gap-16 min-w-0">
+              {specs.length > 0 && (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 -mt-2">
+                  {specs.map((s) => (
+                    <div
+                      key={s.label}
+                      className="p-4"
+                      style={{
+                        background: '#fff',
+                        border: '1px solid var(--neutral-200)',
+                        borderRadius: 'var(--atom-radius-md)',
+                      }}
+                    >
+                      <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: 'var(--neutral-400)' }}>
+                        {s.label}
+                      </div>
+                      <div className="mt-1 text-lg font-semibold" style={{ color: 'var(--neutral-900)' }}>
+                        {s.value}
+                      </div>
                     </div>
-                  )}
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Gallery */}
-      {gallery.length > 1 && (
-        <section className="py-12 md:py-16">
-          <div className="max-w-[1360px] mx-auto px-6 md:px-10">
-            <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— Gallery —</span>
-            <h2 className="atom-h2 mt-3 mb-8 md:mb-10" style={{ fontSize: 'clamp(28px, 3.5vw, 40px)' }}>
-              A closer <span className="atom-accent">look.</span>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-              {gallery.slice(0, 6).map((src, i) => (
-                <div key={i} className="overflow-hidden" style={{ borderRadius: 'var(--atom-radius-lg)', aspectRatio: '4 / 3', background: 'var(--neutral-100)' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt={`${project.name} — ${i + 1}`} loading="lazy" className="w-full h-full object-cover" />
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+              )}
 
-      {/* CTA */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-[1200px] mx-auto px-6 md:px-10">
-          <div
-            className="text-center p-10 md:p-14"
-            style={{
-              borderRadius: 'var(--atom-radius-2xl)',
-              background: 'var(--gradient-primary)',
-              color: '#fff',
-              boxShadow: '0 16px 48px rgba(99,102,241,0.28)',
-            }}
-          >
-            <h2 className="mb-3" style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 700, letterSpacing: '-0.02em' }}>
-              Interested in {project.name}?
-            </h2>
-            <p style={{ color: 'rgba(255,255,255,0.88)', fontSize: 17 }}>
-              Send a request — a senior advisor will reply within one business day with floor plans, payment options, and a private tour.
-            </p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              <Button href={`/${lang}/contact?project=${project.id}`} variant="ghost" className="!bg-white !text-atom-primary-700 !border-transparent">
-                Request details
-              </Button>
-              <Button href="https://wa.me/" external variant="ghost" arrow={false} className="!bg-transparent !text-white !border-white/50 hover:!bg-white/10">
-                WhatsApp us
-              </Button>
+              <HighlightsList amenities={amenities} />
+              <MarkdownDescription markdown={description} />
+              <ConfigurationsTabs options={project.options} unitTypes={project.unit_types || project.unitTypes} />
+              <AmenitiesGrid amenities={amenities} />
+              <LocationDistances
+                distances={distances}
+                district={project.district}
+                projectName={project.name}
+              />
+              <DeveloperCard developerInfo={developerInfo} />
+              <InvestmentBlock investment={investment} />
+              <VideoTour project={project} />
+              <FaqAccordion faqs={faqs} />
             </div>
+
+            {/* Sticky / mobile bottom CTA */}
+            <StickyInfoCard project={project} />
           </div>
         </div>
       </section>
 
       {/* Similar */}
-      {similar.length > 0 && (
-        <section className="py-12 md:py-20">
-          <div className="max-w-[1360px] mx-auto px-6 md:px-10">
-            <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— More nearby —</span>
-            <h2 className="atom-h2 mt-3 mb-8 md:mb-10" style={{ fontSize: 'clamp(28px, 3.5vw, 40px)' }}>
-              Also in <span className="atom-accent">{project.district}.</span>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {similar.map((p) => <AtomProjectCard key={p.id} project={p} lang={lang} />)}
-            </div>
-          </div>
-        </section>
-      )}
-
+      <section className="pb-20 md:pb-28">
+        <div className="max-w-[1360px] mx-auto px-6 md:px-10">
+          <SimilarProperties projects={allProjects} current={project} lang={lang} />
+        </div>
+      </section>
     </>
-  );
-}
-
-function SpecCell({ label, value }) {
-  return (
-    <div className="p-5 bg-white" style={{ borderRadius: 'var(--atom-radius-lg)', border: '1px solid var(--neutral-200)', boxShadow: 'var(--atom-shadow-sm)' }}>
-      <div className="atom-caption" style={{ color: 'var(--neutral-400)' }}>{label}</div>
-      <div className="mt-2 text-xl font-semibold" style={{ color: 'var(--neutral-900)' }}>{value}</div>
-    </div>
   );
 }

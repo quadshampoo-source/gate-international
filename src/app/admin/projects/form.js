@@ -154,7 +154,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           placeholder="1234567890 — numeric Vimeo video ID"
         />
       </Row>
-      <Row label="YouTube URL">
+      <Row label="Video Tour URL (YouTube)">
         <input
           name="youtube_url"
           defaultValue={v('youtube_url') || v('youtubeUrl')}
@@ -162,7 +162,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           placeholder="https://www.youtube.com/watch?v=XXXXX  veya  https://youtu.be/XXXXX"
         />
         <p className="text-[11px] text-fg-dim mt-1.5">
-          Vimeo ID doluyken YouTube yok sayılır.
+          Atom detay sayfasında "Video Tour" bölümünde gömülü oynatılır. Vimeo ID doluyken YouTube yok sayılır.
         </p>
       </Row>
       <Row label="Brochure URL (PDF)">
