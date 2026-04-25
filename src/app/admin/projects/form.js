@@ -162,7 +162,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           placeholder="https://www.youtube.com/watch?v=XXXXX  veya  https://youtu.be/XXXXX"
         />
         <p className="text-[11px] text-fg-dim mt-1.5">
-          Atom detay sayfasında "Video Tour" bölümünde gömülü oynatılır. Vimeo ID doluyken YouTube yok sayılır.
+          Atom detay sayfasında &ldquo;Video Tour&rdquo; bölümünde gömülü oynatılır. Vimeo ID doluyken YouTube yok sayılır.
         </p>
       </Row>
       <Row label="Brochure URL (PDF)">
