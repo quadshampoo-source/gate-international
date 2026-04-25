@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 const LazyMap = dynamic(() => Promise.resolve(MapEmbed), { ssr: false });
 
 // Distance key → (icon, label, suffix). All keys optional in the data.
+// Both snake_case (DB) and camelCase (legacy) shapes are accepted because
+// jsonb columns get round-tripped through JS objects elsewhere in the app.
 const DISTANCE_META = {
   metro_km: { icon: '🚇', label: 'Metro', suffix: 'km' },
   mall_km: { icon: '🛍️', label: 'Shopping', suffix: 'km' },
@@ -20,10 +22,21 @@ const DISTANCE_META = {
   bosphorus_min: { icon: '🌊', label: 'Bosphorus', suffix: 'min' },
   business_district_min: { icon: '🏢', label: 'CBD', suffix: 'min' },
   city_center_min: { icon: '🏙️', label: 'City center', suffix: 'min' },
+  istiklal_avenue_min: { icon: '🚶', label: 'İstiklal Avenue', suffix: 'min' },
+  galataport_min: { icon: '⚓', label: 'Galataport', suffix: 'min' },
+  blue_mosque_min: { icon: '🕌', label: 'Blue Mosque', suffix: 'min' },
+  grand_bazaar_min: { icon: '🏺', label: 'Grand Bazaar', suffix: 'min' },
+  kalamis_marina_min: { icon: '⛵', label: 'Kalamış Marina', suffix: 'min' },
 };
+
+// Accept both snake_case and camelCase keys from upstream callers.
+function snakeKey(k) {
+  return String(k).replace(/[A-Z]/g, (m) => `_${m.toLowerCase()}`);
+}
 
 export default function LocationDistances({ distances = {}, address, district, projectName, city = 'Istanbul' }) {
   const pills = Object.entries(distances || {})
+    .map(([k, v]) => [snakeKey(k), v])
     .filter(([k, v]) => DISTANCE_META[k] && v != null && v !== '')
     .map(([k, v]) => {
       const m = DISTANCE_META[k];

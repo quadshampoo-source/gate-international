@@ -165,7 +165,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           Atom detay sayfasında &ldquo;Video Tour&rdquo; bölümünde gömülü oynatılır. Vimeo ID doluyken YouTube yok sayılır.
         </p>
       </Row>
-      <Row label="Brochure URL (PDF)">
+      <Row label="Residence Brochure URL (PDF)">
         <input
           name="brochure_url"
           type="url"
@@ -174,7 +174,19 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           placeholder="https://.../brochure.pdf"
         />
         <p className="text-[11px] text-fg-dim mt-1.5">
-          Direct link to a PDF (max ~20 MB). Upload to storage first, then paste the public URL here.
+          Direct link to the detailed residence-specific PDF (max ~25 MB).
+        </p>
+      </Row>
+      <Row label="Master Plan URL (PDF)">
+        <input
+          name="master_plan_url"
+          type="url"
+          defaultValue={v('master_plan_url')}
+          className="admin-input font-mono"
+          placeholder="https://.../master-plan.pdf"
+        />
+        <p className="text-[11px] text-fg-dim mt-1.5">
+          Optional. Direct link to the parent development&rsquo;s master plan / overview PDF, if this project is part of a larger development.
         </p>
       </Row>
 

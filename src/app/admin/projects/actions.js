@@ -138,6 +138,7 @@ function payloadFrom(formData) {
     faqs: Array.isArray(faqsJson) ? faqsJson : null,
     investment: investmentValue,
     brochure_url: str('brochure_url'),
+    master_plan_url: str('master_plan_url'),
     price_usd: num('price_usd'),
     bedrooms: str('bedrooms'),
     bathrooms: str('bathrooms'),

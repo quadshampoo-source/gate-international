@@ -11,6 +11,12 @@ const ADVISOR = {
   photo: null, // placeholder — fill from team data later
 };
 
+const PDF_LABELS = {
+  en: { residence: 'Download Residence Brochure', master: 'Download Master Plan' },
+  tr: { residence: 'Konut Broşürünü İndir', master: 'Master Plan İndir' },
+  ar: { residence: 'تحميل كتيب السكن', master: 'تحميل المخطط الرئيسي' },
+};
+
 const fmtUsd = (n) => {
   if (!n && n !== 0) return null;
   const v = Number(n);
@@ -21,7 +27,7 @@ const fmtUsd = (n) => {
 // Sticky right rail on desktop. On mobile renders a fixed bottom CTA bar
 // with a "View options" button that opens the same content in a bottom
 // sheet.
-export default function StickyInfoCard({ project }) {
+export default function StickyInfoCard({ project, lang = 'en' }) {
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -29,15 +35,21 @@ export default function StickyInfoCard({ project }) {
   const priceLabel = fmtUsd(price);
   const paymentPlan = project.payment_plan || project.paymentPlan;
   const brochureUrl = project.brochure_url || project.brochureUrl;
+  const masterPlanUrl = project.master_plan_url || project.masterPlanUrl;
+  const priceNote = project.price_note || project.priceNote;
   const waMsg = encodeURIComponent(`Hi, I'd like to know more about ${project.name}.`);
   const waHref = `https://wa.me/${ADVISOR.whatsappNumber}?text=${waMsg}`;
+  const labels = PDF_LABELS[lang] || PDF_LABELS.en;
 
   const cardBody = (
     <CardBody
       project={project}
       priceLabel={priceLabel}
+      priceNote={priceNote}
       paymentPlan={paymentPlan}
       brochureUrl={brochureUrl}
+      masterPlanUrl={masterPlanUrl}
+      pdfLabels={labels}
       waHref={waHref}
       onSchedule={() => setScheduleOpen(true)}
     />
@@ -114,7 +126,18 @@ export default function StickyInfoCard({ project }) {
   );
 }
 
-function CardBody({ project, priceLabel, paymentPlan, brochureUrl, waHref, onSchedule }) {
+function CardBody({ project, priceLabel, priceNote, paymentPlan, brochureUrl, masterPlanUrl, pdfLabels, waHref, onSchedule }) {
+  // Stages array introduced in March 2026 — collapse it to a short summary
+  // here; the full timeline lives in PaymentPlanTimeline on the page body.
+  const planSummary = (() => {
+    if (!paymentPlan) return null;
+    if (paymentPlan.downPct) {
+      const months = paymentPlan.totalMonths || paymentPlan.termMonths;
+      return months ? `Down ${paymentPlan.downPct}% · ${months}-month plan` : `Down ${paymentPlan.downPct}%`;
+    }
+    return null;
+  })();
+
   return (
     <div>
       {priceLabel && (
@@ -125,14 +148,17 @@ function CardBody({ project, priceLabel, paymentPlan, brochureUrl, waHref, onSch
           <div className="text-3xl font-bold" style={{ color: 'var(--neutral-900)' }}>
             {priceLabel}
           </div>
+          {priceNote && (
+            <div className="mt-1 text-[11px] leading-snug" style={{ color: 'var(--neutral-500)' }}>
+              {priceNote}
+            </div>
+          )}
         </div>
       )}
 
-      {paymentPlan && (paymentPlan.downPct || paymentPlan.termMonths) && (
+      {planSummary && (
         <div className="mt-2 mb-3 text-xs" style={{ color: 'var(--neutral-500)' }}>
-          {paymentPlan.downPct && <>Down {paymentPlan.downPct}%</>}
-          {paymentPlan.downPct && paymentPlan.termMonths && ' · '}
-          {paymentPlan.termMonths && <>{paymentPlan.termMonths}-month plan</>}
+          {planSummary}
         </div>
       )}
 
@@ -173,12 +199,12 @@ function CardBody({ project, priceLabel, paymentPlan, brochureUrl, waHref, onSch
             href={brochureUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 w-full h-11 text-sm font-medium transition-colors"
+            className="inline-flex items-center justify-center gap-2 w-full h-11 text-sm font-semibold transition-colors"
             style={{
-              background: 'transparent',
-              border: '1px solid var(--neutral-200)',
+              background: '#fff',
+              border: '1px solid var(--neutral-300)',
               borderRadius: 'var(--atom-radius-pill)',
-              color: 'var(--neutral-700)',
+              color: 'var(--neutral-900)',
             }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -186,7 +212,29 @@ function CardBody({ project, priceLabel, paymentPlan, brochureUrl, waHref, onSch
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            Download brochure
+            {pdfLabels.residence}
+          </a>
+        )}
+
+        {masterPlanUrl && (
+          <a
+            href={masterPlanUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 w-full h-11 text-sm font-medium transition-colors"
+            style={{
+              background: 'transparent',
+              border: '1px dashed var(--neutral-300)',
+              borderRadius: 'var(--atom-radius-pill)',
+              color: 'var(--neutral-700)',
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+              <line x1="8" y1="2" x2="8" y2="18" />
+              <line x1="16" y1="6" x2="16" y2="22" />
+            </svg>
+            {pdfLabels.master}
           </a>
         )}
       </div>

@@ -64,6 +64,10 @@ function fromRow(r) {
     faqs: r.faqs,
     investment: r.investment,
     brochureUrl: r.brochure_url,
+    masterPlanUrl: r.master_plan_url,
+    techSpecs: r.tech_specs,
+    priceNote: r.price_note,
+    priceLastUpdated: r.price_last_updated,
   };
 }
 

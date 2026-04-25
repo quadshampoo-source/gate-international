@@ -4,6 +4,7 @@ import StickyInfoCard from './detail/sticky-info-card';
 import HighlightsList from './detail/highlights-list';
 import MarkdownDescription from './detail/markdown-description';
 import ConfigurationsTabs from './detail/configurations-tabs';
+import PaymentPlanTimeline from './detail/payment-plan-timeline';
 import FloorPlans from './detail/floor-plans';
 import AmenitiesGrid from './detail/amenities-grid';
 import LocationDistances from './detail/location-distances';
@@ -12,6 +13,7 @@ import InvestmentBlock from './detail/investment-block';
 import VideoTour from './detail/video-tour';
 import FaqAccordion from './detail/faq-accordion';
 import SimilarProperties from './detail/similar-properties';
+import BuildingSpecs from './detail/building-specs';
 
 // Hero gallery is exterior-only. If a project has no exterior images we
 // fall through to the legacy unified `gallery` array, then to the cover
@@ -55,6 +57,11 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
   const amenities = Array.isArray(project.amenities) ? project.amenities : [];
   const faqs = Array.isArray(project.faqs) ? project.faqs : [];
   const investment = project.investment;
+  const techSpecs = project.techSpecs || project.tech_specs;
+  const paymentPlan = project.payment_plan || project.paymentPlan;
+  const priceTable = project.price_table || project.priceTable;
+  const priceNote = project.priceNote || project.price_note;
+  const priceLastUpdated = project.priceLastUpdated || project.price_last_updated;
 
   const districtLabel = (project.subDistrict || project.sub_district) && project.district !== (project.subDistrict || project.sub_district)
     ? `${project.subDistrict || project.sub_district}, ${project.district}`
@@ -130,9 +137,17 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
                 </div>
               )}
 
+              <BuildingSpecs techSpecs={techSpecs} />
               <HighlightsList amenities={amenities} />
               <MarkdownDescription markdown={description} />
-              <ConfigurationsTabs options={project.options} unitTypes={project.unit_types || project.unitTypes} />
+              <ConfigurationsTabs
+                priceTable={priceTable}
+                options={project.options}
+                unitTypes={project.unit_types || project.unitTypes}
+                priceNote={priceNote}
+                priceLastUpdated={priceLastUpdated}
+              />
+              <PaymentPlanTimeline paymentPlan={paymentPlan} />
               <FloorPlans images={interiorImages} alt={`${project.name} interior`} />
               <AmenitiesGrid amenities={amenities} />
               <LocationDistances
@@ -147,7 +162,7 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
             </div>
 
             {/* Sticky / mobile bottom CTA */}
-            <StickyInfoCard project={project} />
+            <StickyInfoCard project={project} lang={lang} />
           </div>
         </div>
       </section>

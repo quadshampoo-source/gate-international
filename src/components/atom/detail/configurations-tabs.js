@@ -9,26 +9,63 @@ const fmtUsd = (n) => {
   return `$${v.toLocaleString()}`;
 };
 
-// Tab UI for project.options (unit types). Each tab body shows size + price.
-export default function ConfigurationsTabs({ options = [], unitTypes = [] }) {
-  const cleaned = (options || [])
-    .filter((o) => o && (o.type || o.size || o.price))
-    .map((o) => ({
-      type: o.type || '—',
-      size: o.size ? Number(String(o.size).replace(/\D/g, '')) || o.size : null,
-      price: fmtUsd(o.price),
-    }));
+// Renders pricing rows from project.priceTable (preferred — supports ranges
+// + per-row notes) or falls back to project.options (legacy single-price
+// shape) and then to plain unit_types names.
+//
+// priceTable row shape:
+//   { type, areaM2?, areaM2Max?, priceUsd?, priceUsdMax?, note? }
+function normalize({ priceTable, options, unitTypes }) {
+  if (Array.isArray(priceTable) && priceTable.length) {
+    return priceTable
+      .filter((r) => r && (r.type || r.priceUsd || r.areaM2))
+      .map((r) => ({
+        type: r.type || '—',
+        size: r.areaM2 != null ? Number(r.areaM2) : null,
+        sizeMax: r.areaM2Max != null ? Number(r.areaM2Max) : null,
+        priceMin: r.priceUsd != null ? Number(r.priceUsd) : null,
+        priceMax: r.priceUsdMax != null ? Number(r.priceUsdMax) : null,
+        note: r.note || null,
+      }));
+  }
+  if (Array.isArray(options) && options.length) {
+    return options
+      .filter((o) => o && (o.type || o.size || o.price))
+      .map((o) => ({
+        type: o.type || '—',
+        size: o.size ? Number(String(o.size).replace(/\D/g, '')) || null : null,
+        sizeMax: null,
+        priceMin: o.price ? Number(String(o.price).replace(/\D/g, '')) || null : null,
+        priceMax: null,
+        note: null,
+      }));
+  }
+  if (Array.isArray(unitTypes) && unitTypes.length) {
+    return unitTypes.map((t) => ({ type: t, size: null, sizeMax: null, priceMin: null, priceMax: null, note: null }));
+  }
+  return [];
+}
 
-  const fallback = !cleaned.length && Array.isArray(unitTypes) && unitTypes.length
-    ? unitTypes.map((t) => ({ type: t, size: null, price: null }))
-    : [];
-
-  const items = cleaned.length ? cleaned : fallback;
+export default function ConfigurationsTabs({ priceTable, options, unitTypes, priceNote, priceLastUpdated }) {
+  const items = normalize({ priceTable, options, unitTypes });
   const [active, setActive] = useState(0);
 
   if (items.length === 0) return null;
-
   const current = items[active];
+
+  const sizeLabel = current.sizeMax && current.size && current.sizeMax !== current.size
+    ? `${current.size}–${current.sizeMax} m²`
+    : current.size != null
+      ? `${current.size} m²`
+      : '—';
+
+  const priceLabel = current.priceMin != null && current.priceMax != null && current.priceMax !== current.priceMin
+    ? `${fmtUsd(current.priceMin)} – ${fmtUsd(current.priceMax)}`
+    : current.priceMin != null
+      ? `${fmtUsd(current.priceMin)}`
+      : 'On request';
+
+  const showFromPrefix = current.priceMin != null && (current.priceMax == null || current.priceMax === current.priceMin);
 
   return (
     <section>
@@ -36,10 +73,7 @@ export default function ConfigurationsTabs({ options = [], unitTypes = [] }) {
         Available configurations
       </h2>
 
-      <div
-        className="flex gap-2 overflow-x-auto pb-2 mb-4"
-        style={{ scrollbarWidth: 'none' }}
-      >
+      <div className="flex gap-2 overflow-x-auto pb-2 mb-4" style={{ scrollbarWidth: 'none' }}>
         {items.map((o, i) => (
           <button
             key={i}
@@ -68,14 +102,27 @@ export default function ConfigurationsTabs({ options = [], unitTypes = [] }) {
         }}
       >
         <Stat label="Layout" value={current.type} />
-        <Stat label="Size" value={current.size ? `${current.size} m²` : '—'} />
-        <Stat label="From" value={current.price || 'On request'} accent />
+        <Stat label="Size" value={sizeLabel} />
+        <Stat
+          label={showFromPrefix ? 'From' : 'Price range'}
+          value={priceLabel}
+          accent
+          caption={current.note}
+        />
       </div>
+
+      {(priceNote || priceLastUpdated) && (
+        <p className="mt-3 text-xs" style={{ color: 'var(--neutral-500)' }}>
+          {priceNote}
+          {priceNote && priceLastUpdated ? ' · ' : ''}
+          {priceLastUpdated && `Updated ${formatDate(priceLastUpdated)}`}
+        </p>
+      )}
     </section>
   );
 }
 
-function Stat({ label, value, accent }) {
+function Stat({ label, value, accent, caption }) {
   return (
     <div>
       <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: 'var(--neutral-400)' }}>
@@ -92,6 +139,19 @@ function Stat({ label, value, accent }) {
       >
         {value}
       </div>
+      {caption && (
+        <div className="mt-1 text-xs" style={{ color: 'var(--neutral-500)' }}>
+          {caption}
+        </div>
+      )}
     </div>
   );
+}
+
+function formatDate(d) {
+  try {
+    return new Date(d).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  } catch {
+    return String(d);
+  }
 }
