@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import { supabaseServer } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 const DEFAULTS = {
   activeTheme: null,
@@ -14,12 +14,19 @@ const DEFAULTS = {
 
 /**
  * Read the singleton site_settings row (id = 1).
- * React.cache dedupes across a single render so every server component
- * that asks gets the same answer without a second DB hit.
+ *
+ * Uses the service-role client so newly-added columns are always readable
+ * regardless of column-level grants — Supabase's anon role doesn't
+ * automatically inherit SELECT on columns added via later ALTER TABLE
+ * migrations, which silently broke hero_* reads. The data here is
+ * non-sensitive site config that's already exposed in rendered HTML, so
+ * service-role for a server-only read is acceptable.
+ *
+ * React.cache dedupes across a single render.
  */
 export const getSiteSettings = cache(async () => {
   try {
-    const s = await supabaseServer();
+    const s = supabaseAdmin();
     const { data } = await s
       .from('site_settings')
       .select('active_theme, logo_url, logo_alt, hero_version, hero_image_url, hero_image_mobile_url, hero_overlay_opacity, updated_at')
