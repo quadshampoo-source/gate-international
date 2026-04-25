@@ -54,6 +54,32 @@ const YOUTUBE_IFRAME_PROPS = {
 const YOUTUBE_HOST = 'https://www.youtube-nocookie.com';
 const YOUTUBE_PARAMS = 'rel=0&modestbranding=1&showinfo=0&controls=1&disablekb=0&fs=1&playsinline=1';
 
+// Permissive YouTube ID extractor used by the Reels admin editor — accepts
+// shorts, watch, youtu.be, and embed shapes plus any extra query params.
+// Same id grammar as parseYouTubeId; this wrapper just keeps the spec name.
+export function extractYouTubeId(url) {
+  return parseYouTubeId(url);
+}
+
+// Default thumbnail URL for a YouTube video id. `maxres` first, then the
+// caller can fall back to `hqdefault` on error if needed.
+export function youtubeThumbnail(id, quality = 'maxresdefault') {
+  if (!id) return null;
+  return `https://i.ytimg.com/vi/${id}/${quality}.jpg`;
+}
+
+// Embed URL builder for inline (muted, looping, no controls) and lightbox
+// (sound on, default controls). Centralises the param strings so the
+// component code stays compact.
+export function youtubeEmbedUrl(id, mode = 'inline') {
+  if (!id) return null;
+  if (mode === 'lightbox') {
+    return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&playsinline=1`;
+  }
+  // inline — autoplay muted, looping single video.
+  return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1&loop=1&playlist=${id}`;
+}
+
 // Returns { provider: 'vimeo' | 'youtube', embedUrl, id, iframeProps } or null.
 // Respects the priority rule: Vimeo first, YouTube only if Vimeo is empty.
 export function resolveVideo(project) {

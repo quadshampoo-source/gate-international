@@ -5,6 +5,7 @@ import OptionsEditor from './_components/options-editor';
 import DistrictPicker from './_components/district-picker';
 import AmenitiesEditor from './_components/amenities-editor';
 import FaqsEditor from './_components/faqs-editor';
+import ReelsEditor from './_components/reels-editor';
 
 export default function ProjectForm({ action, project = {}, isNew = false, deleteAction }) {
   const v = (k, fallback = '') => project[k] ?? fallback;
@@ -189,6 +190,9 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           Optional. Direct link to the parent development&rsquo;s master plan / overview PDF, if this project is part of a larger development.
         </p>
       </Row>
+
+      <h3 className="font-serif text-[22px] mt-8 mb-4">Project Reels</h3>
+      <ReelsEditor initialReels={Array.isArray(project.reels) ? project.reels : []} />
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Project scale</h3>
       <Row label="Total units"><input name="total_units" type="number" defaultValue={v('total_units')} className="admin-input w-40" /></Row>

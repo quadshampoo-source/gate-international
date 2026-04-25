@@ -68,6 +68,7 @@ function fromRow(r) {
     techSpecs: r.tech_specs,
     priceNote: r.price_note,
     priceLastUpdated: r.price_last_updated,
+    reels: r.reels,
   };
 }
 

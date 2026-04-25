@@ -79,6 +79,7 @@ function payloadFrom(formData) {
   const options = parseJsonOrNull(String(formData.get('options_json') || ''));
   const amenitiesJson = parseJsonOrNull(String(formData.get('amenities_json') || ''));
   const faqsJson = parseJsonOrNull(String(formData.get('faqs_json') || ''));
+  const reelsJson = parseJsonOrNull(String(formData.get('reels_json') || ''));
 
   // Build the developer object from the split inputs. Legacy `developer` text
   // column still written — derived from the object's name so existing readers
@@ -139,6 +140,7 @@ function payloadFrom(formData) {
     investment: investmentValue,
     brochure_url: str('brochure_url'),
     master_plan_url: str('master_plan_url'),
+    reels: Array.isArray(reelsJson) && reelsJson.length ? reelsJson : null,
     price_usd: num('price_usd'),
     bedrooms: str('bedrooms'),
     bathrooms: str('bathrooms'),

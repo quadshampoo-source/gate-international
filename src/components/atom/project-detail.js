@@ -14,6 +14,7 @@ import VideoTour from './detail/video-tour';
 import FaqAccordion from './detail/faq-accordion';
 import SimilarProperties from './detail/similar-properties';
 import BuildingSpecs from './detail/building-specs';
+import ProjectReels from './detail/project-reels';
 
 // Hero gallery is exterior-only. If a project has no exterior images we
 // fall through to the legacy unified `gallery` array, then to the cover
@@ -62,6 +63,7 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
   const priceTable = project.price_table || project.priceTable;
   const priceNote = project.priceNote || project.price_note;
   const priceLastUpdated = project.priceLastUpdated || project.price_last_updated;
+  const reels = Array.isArray(project.reels) ? project.reels : [];
 
   const districtLabel = (project.subDistrict || project.sub_district) && project.district !== (project.subDistrict || project.sub_district)
     ? `${project.subDistrict || project.sub_district}, ${project.district}`
@@ -140,6 +142,7 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
               <BuildingSpecs techSpecs={techSpecs} />
               <HighlightsList amenities={amenities} />
               <MarkdownDescription markdown={description} />
+              <ProjectReels reels={reels} lang={lang} />
               <ConfigurationsTabs
                 priceTable={priceTable}
                 options={project.options}
