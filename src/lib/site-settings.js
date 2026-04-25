@@ -27,9 +27,13 @@ const DEFAULTS = {
 export const getSiteSettings = cache(async () => {
   try {
     const s = supabaseAdmin();
+    // SELECT * keeps the read resilient against schema-cache drift —
+    // PostgREST occasionally lags after migrations and explicit column
+    // lists fail with "column does not exist". Missing columns just come
+    // back undefined and we coalesce.
     const { data, error } = await s
       .from('site_settings')
-      .select('active_theme, logo_url, logo_alt, hero_version, hero_image_url, hero_image_mobile_url, hero_overlay_opacity, updated_at')
+      .select('*')
       .eq('id', 1)
       .single();
     if (error) {
