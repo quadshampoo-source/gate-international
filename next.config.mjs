@@ -10,6 +10,14 @@ const nextConfig = {
       { protocol: 'https', hostname: '*.supabase.in' },
     ],
   },
+  experimental: {
+    // Hero banner uploads can be a few MB. Default Server Action body
+    // limit is 1 MB and large uploads silently fail — bump to 10 MB to
+    // match the 8 MB max enforced inside the action.
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
 };
 
 export default nextConfig;
