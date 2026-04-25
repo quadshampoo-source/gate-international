@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { getProjects, getDistricts } from '@/lib/data';
 import { getTestimonials } from '@/lib/testimonials';
+import { getSiteSettings } from '@/lib/site-settings';
 import AtomProjectCard from './project-card';
-import AtomHeroSearch from './hero-search';
+import AtomHomeHero from './home-hero';
+import AtomHomeHeroV2 from './home-hero-v2';
 import { Button, Card, StatCard, PillTag, IconContainer } from '@/components/ui';
 
 const SERVICES = [
@@ -14,56 +16,31 @@ const SERVICES = [
   { title: 'Concierge', body: 'Bank accounts, residency permits, schools, private healthcare — handled on your behalf.', link: 'See list' },
 ];
 
-export default async function AtomHome({ lang = 'en' }) {
-  const [projects, districts, testimonials] = await Promise.all([
+export default async function AtomHome({ lang = 'en', searchParams }) {
+  const [projects, districts, testimonials, settings] = await Promise.all([
     getProjects(),
     getDistricts(),
     getTestimonials(),
+    getSiteSettings(),
   ]);
   const featured = projects.slice(0, 6);
   const districtList = (districts || [])
     .filter((d) => d?.name)
     .map((d) => ({ name: d.name, city: d.city || 'Istanbul' }));
 
+  // ?preview_hero=v2 (or v1) overrides the saved version — admins use this
+  // to preview before committing. Anything else falls back to settings.
+  const preview = searchParams?.preview_hero;
+  const activeHeroVersion =
+    preview === 'v1' || preview === 'v2' ? preview : settings.heroVersion;
+
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
-        <AtomHero aura />
-        <div className="relative max-w-[1100px] mx-auto px-6 md:px-10 text-center">
-          <div
-            className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full"
-            style={{
-              background: 'var(--primary-50)',
-              color: 'var(--primary-700)',
-              fontSize: 13,
-              fontWeight: 500,
-              border: '1px solid var(--primary-200)',
-            }}
-          >
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--primary-500)' }} />
-            Citizenship eligible from $400K
-          </div>
-          <h1 className="atom-h1" style={{ fontSize: 'clamp(40px, 6.5vw, 72px)', fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.025em' }}>
-            Premium Turkish residences,{' '}
-            <span className="atom-accent">sourced privately.</span>
-          </h1>
-          <p className="atom-body-lg mt-6 max-w-[640px] mx-auto" style={{ color: 'var(--neutral-500)' }}>
-            A curated portfolio of investor-grade homes across Istanbul, Bodrum and Bursa — vetted for location, developer track record, and clean title.
-          </p>
-
-          <div className="mt-10">
-            <AtomHeroSearch lang={lang} districts={districtList} />
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-6 mt-10 text-sm" style={{ color: 'var(--neutral-500)' }}>
-            <TrustPill>Bar-licensed legal</TrustPill>
-            <TrustPill>Private listings</TrustPill>
-            <TrustPill>6 languages</TrustPill>
-            <TrustPill>15 years advisory</TrustPill>
-          </div>
-        </div>
-      </section>
+      {activeHeroVersion === 'v2' ? (
+        <AtomHomeHeroV2 lang={lang} districtList={districtList} settings={settings} />
+      ) : (
+        <AtomHomeHero lang={lang} districtList={districtList} />
+      )}
 
       {/* Stats */}
       <section className="py-16 md:py-20">
@@ -228,32 +205,5 @@ export default async function AtomHome({ lang = 'en' }) {
       </section>
 
     </>
-  );
-}
-
-function TrustPill({ children }) {
-  return (
-    <span
-      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full"
-      style={{ background: 'var(--neutral-100)', color: 'var(--neutral-500)', fontSize: 12, fontWeight: 500 }}
-    >
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="20 6 9 17 4 12" />
-      </svg>
-      {children}
-    </span>
-  );
-}
-
-function AtomHero({ aura = false }) {
-  if (!aura) return null;
-  return (
-    <div
-      aria-hidden
-      className="absolute inset-0 pointer-events-none -z-0"
-      style={{
-        background: 'radial-gradient(60% 60% at 50% 0%, rgba(99,102,241,0.14) 0%, rgba(99,102,241,0) 70%), radial-gradient(50% 60% at 80% 20%, rgba(139,92,246,0.10) 0%, rgba(139,92,246,0) 70%), radial-gradient(40% 50% at 15% 40%, rgba(110,231,231,0.10) 0%, rgba(110,231,231,0) 70%)',
-      }}
-    />
   );
 }

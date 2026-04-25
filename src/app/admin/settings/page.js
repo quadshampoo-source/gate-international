@@ -26,7 +26,10 @@ export default async function AdminSettingsPage({ searchParams }) {
     <AdminFrame active="settings" userEmail={user?.email} role="admin">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h1 className="mb-0">Site Settings</h1>
-        <Link href="/admin/settings/branding" className="admin-btn secondary">Branding & logo →</Link>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link href="/admin/settings/hero" className="admin-btn secondary">Hero section →</Link>
+          <Link href="/admin/settings/branding" className="admin-btn secondary">Branding & logo →</Link>
+        </div>
       </div>
 
       {sp?.saved && (
