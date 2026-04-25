@@ -10,6 +10,10 @@ const STRINGS = {
   ar: { heading: 'أبرز اللحظات', prev: 'الفيديو السابق', next: 'الفيديو التالي', expand: 'تكبير الفيديو', play: 'تشغيل الفيديو' },
 };
 
+const CARD_WIDTH = 280;
+const CARD_GAP = 16;
+const TRANSITION_MS = 300;
+
 function sortReels(raw) {
   if (!Array.isArray(raw)) return [];
   return raw
@@ -30,20 +34,24 @@ function isSlowConnection() {
   return c.effectiveType === '2g' || c.effectiveType === 'slow-2g' || c.saveData === true;
 }
 
-// Inline carousel of YouTube Shorts. One iframe is mounted only when the
-// section is in view, the page is visible, and the user hasn't opted out of
-// autoplay (reduced motion or slow connection). Navigating to a new reel
-// destroys the previous iframe, so two never coexist.
+// Inline carousel of YouTube Shorts. Layout shows the active reel centred
+// with neighbour posters peeking at the edges so users can see at a glance
+// that there are more videos. Single iframe alive at any time — neighbours
+// render as static <img> posters, only the active card mounts the embed
+// once the transition settles. Tap a peeking poster to jump to it; tap the
+// active card's expand button to open the fullscreen lightbox.
 export default function ProjectReels({ reels, lang = 'en' }) {
   const list = sortReels(reels);
   const labels = STRINGS[lang] || STRINGS.en;
   const [index, setIndex] = useState(0);
+  const [embedIndex, setEmbedIndex] = useState(-1); // index that gets the iframe
   const [inView, setInView] = useState(false);
   const [tabVisible, setTabVisible] = useState(true);
   const [allowAutoplay, setAllowAutoplay] = useState(false);
   const [poster404, setPoster404] = useState({});
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const sectionRef = useRef(null);
+  const transitionTimer = useRef(null);
   const last = list.length - 1;
 
   // Decide once on mount whether autoplay is allowed (motion + connection).
@@ -58,9 +66,7 @@ export default function ProjectReels({ reels, lang = 'en' }) {
       return undefined;
     }
     const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) setInView(e.isIntersecting);
-      },
+      (entries) => { for (const e of entries) setInView(e.isIntersecting); },
       { rootMargin: '0px', threshold: 0.25 },
     );
     obs.observe(sectionRef.current);
@@ -88,31 +94,47 @@ export default function ProjectReels({ reels, lang = 'en' }) {
     }
   }, [list.length, last]);
 
-  // Keyboard nav when section is focused.
+  // Slide transition: unmount the iframe immediately, slide for 300ms, then
+  // mount the iframe in the new active slot. Keeps single-iframe invariant.
+  useEffect(() => {
+    setEmbedIndex(-1);
+    if (transitionTimer.current) clearTimeout(transitionTimer.current);
+    transitionTimer.current = setTimeout(() => {
+      setEmbedIndex(index);
+    }, TRANSITION_MS);
+    return () => clearTimeout(transitionTimer.current);
+  }, [index]);
+
+  const next = useCallback(() => setIndex((i) => (i >= last ? 0 : i + 1)), [last]);
+  const prev = useCallback(() => setIndex((i) => (i <= 0 ? last : i - 1)), [last]);
+
   const onKeyDown = useCallback(
     (e) => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); setIndex((i) => (i >= last ? 0 : i + 1)); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); setIndex((i) => (i <= 0 ? last : i - 1)); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
     },
-    [last],
+    [next, prev],
   );
 
-  // Mobile swipe.
-  const touch = useRef({ x: 0, t: 0 });
-  const onTouchStart = (e) => { touch.current = { x: e.touches[0].clientX, t: Date.now() }; };
+  // Mobile swipe (kept simple: fixed 50px threshold). The peek + arrows
+  // give the carousel its primary affordance now; swipe is a shortcut.
+  const touch = useRef({ x: 0 });
+  const onTouchStart = (e) => { touch.current = { x: e.touches[0].clientX }; };
   const onTouchEnd = (e) => {
     const dx = e.changedTouches[0].clientX - touch.current.x;
     if (Math.abs(dx) < 50) return;
-    if (dx < 0) setIndex((i) => (i >= last ? 0 : i + 1));
-    else setIndex((i) => (i <= 0 ? last : i - 1));
+    if (dx < 0) next(); else prev();
   };
 
   if (list.length === 0) return null;
 
-  const current = list[index];
-  const shouldEmbed = inView && tabVisible && allowAutoplay;
-  const poster = poster404[current.id] ? youtubeThumbnail(current.id, 'hqdefault') : youtubeThumbnail(current.id, 'maxresdefault');
-  const src = shouldEmbed ? youtubeEmbedUrl(current.id, 'inline') : null;
+  const active = list[index];
+  const shouldEmbedActive =
+    inView &&
+    tabVisible &&
+    allowAutoplay &&
+    embedIndex === index;
+  const stripOffsetPx = index * (CARD_WIDTH + CARD_GAP);
 
   return (
     <section
@@ -126,179 +148,289 @@ export default function ProjectReels({ reels, lang = 'en' }) {
         {labels.heading}
       </h2>
 
-      <div
-        className="flex flex-col items-center gap-4"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
-        <div className="flex items-center gap-3 md:gap-4">
-          {/* Desktop prev */}
-          <button
-            type="button"
-            onClick={() => setIndex((i) => (i <= 0 ? last : i - 1))}
-            aria-label={labels.prev}
-            className="hidden md:inline-flex w-11 h-11 rounded-full items-center justify-center transition-colors flex-shrink-0"
-            style={{
-              background: '#fff',
-              border: '1px solid var(--neutral-200)',
-              color: 'var(--neutral-700)',
-              opacity: list.length > 1 ? 1 : 0.3,
-              pointerEvents: list.length > 1 ? 'auto' : 'none',
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-
-          {/* Reel card */}
+      <div className="relative">
+        {/* Strip viewport — overflow-hidden, full-width so neighbours peek. */}
+        <div
+          className="relative"
+          style={{ overflow: 'hidden' }}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           <div
-            className="relative overflow-hidden flex-shrink-0"
+            className="relative flex items-stretch"
             style={{
-              width: 280,
-              maxWidth: '70vw',
-              aspectRatio: '9 / 16',
-              background: '#000',
-              borderRadius: 16,
-              boxShadow: '0 12px 32px rgba(15,22,36,0.12)',
-              transition: 'opacity 200ms ease',
-              opacity: 1,
+              gap: CARD_GAP,
+              // Centre the active card in the viewport.
+              transform: `translateX(calc(50% - ${CARD_WIDTH / 2}px - ${stripOffsetPx}px))`,
+              transition: `transform ${TRANSITION_MS}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+              willChange: 'transform',
             }}
-            aria-roledescription="slide"
-            aria-label={`${index + 1} of ${list.length}${current.title ? ` — ${current.title}` : ''}`}
           >
-            {/* Poster (always rendered as background; iframe layers over it) */}
-            {poster && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={poster}
-                alt=""
-                onError={() => setPoster404((s) => ({ ...s, [current.id]: true }))}
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-                aria-hidden
-              />
-            )}
-
-            {src ? (
-              <iframe
-                key={`reel-${current.id}-${index}`}
-                src={src}
-                title={current.title || `Reel ${index + 1}`}
-                className="absolute inset-0 w-full h-full"
-                style={{ border: 0 }}
-                allow="autoplay; encrypted-media; picture-in-picture"
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
-            ) : (
-              // Static play button when autoplay is suppressed (reduced motion,
-              // offscreen, hidden tab, or slow connection).
-              <button
-                type="button"
-                onClick={() => setLightboxOpen(true)}
-                aria-label={labels.play}
-                className="absolute inset-0 w-full h-full flex items-center justify-center"
-                style={{ background: 'rgba(0,0,0,0.25)' }}
-              >
-                <span
-                  className="inline-flex items-center justify-center rounded-full transition-transform"
-                  style={{
-                    width: 64, height: 64,
-                    background: 'var(--accent-coral)',
-                    color: '#fff',
-                    boxShadow: '0 8px 24px rgba(255,107,92,0.4)',
+            {list.map((reel, i) => {
+              const isActive = i === index;
+              const distance = Math.abs(i - index);
+              return (
+                <ReelCard
+                  key={reel.id}
+                  reel={reel}
+                  isActive={isActive}
+                  distance={distance}
+                  posterFallback={poster404[reel.id]}
+                  onPosterError={() => setPoster404((s) => ({ ...s, [reel.id]: true }))}
+                  onClickPoster={() => {
+                    if (!isActive) setIndex(i);
                   }}
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ marginLeft: 4 }}>
-                    <polygon points="6,4 20,12 6,20" />
-                  </svg>
-                </span>
-              </button>
-            )}
-
-            {/* Expand button (top-right) */}
-            <button
-              type="button"
-              onClick={() => setLightboxOpen(true)}
-              aria-label={labels.expand}
-              className="absolute top-3 right-3 w-9 h-9 rounded-full inline-flex items-center justify-center text-white"
-              style={{ background: 'rgba(0,0,0,0.45)' }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <polyline points="15 3 21 3 21 9" />
-                <polyline points="9 21 3 21 3 15" />
-                <line x1="21" y1="3" x2="14" y2="10" />
-                <line x1="3" y1="21" x2="10" y2="14" />
-              </svg>
-            </button>
+                  onExpand={() => setLightboxOpen(true)}
+                  onPlay={() => setLightboxOpen(true)}
+                  embed={isActive && shouldEmbedActive}
+                  expandLabel={labels.expand}
+                  playLabel={labels.play}
+                  prevLabel={labels.prev}
+                  nextLabel={labels.next}
+                  onPrev={prev}
+                  onNext={next}
+                  reelsCount={list.length}
+                />
+              );
+            })}
           </div>
-
-          {/* Desktop next */}
-          <button
-            type="button"
-            onClick={() => setIndex((i) => (i >= last ? 0 : i + 1))}
-            aria-label={labels.next}
-            className="hidden md:inline-flex w-11 h-11 rounded-full items-center justify-center transition-colors flex-shrink-0"
-            style={{
-              background: '#fff',
-              border: '1px solid var(--neutral-200)',
-              color: 'var(--neutral-700)',
-              opacity: list.length > 1 ? 1 : 0.3,
-              pointerEvents: list.length > 1 ? 'auto' : 'none',
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
         </div>
 
-        {/* Dot indicator */}
+        {/* Desktop arrows — large, shadowed, anchored to the strip edges. */}
         {list.length > 1 && (
-          <div
-            className="flex items-center gap-2"
-            role="tablist"
-            aria-label={`Reel ${index + 1} of ${list.length}`}
-          >
-            {list.map((r, i) => (
-              <button
-                key={r.id}
-                type="button"
-                role="tab"
-                aria-selected={i === index}
-                aria-label={`Reel ${i + 1}${r.title ? ` — ${r.title}` : ''}`}
-                onClick={() => setIndex(i)}
-                className="transition-all"
-                style={{
-                  width: i === index ? 24 : 8,
-                  height: 8,
-                  borderRadius: 999,
-                  background: i === index ? 'var(--accent-coral)' : 'var(--neutral-300)',
-                  border: 0,
-                  cursor: 'pointer',
-                }}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Caption */}
-        {current.title && (
-          <div className="text-sm text-center" style={{ color: 'var(--neutral-500)', maxWidth: 320 }}>
-            {current.title}
-          </div>
+          <>
+            <NavButton
+              direction="prev"
+              ariaLabel={labels.prev}
+              onClick={prev}
+              className="hidden md:inline-flex absolute left-2 top-1/2 -translate-y-1/2 z-10"
+            />
+            <NavButton
+              direction="next"
+              ariaLabel={labels.next}
+              onClick={next}
+              className="hidden md:inline-flex absolute right-2 top-1/2 -translate-y-1/2 z-10"
+            />
+          </>
         )}
       </div>
+
+      {/* Dot indicator */}
+      {list.length > 1 && (
+        <div
+          className="flex items-center justify-center gap-2 mt-5"
+          role="tablist"
+          aria-label={`Reel ${index + 1} of ${list.length}`}
+        >
+          {list.map((r, i) => (
+            <button
+              key={r.id}
+              type="button"
+              role="tab"
+              aria-selected={i === index}
+              aria-label={`Reel ${i + 1}${r.title ? ` — ${r.title}` : ''}`}
+              onClick={() => setIndex(i)}
+              className="transition-all"
+              style={{
+                width: i === index ? 28 : 8,
+                height: 8,
+                borderRadius: 999,
+                background: i === index ? 'var(--accent-coral)' : 'var(--neutral-300)',
+                border: 0,
+                cursor: 'pointer',
+                padding: 0,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {active.title && (
+        <div className="text-sm text-center mt-3 mx-auto" style={{ color: 'var(--neutral-500)', maxWidth: 320 }}>
+          {active.title}
+        </div>
+      )}
 
       <ReelLightbox
         reels={list}
         open={lightboxOpen}
         startIndex={index}
-        onClose={() => {
-          setLightboxOpen(false);
-        }}
+        onClose={() => setLightboxOpen(false)}
         lang={lang}
       />
     </section>
+  );
+}
+
+function ReelCard({
+  reel,
+  isActive,
+  distance,
+  posterFallback,
+  onPosterError,
+  onClickPoster,
+  onExpand,
+  onPlay,
+  embed,
+  expandLabel,
+  playLabel,
+  prevLabel,
+  nextLabel,
+  onPrev,
+  onNext,
+  reelsCount,
+}) {
+  const poster = posterFallback
+    ? youtubeThumbnail(reel.id, 'hqdefault')
+    : youtubeThumbnail(reel.id, 'maxresdefault');
+  const src = embed ? youtubeEmbedUrl(reel.id, 'inline') : null;
+
+  // Distance-based dimming for non-active cards to telegraph the active
+  // slot. Active = full opacity + slight scale; neighbours fade.
+  const opacity = isActive ? 1 : distance === 1 ? 0.55 : 0.3;
+  const scale = isActive ? 1 : 0.92;
+
+  return (
+    <div
+      className="relative flex-shrink-0 overflow-hidden"
+      style={{
+        width: CARD_WIDTH,
+        aspectRatio: '9 / 16',
+        borderRadius: 16,
+        background: '#000',
+        boxShadow: isActive ? '0 16px 40px rgba(15,22,36,0.18)' : '0 6px 16px rgba(15,22,36,0.08)',
+        opacity,
+        transform: `scale(${scale})`,
+        transformOrigin: 'center',
+        transition: `opacity ${TRANSITION_MS}ms ease, transform ${TRANSITION_MS}ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow ${TRANSITION_MS}ms ease`,
+        cursor: isActive ? 'default' : 'pointer',
+      }}
+      aria-roledescription="slide"
+      aria-label={`${reel.title || `Reel`}${isActive ? ' (active)' : ''}`}
+      // Non-active cards become a giant tap target to jump to that index.
+      onClick={isActive ? undefined : onClickPoster}
+    >
+      {poster && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={poster}
+          alt=""
+          onError={onPosterError}
+          className="absolute inset-0 w-full h-full object-cover"
+          loading={distance > 1 ? 'lazy' : 'eager'}
+          aria-hidden
+        />
+      )}
+
+      {src && (
+        <iframe
+          key={`reel-${reel.id}`}
+          src={src}
+          title={reel.title || 'Reel'}
+          className="absolute inset-0 w-full h-full"
+          style={{ border: 0 }}
+          allow="autoplay; encrypted-media; picture-in-picture"
+          referrerPolicy="strict-origin-when-cross-origin"
+        />
+      )}
+
+      {isActive && !src && (
+        // Static play button when autoplay is suppressed (reduced motion,
+        // hidden tab, slow connection, or section out of view).
+        <button
+          type="button"
+          onClick={onPlay}
+          aria-label={playLabel}
+          className="absolute inset-0 w-full h-full flex items-center justify-center"
+          style={{ background: 'rgba(0,0,0,0.25)' }}
+        >
+          <span
+            className="inline-flex items-center justify-center rounded-full"
+            style={{
+              width: 64, height: 64,
+              background: 'var(--accent-coral)',
+              color: '#fff',
+              boxShadow: '0 8px 24px rgba(255,107,92,0.4)',
+            }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ marginLeft: 4 }}>
+              <polygon points="6,4 20,12 6,20" />
+            </svg>
+          </span>
+        </button>
+      )}
+
+      {/* Active-only overlays: mobile prev/next at top corners + expand. */}
+      {isActive && reelsCount > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onPrev(); }}
+            aria-label={prevLabel}
+            className="md:hidden absolute top-3 left-3 w-9 h-9 rounded-full inline-flex items-center justify-center text-white"
+            style={{ background: 'rgba(0,0,0,0.55)' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onNext(); }}
+            aria-label={nextLabel}
+            className="md:hidden absolute top-3 right-3 w-9 h-9 rounded-full inline-flex items-center justify-center text-white"
+            style={{ background: 'rgba(0,0,0,0.55)', marginRight: 44 }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </>
+      )}
+
+      {isActive && (
+        <button
+          type="button"
+          onClick={onExpand}
+          aria-label={expandLabel}
+          className="absolute top-3 right-3 w-9 h-9 rounded-full inline-flex items-center justify-center text-white"
+          style={{ background: 'rgba(0,0,0,0.55)' }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <polyline points="15 3 21 3 21 9" />
+            <polyline points="9 21 3 21 3 15" />
+            <line x1="21" y1="3" x2="14" y2="10" />
+            <line x1="3" y1="21" x2="10" y2="14" />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+}
+
+function NavButton({ direction, ariaLabel, onClick, className }) {
+  const path = direction === 'prev'
+    ? <polyline points="15 18 9 12 15 6" />
+    : <polyline points="9 18 15 12 9 6" />;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={ariaLabel}
+      className={`group items-center justify-center transition-transform hover:scale-105 active:scale-95 ${className || ''}`}
+      style={{
+        width: 52,
+        height: 52,
+        borderRadius: '50%',
+        background: '#fff',
+        border: '1px solid var(--neutral-200)',
+        color: 'var(--neutral-900)',
+        boxShadow: '0 8px 24px rgba(15,22,36,0.15)',
+      }}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        {path}
+      </svg>
+    </button>
   );
 }
