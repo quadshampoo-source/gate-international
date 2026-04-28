@@ -56,6 +56,10 @@ export default function WhatsappFab({ lang = 'en', team = [] }) {
         .wa-widget.open .wa-popup { pointer-events: auto; }
         /* Lift above the Enquire sticky bar when it's on screen. */
         body:has(.cta-sticky.visible) .wa-widget { bottom: 88px; }
+        /* Project detail mobile bar already includes its own WhatsApp action,
+           so hide the floating FAB entirely on those pages — avoids duplicate
+           CTAs stacked on top of the sticky bar. */
+        body:has(.cta-with-wa.visible) .wa-widget { display: none; }
         html[dir="rtl"] .wa-widget { right: auto; left: 24px; align-items: flex-start; }
 
         .wa-button {
