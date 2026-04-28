@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { getDict } from '@/lib/i18n';
 
 // Shared lightbox: dark backdrop, prev/next, ESC, swipe, counter.
 // Used by both GalleryMosaic (exterior set) and FloorPlans (interior set);
 // each consumer passes its own image array so the two never mingle.
-export default function Lightbox({ images, startIndex = 0, onClose, alt = 'Photo' }) {
+export default function Lightbox({ images, startIndex = 0, onClose, alt = 'Photo', lang = 'en' }) {
+  const t = getDict(lang).pages.detail.gallery;
   const [i, setI] = useState(startIndex);
   const last = images.length - 1;
 
@@ -49,7 +51,7 @@ export default function Lightbox({ images, startIndex = 0, onClose, alt = 'Photo
       <button
         type="button"
         onClick={onClose}
-        aria-label="Close"
+        aria-label={t.close}
         className="absolute top-4 right-4 w-12 h-12 rounded-full inline-flex items-center justify-center text-white"
         style={{ background: 'rgba(255,255,255,0.12)' }}
       >
@@ -63,7 +65,7 @@ export default function Lightbox({ images, startIndex = 0, onClose, alt = 'Photo
           <button
             type="button"
             onClick={prev}
-            aria-label="Previous"
+            aria-label={t.prev}
             className="hidden md:inline-flex absolute left-4 w-12 h-12 rounded-full items-center justify-center text-white"
             style={{ background: 'rgba(255,255,255,0.12)' }}
           >
@@ -74,7 +76,7 @@ export default function Lightbox({ images, startIndex = 0, onClose, alt = 'Photo
           <button
             type="button"
             onClick={next}
-            aria-label="Next"
+            aria-label={t.next}
             className="hidden md:inline-flex absolute right-4 w-12 h-12 rounded-full items-center justify-center text-white"
             style={{ background: 'rgba(255,255,255,0.12)' }}
           >

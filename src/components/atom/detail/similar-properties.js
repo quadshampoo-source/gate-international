@@ -1,10 +1,12 @@
 'use client';
 
 import AtomProjectCard from '../project-card';
+import { getDict } from '@/lib/i18n';
 
 // Picks 4-6 other projects in same district. Falls back to similar price
 // tier if district yields fewer than 3.
 export default function SimilarProperties({ projects = [], current, lang = 'en' }) {
+  const t = getDict(lang).pages.detail.similar;
   const all = Array.isArray(projects) ? projects.filter((p) => p && p.id !== current?.id) : [];
 
   let pool = all.filter((p) => p.district === current?.district);
@@ -27,7 +29,7 @@ export default function SimilarProperties({ projects = [], current, lang = 'en' 
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Similar properties
+        {t.heading}
       </h2>
 
       <div className="md:hidden -mx-6 px-6 flex gap-4 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>

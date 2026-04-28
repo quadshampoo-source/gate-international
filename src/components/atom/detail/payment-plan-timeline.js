@@ -1,9 +1,12 @@
 'use client';
 
+import { getDict } from '@/lib/i18n';
+
 // Renders payment_plan.stages as a horizontal timeline. Falls back to a
 // compact "Down X% · Y months" line when the legacy shape is in use.
 // Hides entirely when there's nothing to show.
-export default function PaymentPlanTimeline({ paymentPlan }) {
+export default function PaymentPlanTimeline({ paymentPlan, lang = 'en' }) {
+  const t = getDict(lang).pages.detail.paymentPlan;
   if (!paymentPlan || typeof paymentPlan !== 'object') return null;
 
   const stages = Array.isArray(paymentPlan.stages) ? paymentPlan.stages.filter(Boolean) : [];
@@ -19,7 +22,7 @@ export default function PaymentPlanTimeline({ paymentPlan }) {
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Payment plan
+        {t.heading}
       </h2>
 
       {hasStages ? (
@@ -48,7 +51,7 @@ export default function PaymentPlanTimeline({ paymentPlan }) {
                 </span>
                 <div className="min-w-0">
                   <div className="text-sm font-semibold" style={{ color: 'var(--neutral-900)' }}>
-                    {s.label || s.timing || `Stage ${i + 1}`}
+                    {s.label || s.timing || `${t.stage} ${i + 1}`}
                   </div>
                   <div className="mt-0.5 text-xs" style={{ color: 'var(--neutral-500)' }}>
                     {s.timing && s.label && s.timing !== s.label ? `${s.timing} · ` : ''}
@@ -81,7 +84,7 @@ export default function PaymentPlanTimeline({ paymentPlan }) {
                   {s.pct ?? '—'}%
                 </div>
                 <div className="text-sm font-semibold leading-tight" style={{ color: 'var(--neutral-900)' }}>
-                  {s.label || `Stage ${i + 1}`}
+                  {s.label || `${t.stage} ${i + 1}`}
                 </div>
                 {s.timing && s.timing !== s.label && (
                   <div className="mt-1 text-xs" style={{ color: 'var(--neutral-500)' }}>
@@ -96,9 +99,9 @@ export default function PaymentPlanTimeline({ paymentPlan }) {
           </div>
 
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs" style={{ color: 'var(--neutral-500)' }}>
-            {totalPct != null && totalPct !== 100 && <span>Stages total: {totalPct}%</span>}
-            {paymentPlan.interestPct != null && <span>Interest: {paymentPlan.interestPct}%</span>}
-            {paymentPlan.totalMonths != null && <span>Total period: {paymentPlan.totalMonths} months</span>}
+            {totalPct != null && totalPct !== 100 && <span>{t.stagesTotal}: {totalPct}%</span>}
+            {paymentPlan.interestPct != null && <span>{t.interest}: {paymentPlan.interestPct}%</span>}
+            {paymentPlan.totalMonths != null && <span>{t.totalPeriod}: {paymentPlan.totalMonths} {t.months}</span>}
             {paymentPlan.deadlineNote && <span style={{ color: 'var(--neutral-700)' }}>{paymentPlan.deadlineNote}</span>}
           </div>
         </>
@@ -112,18 +115,17 @@ export default function PaymentPlanTimeline({ paymentPlan }) {
             color: 'var(--neutral-700)',
           }}
         >
-          {paymentPlan.downPct != null && <span><strong>{paymentPlan.downPct}%</strong> down payment</span>}
+          {paymentPlan.downPct != null && <span><strong>{paymentPlan.downPct}%</strong> {t.downPayment}</span>}
           {paymentPlan.downPct != null && paymentPlan.termMonths != null && ' · '}
-          {paymentPlan.termMonths != null && <span>{paymentPlan.termMonths}-month plan</span>}
+          {paymentPlan.termMonths != null && <span>{paymentPlan.termMonths} {t.monthPlanSuffix}</span>}
           {paymentPlan.interestPct != null && (
-            <span>{(paymentPlan.downPct != null || paymentPlan.termMonths != null) ? ' · ' : ''}{paymentPlan.interestPct}% interest</span>
+            <span>{(paymentPlan.downPct != null || paymentPlan.termMonths != null) ? ' · ' : ''}{paymentPlan.interestPct}% {t.interestSuffix}</span>
           )}
           {paymentPlan.deadlineNote && (
             <div className="mt-2 text-xs" style={{ color: 'var(--neutral-500)' }}>{paymentPlan.deadlineNote}</div>
           )}
         </div>
       ) : (
-        // Note-only fallback: Aliée Loft and similar where the plan is TBD.
         <div
           className="p-5 text-sm"
           style={{

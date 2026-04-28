@@ -1,21 +1,24 @@
 'use client';
 
+import { getDict } from '@/lib/i18n';
+
 // Renders project.developerInfo. Returns null if missing/empty so the
 // section disappears entirely on sparse projects.
-export default function DeveloperCard({ developerInfo }) {
+export default function DeveloperCard({ developerInfo, lang = 'en' }) {
+  const t = getDict(lang).pages.detail.developer;
   if (!developerInfo || typeof developerInfo !== 'object') return null;
   const { name, logo_url, founded_year, website_url, description, past_projects_count } = developerInfo;
   if (!name) return null;
 
   const meta = [
-    founded_year ? `Est. ${founded_year}` : null,
-    past_projects_count ? `${past_projects_count}+ projects delivered` : null,
+    founded_year ? `${t.estPrefix} ${founded_year}` : null,
+    past_projects_count ? `${past_projects_count}${t.projectsSuffix}` : null,
   ].filter(Boolean);
 
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        About the developer
+        {t.heading}
       </h2>
 
       <div
@@ -69,7 +72,7 @@ export default function DeveloperCard({ developerInfo }) {
               className="mt-4 inline-flex items-center gap-1 text-sm font-semibold"
               style={{ color: 'var(--primary-600)' }}
             >
-              Visit website
+              {t.visitWebsite}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <line x1="7" y1="17" x2="17" y2="7" />
                 <polyline points="7 7 17 7 17 17" />

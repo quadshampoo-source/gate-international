@@ -1,15 +1,18 @@
 'use client';
 
+import { getDict } from '@/lib/i18n';
+
 // Full grid of all amenities. Responsive: 4 cols desktop, 3 tablet, 2 mobile.
 // Each cell: icon + label (no description — kept clean).
-export default function AmenitiesGrid({ amenities = [] }) {
+export default function AmenitiesGrid({ amenities = [], lang = 'en' }) {
+  const t = getDict(lang).pages.detail.amenities;
   const items = (amenities || []).filter(Boolean);
   if (items.length === 0) return null;
 
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Amenities
+        {t.heading}
       </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">

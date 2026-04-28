@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { getDict } from '@/lib/i18n';
 
 const MOBILE_COLLAPSE_THRESHOLD = 600;
 
 // Renders project.description as markdown. On mobile, collapses long bodies
 // (>600 chars) behind a "Read more" toggle. Atom-styled prose without the
 // Tailwind Typography plugin — small bespoke ruleset is enough.
-export default function MarkdownDescription({ markdown }) {
+export default function MarkdownDescription({ markdown, lang = 'en' }) {
+  const t = getDict(lang).pages.detail.description;
   const [expanded, setExpanded] = useState(false);
   const text = (markdown || '').trim();
   if (!text) return null;
@@ -44,7 +46,7 @@ export default function MarkdownDescription({ markdown }) {
       `}</style>
 
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        About this residence
+        {t.heading}
       </h2>
 
       <div className={`atom-md ${long && !expanded ? 'atom-md-collapsed md:!max-h-none md:!mask-none' : ''}`}>
@@ -58,7 +60,7 @@ export default function MarkdownDescription({ markdown }) {
           className="md:hidden mt-3 inline-flex items-center gap-1 text-sm font-semibold"
           style={{ color: 'var(--primary-600)' }}
         >
-          {expanded ? 'Show less' : 'Read more'}
+          {expanded ? t.showLess : t.readMore}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden style={{ transform: expanded ? 'rotate(180deg)' : 'none' }}>
             <polyline points="6 9 12 15 18 9" />
           </svg>

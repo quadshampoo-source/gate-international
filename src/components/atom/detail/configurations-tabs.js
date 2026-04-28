@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { getDict } from '@/lib/i18n';
 
 const fmtUsd = (n) => {
   if (!n && n !== 0) return null;
@@ -12,9 +13,6 @@ const fmtUsd = (n) => {
 // Renders pricing rows from project.priceTable (preferred — supports ranges
 // + per-row notes) or falls back to project.options (legacy single-price
 // shape) and then to plain unit_types names.
-//
-// priceTable row shape:
-//   { type, areaM2?, areaM2Max?, priceUsd?, priceUsdMax?, note? }
 function normalize({ priceTable, options, unitTypes }) {
   if (Array.isArray(priceTable) && priceTable.length) {
     return priceTable
@@ -41,12 +39,13 @@ function normalize({ priceTable, options, unitTypes }) {
       }));
   }
   if (Array.isArray(unitTypes) && unitTypes.length) {
-    return unitTypes.map((t) => ({ type: t, size: null, sizeMax: null, priceMin: null, priceMax: null, note: null }));
+    return unitTypes.map((tp) => ({ type: tp, size: null, sizeMax: null, priceMin: null, priceMax: null, note: null }));
   }
   return [];
 }
 
-export default function ConfigurationsTabs({ priceTable, options, unitTypes, priceNote, priceLastUpdated }) {
+export default function ConfigurationsTabs({ priceTable, options, unitTypes, priceNote, priceLastUpdated, lang = 'en' }) {
+  const t = getDict(lang).pages.detail.configurations;
   const items = normalize({ priceTable, options, unitTypes });
   const [active, setActive] = useState(0);
 
@@ -63,14 +62,14 @@ export default function ConfigurationsTabs({ priceTable, options, unitTypes, pri
     ? `${fmtUsd(current.priceMin)} – ${fmtUsd(current.priceMax)}`
     : current.priceMin != null
       ? `${fmtUsd(current.priceMin)}`
-      : 'On request';
+      : t.onRequest;
 
   const showFromPrefix = current.priceMin != null && (current.priceMax == null || current.priceMax === current.priceMin);
 
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Available configurations
+        {t.heading}
       </h2>
 
       <div className="flex gap-2 overflow-x-auto pb-2 mb-4" style={{ scrollbarWidth: 'none' }}>
@@ -101,10 +100,10 @@ export default function ConfigurationsTabs({ priceTable, options, unitTypes, pri
           borderRadius: 'var(--atom-radius-lg)',
         }}
       >
-        <Stat label="Layout" value={current.type} />
-        <Stat label="Size" value={sizeLabel} />
+        <Stat label={t.layout} value={current.type} />
+        <Stat label={t.size} value={sizeLabel} />
         <Stat
-          label={showFromPrefix ? 'From' : 'Price range'}
+          label={showFromPrefix ? t.from : t.priceRange}
           value={priceLabel}
           accent
           caption={current.note}
@@ -115,7 +114,7 @@ export default function ConfigurationsTabs({ priceTable, options, unitTypes, pri
         <p className="mt-3 text-xs" style={{ color: 'var(--neutral-500)' }}>
           {priceNote}
           {priceNote && priceLastUpdated ? ' · ' : ''}
-          {priceLastUpdated && `Updated ${formatDate(priceLastUpdated)}`}
+          {priceLastUpdated && `${t.updatedPrefix} ${formatDate(priceLastUpdated, lang)}`}
         </p>
       )}
     </section>
@@ -148,9 +147,10 @@ function Stat({ label, value, accent, caption }) {
   );
 }
 
-function formatDate(d) {
+function formatDate(d, lang) {
+  const localeMap = { en: 'en-US', ar: 'ar-SA', zh: 'zh-CN', ru: 'ru-RU', fa: 'fa-IR', fr: 'fr-FR' };
   try {
-    return new Date(d).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    return new Date(d).toLocaleDateString(localeMap[lang] || 'en-US', { month: 'long', year: 'numeric' });
   } catch {
     return String(d);
   }

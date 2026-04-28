@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { resolveVideo } from '@/lib/video';
+import { getDict } from '@/lib/i18n';
 
 // Click-to-play poster pattern. resolveVideo() handles vimeo_id and
 // youtube_url priority; returns null if neither is set, in which case
 // the whole section disappears.
-export default function VideoTour({ project, poster }) {
+export default function VideoTour({ project, poster, lang = 'en' }) {
+  const t = getDict(lang).pages.detail.videoTour;
   const [playing, setPlaying] = useState(false);
   const video = resolveVideo(project);
   if (!video) return null;
@@ -23,7 +25,7 @@ export default function VideoTour({ project, poster }) {
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Video tour
+        {t.heading}
       </h2>
 
       <div
@@ -47,7 +49,7 @@ export default function VideoTour({ project, poster }) {
           <button
             type="button"
             onClick={() => setPlaying(true)}
-            aria-label="Play video tour"
+            aria-label={t.playLabel}
             className="absolute inset-0 w-full h-full group"
           >
             {cover && (

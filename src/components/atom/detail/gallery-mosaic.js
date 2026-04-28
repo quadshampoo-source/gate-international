@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import Lightbox from './lightbox';
+import { getDict } from '@/lib/i18n';
 
 // 5-image mosaic hero (1 large left + 4 small right in 2x2). Click any
 // image opens a lightbox; mobile collapses to a swipe carousel.
 //
 // Graceful fallback: 5+ images → mosaic, 3-4 → 2-up + small grid, 2 → side
 // by side, 1 → full width, 0 → render nothing.
-export default function GalleryMosaic({ images = [], alt = 'Gallery' }) {
+export default function GalleryMosaic({ images = [], alt = 'Gallery', lang = 'en' }) {
+  const t = getDict(lang).pages.detail.gallery;
   const valid = images.filter(Boolean);
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
@@ -17,7 +19,6 @@ export default function GalleryMosaic({ images = [], alt = 'Gallery' }) {
 
   const openAt = (i) => { setIndex(i); setOpen(true); };
 
-  // --- mobile carousel ---
   return (
     <>
       <div className="md:hidden -mx-6">
@@ -31,7 +32,7 @@ export default function GalleryMosaic({ images = [], alt = 'Gallery' }) {
               type="button"
               onClick={() => openAt(i)}
               className="snap-center flex-shrink-0 w-[92vw] mx-1 first:ml-6 last:mr-6"
-              aria-label={`Open photo ${i + 1} of ${valid.length}`}
+              aria-label={`${alt} ${i + 1} / ${valid.length}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -45,7 +46,7 @@ export default function GalleryMosaic({ images = [], alt = 'Gallery' }) {
           ))}
         </div>
         <div className="px-6 pt-2 text-xs" style={{ color: 'var(--neutral-500)' }}>
-          {valid.length} photos · swipe →
+          {valid.length} {t.photosCount} · {t.swipeHint} →
         </div>
       </div>
 
@@ -70,11 +71,11 @@ export default function GalleryMosaic({ images = [], alt = 'Gallery' }) {
             <rect x="14" y="14" width="7" height="7" />
             <rect x="3" y="14" width="7" height="7" />
           </svg>
-          Show all {valid.length} photos
+          {t.showAll} {valid.length} {t.showAllSuffix}
         </button>
       </div>
 
-      {open && <Lightbox images={valid} startIndex={index} onClose={() => setOpen(false)} alt={alt} />}
+      {open && <Lightbox images={valid} startIndex={index} onClose={() => setOpen(false)} alt={alt} lang={lang} />}
     </>
   );
 }
@@ -151,4 +152,3 @@ function Mosaic({ images, alt, onOpen }) {
     </div>
   );
 }
-

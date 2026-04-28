@@ -1,19 +1,10 @@
 'use client';
 
+import { getDict } from '@/lib/i18n';
+
 // Building-level specs — distinct from unit specs (bedrooms/bathrooms/area).
 // Reads from project.techSpecs (jsonb) so other projects without the field
 // stay invisible. Renders as a compact icon-grid; hides if nothing matches.
-const FIELDS = [
-  { key: 'floors_per_building', icon: '🏢', label: 'Floors / building' },
-  { key: 'parking_lots', icon: '🅿️', label: 'Parking lots' },
-  { key: 'guest_lifts', icon: '🛗', label: 'Guest lifts' },
-  { key: 'service_lifts', icon: '🚪', label: 'Service lifts' },
-  { key: 'ceiling_height_m', icon: '📏', label: 'Ceiling height', suffix: ' m' },
-  { key: 'size_range_m2', icon: '📐', label: 'Unit size range', suffix: ' m²' },
-  { key: 'zone_number', icon: '📍', label: 'Zone', prefix: 'Zone ' },
-  { key: 'parent_development', icon: '🏗️', label: 'Within' },
-];
-
 function snakeKey(k) {
   return String(k).replace(/[A-Z]/g, (m) => `_${m.toLowerCase()}`);
 }
@@ -28,7 +19,19 @@ function pickFromTechSpecs(techSpecs, key) {
   return null;
 }
 
-export default function BuildingSpecs({ techSpecs }) {
+export default function BuildingSpecs({ techSpecs, lang = 'en' }) {
+  const t = getDict(lang).pages.detail.buildingSpecs;
+  const FIELDS = [
+    { key: 'floors_per_building', icon: '🏢', label: t.floors },
+    { key: 'parking_lots', icon: '🅿️', label: t.parking },
+    { key: 'guest_lifts', icon: '🛗', label: t.guestLifts },
+    { key: 'service_lifts', icon: '🚪', label: t.serviceLifts },
+    { key: 'ceiling_height_m', icon: '📏', label: t.ceilingHeight, suffix: ' m' },
+    { key: 'size_range_m2', icon: '📐', label: t.sizeRange, suffix: ' m²' },
+    { key: 'zone_number', icon: '📍', label: t.zone, prefix: t.zonePrefix },
+    { key: 'parent_development', icon: '🏗️', label: t.parent },
+  ];
+
   if (!techSpecs || typeof techSpecs !== 'object') return null;
   const cells = FIELDS
     .map((f) => {
@@ -47,7 +50,7 @@ export default function BuildingSpecs({ techSpecs }) {
     cells.push({
       key: 'furnishing_options',
       icon: '🪑',
-      label: 'Furnishing',
+      label: t.furnishing,
       display: furnishing.join(' / '),
     });
   }
@@ -57,7 +60,7 @@ export default function BuildingSpecs({ techSpecs }) {
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Building specs
+        {t.heading}
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {cells.map((c) => (

@@ -9,6 +9,7 @@ export default function BottomSheet({
   open,
   onClose,
   title,
+  closeLabel = 'Close',
   ariaLabelledById = 'bottom-sheet-title',
   maxHeight = '85vh',
   children,
@@ -68,7 +69,7 @@ export default function BottomSheet({
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close"
+              aria-label={closeLabel}
               className="inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors hover:bg-[var(--neutral-100)]"
               style={{ color: 'var(--neutral-700)' }}
             >

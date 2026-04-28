@@ -2,12 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { youtubeEmbedUrl, youtubeThumbnail } from '@/lib/video';
-
-const STRINGS = {
-  en: { close: 'Close', prev: 'Previous reel', next: 'Next reel', counter: '/' },
-  tr: { close: 'Kapat', prev: 'Önceki video', next: 'Sonraki video', counter: '/' },
-  ar: { close: 'إغلاق', prev: 'الفيديو السابق', next: 'الفيديو التالي', counter: '/' },
-};
+import { getDict } from '@/lib/i18n';
 
 // Fullscreen TikTok-style modal: portrait iframe, nav buttons (desktop),
 // vertical swipe (mobile up=next, down=prev), horizontal swipe right edge =
@@ -20,11 +15,11 @@ export default function ReelLightbox({
   onClose,
   lang = 'en',
 }) {
+  const labels = getDict(lang).pages.detail.reels;
   const [index, setIndex] = useState(startIndex);
   const [transitioning, setTransitioning] = useState(false);
   const triggerRef = useRef(null);
   const containerRef = useRef(null);
-  const labels = STRINGS[lang] || STRINGS.en;
   const last = (reels?.length || 0) - 1;
 
   // Sync index when start changes from outside (e.g. clicking a different
@@ -39,7 +34,6 @@ export default function ReelLightbox({
       const clamped = Math.max(0, Math.min(last, newIdx));
       setTransitioning(true);
       setIndex(clamped);
-      // Brief unmount window so we never have two iframes alive.
       window.setTimeout(() => setTransitioning(false), 200);
     },
     [index, last],
@@ -63,14 +57,12 @@ export default function ReelLightbox({
       window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${newHash}`);
     }
     return () => {
-      // Clear only if hash still ours.
       if (window.location.hash.startsWith('#reel-')) {
         window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
       }
     };
   }, [open, index]);
 
-  // Capture trigger on open, restore focus on close.
   useEffect(() => {
     if (!open) return undefined;
     triggerRef.current = typeof document !== 'undefined' ? document.activeElement : null;
@@ -81,7 +73,6 @@ export default function ReelLightbox({
     };
   }, [open]);
 
-  // Body scroll lock + keyboard handlers.
   useEffect(() => {
     if (!open) return undefined;
     const onKey = (e) => {
@@ -98,7 +89,6 @@ export default function ReelLightbox({
     };
   }, [open, onClose, next, prev]);
 
-  // Touch gestures: vertical swipe nav, big horizontal swipe = close.
   const touch = useRef({ x: 0, y: 0, t: 0 });
   const onTouchStart = (e) => {
     const t = e.touches[0];
@@ -112,10 +102,10 @@ export default function ReelLightbox({
     const ady = Math.abs(dy);
     if (adx < 40 && ady < 40) return;
     if (ady > adx) {
-      if (dy < -50) next();        // swipe up → next
-      else if (dy > 50) prev();    // swipe down → previous
+      if (dy < -50) next();
+      else if (dy > 50) prev();
     } else if (dx > 80) {
-      onClose();                    // big swipe right → close
+      onClose();
     }
   };
 
@@ -195,7 +185,6 @@ export default function ReelLightbox({
             background: '#000',
           }}
         >
-          {/* Poster fallback during transition + as a fast-paint background. */}
           {poster && (
             // eslint-disable-next-line @next/next/no-img-element
             <img

@@ -3,12 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { youtubeEmbedUrl, youtubeThumbnail } from '@/lib/video';
 import ReelLightbox from './reel-lightbox';
-
-const STRINGS = {
-  en: { heading: 'Highlights', prev: 'Previous reel', next: 'Next reel', expand: 'Expand video', play: 'Play video' },
-  tr: { heading: 'Öne Çıkanlar', prev: 'Önceki video', next: 'Sonraki video', expand: 'Tam ekran', play: 'Videoyu oynat' },
-  ar: { heading: 'أبرز اللحظات', prev: 'الفيديو السابق', next: 'الفيديو التالي', expand: 'تكبير الفيديو', play: 'تشغيل الفيديو' },
-};
+import { getDict } from '@/lib/i18n';
 
 const CARD_WIDTH = 280;
 const CARD_GAP = 16;
@@ -42,9 +37,9 @@ function isSlowConnection() {
 // active card's expand button to open the fullscreen lightbox.
 export default function ProjectReels({ reels, lang = 'en' }) {
   const list = sortReels(reels);
-  const labels = STRINGS[lang] || STRINGS.en;
+  const labels = getDict(lang).pages.detail.reels;
   const [index, setIndex] = useState(0);
-  const [embedIndex, setEmbedIndex] = useState(-1); // index that gets the iframe
+  const [embedIndex, setEmbedIndex] = useState(-1);
   const [inView, setInView] = useState(false);
   const [tabVisible, setTabVisible] = useState(true);
   const [allowAutoplay, setAllowAutoplay] = useState(false);
@@ -54,12 +49,10 @@ export default function ProjectReels({ reels, lang = 'en' }) {
   const transitionTimer = useRef(null);
   const last = list.length - 1;
 
-  // Decide once on mount whether autoplay is allowed (motion + connection).
   useEffect(() => {
     setAllowAutoplay(!prefersReducedMotion() && !isSlowConnection());
   }, []);
 
-  // Section-level intersection: mount iframe only while in view.
   useEffect(() => {
     if (!sectionRef.current || typeof IntersectionObserver === 'undefined') {
       setInView(true);
@@ -73,7 +66,6 @@ export default function ProjectReels({ reels, lang = 'en' }) {
     return () => obs.disconnect();
   }, []);
 
-  // Tab visibility — pause when user switches tabs.
   useEffect(() => {
     if (typeof document === 'undefined') return undefined;
     const onVisibility = () => setTabVisible(!document.hidden);
@@ -82,7 +74,6 @@ export default function ProjectReels({ reels, lang = 'en' }) {
     return () => document.removeEventListener('visibilitychange', onVisibility);
   }, []);
 
-  // Hash sync on first mount: open lightbox to the matching reel.
   useEffect(() => {
     if (typeof window === 'undefined' || !list.length) return;
     const m = window.location.hash.match(/^#reel-(\d+)$/);
@@ -94,8 +85,6 @@ export default function ProjectReels({ reels, lang = 'en' }) {
     }
   }, [list.length, last]);
 
-  // Slide transition: unmount the iframe immediately, slide for 300ms, then
-  // mount the iframe in the new active slot. Keeps single-iframe invariant.
   useEffect(() => {
     setEmbedIndex(-1);
     if (transitionTimer.current) clearTimeout(transitionTimer.current);
@@ -116,8 +105,6 @@ export default function ProjectReels({ reels, lang = 'en' }) {
     [next, prev],
   );
 
-  // Mobile swipe (kept simple: fixed 50px threshold). The peek + arrows
-  // give the carousel its primary affordance now; swipe is a shortcut.
   const touch = useRef({ x: 0 });
   const onTouchStart = (e) => { touch.current = { x: e.touches[0].clientX }; };
   const onTouchEnd = (e) => {
@@ -149,7 +136,6 @@ export default function ProjectReels({ reels, lang = 'en' }) {
       </h2>
 
       <div className="relative">
-        {/* Strip viewport — overflow-hidden, full-width so neighbours peek. */}
         <div
           className="relative"
           style={{ overflow: 'hidden' }}
@@ -160,7 +146,6 @@ export default function ProjectReels({ reels, lang = 'en' }) {
             className="relative flex items-stretch"
             style={{
               gap: CARD_GAP,
-              // Centre the active card in the viewport.
               transform: `translateX(calc(50% - ${CARD_WIDTH / 2}px - ${stripOffsetPx}px))`,
               transition: `transform ${TRANSITION_MS}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
               willChange: 'transform',
@@ -191,7 +176,6 @@ export default function ProjectReels({ reels, lang = 'en' }) {
           </div>
         </div>
 
-        {/* Desktop arrows — large, shadowed, anchored to the strip edges. */}
         {list.length > 1 && (
           <>
             <NavButton
@@ -210,8 +194,6 @@ export default function ProjectReels({ reels, lang = 'en' }) {
         )}
       </div>
 
-      {/* Mobile control row: prev · dots · next. Desktop just shows dots
-          since arrows already flank the carousel. */}
       {list.length > 1 && (
         <div className="flex items-center justify-center gap-3 mt-5">
           <button
@@ -235,7 +217,7 @@ export default function ProjectReels({ reels, lang = 'en' }) {
           <div
             className="flex items-center gap-2"
             role="tablist"
-            aria-label={`Reel ${index + 1} of ${list.length}`}
+            aria-label={`${labels.heading}: ${index + 1} / ${list.length}`}
           >
             {list.map((r, i) => (
               <button
@@ -243,7 +225,7 @@ export default function ProjectReels({ reels, lang = 'en' }) {
                 type="button"
                 role="tab"
                 aria-selected={i === index}
-                aria-label={`Reel ${i + 1}${r.title ? ` — ${r.title}` : ''}`}
+                aria-label={`${i + 1}${r.title ? ` — ${r.title}` : ''}`}
                 onClick={() => setIndex(i)}
                 className="transition-all"
                 style={{
@@ -314,8 +296,6 @@ function ReelCard({
     : youtubeThumbnail(reel.id, 'maxresdefault');
   const src = embed ? youtubeEmbedUrl(reel.id, 'inline') : null;
 
-  // Distance-based dimming for non-active cards to telegraph the active
-  // slot. Active = full opacity + slight scale; neighbours fade.
   const opacity = isActive ? 1 : distance === 1 ? 0.55 : 0.3;
   const scale = isActive ? 1 : 0.92;
 
@@ -335,8 +315,7 @@ function ReelCard({
         cursor: isActive ? 'default' : 'pointer',
       }}
       aria-roledescription="slide"
-      aria-label={`${reel.title || `Reel`}${isActive ? ' (active)' : ''}`}
-      // Non-active cards become a giant tap target to jump to that index.
+      aria-label={`${reel.title || ''}${isActive ? ' (active)' : ''}`}
       onClick={isActive ? undefined : onClickPoster}
     >
       {poster && (
@@ -364,8 +343,6 @@ function ReelCard({
       )}
 
       {isActive && !src && (
-        // Static play button when autoplay is suppressed (reduced motion,
-        // hidden tab, slow connection, or section out of view).
         <button
           type="button"
           onClick={onPlay}

@@ -1,5 +1,7 @@
 'use client';
 
+import { getDict } from '@/lib/i18n';
+
 const fmtUsd = (n) => {
   if (!n && n !== 0) return null;
   const v = Number(n);
@@ -7,7 +9,8 @@ const fmtUsd = (n) => {
   return `$${v.toLocaleString()}`;
 };
 
-export default function InvestmentBlock({ investment }) {
+export default function InvestmentBlock({ investment, lang = 'en' }) {
+  const t = getDict(lang).pages.detail.investment;
   if (!investment || typeof investment !== 'object') return null;
   const {
     rental_yield_pct,
@@ -18,15 +21,15 @@ export default function InvestmentBlock({ investment }) {
   } = investment;
 
   const stats = [
-    rental_yield_pct != null ? { label: 'Rental yield', value: `${rental_yield_pct}%`, hint: 'p.a.' } : null,
-    appreciation_pct_5yr != null ? { label: 'Appreciation', value: `${appreciation_pct_5yr}%`, hint: '5-year' } : null,
+    rental_yield_pct != null ? { label: t.rentalYield, value: `${rental_yield_pct}%`, hint: t.rentalYieldHint } : null,
+    appreciation_pct_5yr != null ? { label: t.appreciation, value: `${appreciation_pct_5yr}%`, hint: t.appreciationHint } : null,
     {
-      label: 'Citizenship',
-      value: citizenship_eligible ? 'Eligible' : 'Not eligible',
+      label: t.citizenship,
+      value: citizenship_eligible ? t.eligible : t.notEligible,
       hint: citizenship_eligible
         ? min_investment_for_citizenship
-          ? `Min ${fmtUsd(min_investment_for_citizenship)}`
-          : 'Turkish CBI'
+          ? `${t.minPrefix} ${fmtUsd(min_investment_for_citizenship)}`
+          : t.cbiBadge
         : null,
       eligible: !!citizenship_eligible,
     },
@@ -37,7 +40,7 @@ export default function InvestmentBlock({ investment }) {
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Investment overview
+        {t.heading}
       </h2>
 
       {stats.length > 0 && (
@@ -88,7 +91,7 @@ export default function InvestmentBlock({ investment }) {
             <circle cx="12" cy="12" r="9" />
           </svg>
           <span className="text-sm font-semibold">
-            Turkish Citizenship Eligible{min_investment_for_citizenship ? ` · Min ${fmtUsd(min_investment_for_citizenship)}` : ''}
+            {t.citizenshipBadge}{min_investment_for_citizenship ? ` · ${t.minPrefix} ${fmtUsd(min_investment_for_citizenship)}` : ''}
           </span>
         </div>
       )}

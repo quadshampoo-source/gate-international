@@ -1,40 +1,43 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { getDict } from '@/lib/i18n';
 
 // Lazy-load the map iframe — avoids shipping the embed to first paint.
 const LazyMap = dynamic(() => Promise.resolve(MapEmbed), { ssr: false });
-
-// Distance key → (icon, label, suffix). All keys optional in the data.
-// Both snake_case (DB) and camelCase (legacy) shapes are accepted because
-// jsonb columns get round-tripped through JS objects elsewhere in the app.
-const DISTANCE_META = {
-  metro_km: { icon: '🚇', label: 'Metro', suffix: 'km' },
-  mall_km: { icon: '🛍️', label: 'Shopping', suffix: 'km' },
-  school_km: { icon: '🎓', label: 'Schools', suffix: 'km' },
-  hospital_km: { icon: '🏥', label: 'Hospital', suffix: 'km' },
-  beach_km: { icon: '🏖️', label: 'Beach', suffix: 'km' },
-  ferry_km: { icon: '⛴️', label: 'Ferry', suffix: 'km' },
-  marina_km: { icon: '⛵', label: 'Marina', suffix: 'km' },
-  lake_km: { icon: '🏞️', label: 'Lake', suffix: 'km' },
-  ski_resort_km: { icon: '⛷️', label: 'Ski resort', suffix: 'km' },
-  airport_min: { icon: '✈️', label: 'Airport', suffix: 'min' },
-  bosphorus_min: { icon: '🌊', label: 'Bosphorus', suffix: 'min' },
-  business_district_min: { icon: '🏢', label: 'CBD', suffix: 'min' },
-  city_center_min: { icon: '🏙️', label: 'City center', suffix: 'min' },
-  istiklal_avenue_min: { icon: '🚶', label: 'İstiklal Avenue', suffix: 'min' },
-  galataport_min: { icon: '⚓', label: 'Galataport', suffix: 'min' },
-  blue_mosque_min: { icon: '🕌', label: 'Blue Mosque', suffix: 'min' },
-  grand_bazaar_min: { icon: '🏺', label: 'Grand Bazaar', suffix: 'min' },
-  kalamis_marina_min: { icon: '⛵', label: 'Kalamış Marina', suffix: 'min' },
-};
 
 // Accept both snake_case and camelCase keys from upstream callers.
 function snakeKey(k) {
   return String(k).replace(/[A-Z]/g, (m) => `_${m.toLowerCase()}`);
 }
 
-export default function LocationDistances({ distances = {}, address, district, projectName, city = 'Istanbul' }) {
+function buildDistanceMeta(t) {
+  return {
+    metro_km: { icon: '🚇', label: t.metro, suffix: 'km' },
+    mall_km: { icon: '🛍️', label: t.shopping, suffix: 'km' },
+    school_km: { icon: '🎓', label: t.schools, suffix: 'km' },
+    hospital_km: { icon: '🏥', label: t.hospital, suffix: 'km' },
+    beach_km: { icon: '🏖️', label: t.beach, suffix: 'km' },
+    ferry_km: { icon: '⛴️', label: t.ferry, suffix: 'km' },
+    marina_km: { icon: '⛵', label: t.marina, suffix: 'km' },
+    lake_km: { icon: '🏞️', label: t.lake, suffix: 'km' },
+    ski_resort_km: { icon: '⛷️', label: t.skiResort, suffix: 'km' },
+    airport_min: { icon: '✈️', label: t.airport, suffix: 'min' },
+    bosphorus_min: { icon: '🌊', label: t.bosphorus, suffix: 'min' },
+    business_district_min: { icon: '🏢', label: t.cbd, suffix: 'min' },
+    city_center_min: { icon: '🏙️', label: t.cityCenter, suffix: 'min' },
+    istiklal_avenue_min: { icon: '🚶', label: t.istiklal, suffix: 'min' },
+    galataport_min: { icon: '⚓', label: t.galataport, suffix: 'min' },
+    blue_mosque_min: { icon: '🕌', label: t.blueMosque, suffix: 'min' },
+    grand_bazaar_min: { icon: '🏺', label: t.grandBazaar, suffix: 'min' },
+    kalamis_marina_min: { icon: '⛵', label: t.kalamis, suffix: 'min' },
+  };
+}
+
+export default function LocationDistances({ distances = {}, address, district, projectName, city = 'Istanbul', lang = 'en' }) {
+  const t = getDict(lang).pages.detail.location;
+  const DISTANCE_META = buildDistanceMeta(t);
+
   const pills = Object.entries(distances || {})
     .map(([k, v]) => [snakeKey(k), v])
     .filter(([k, v]) => DISTANCE_META[k] && v != null && v !== '')
@@ -50,7 +53,7 @@ export default function LocationDistances({ distances = {}, address, district, p
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Location
+        {t.heading}
       </h2>
 
       <div

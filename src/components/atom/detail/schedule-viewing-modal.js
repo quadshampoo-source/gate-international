@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { getDict } from '@/lib/i18n';
 
 const ESC = 'Escape';
 
 // Schedule viewing modal — centered desktop dialog, full-screen sheet on
 // mobile. Submits to console + shows toast for now (backend wiring deferred).
-export default function ScheduleViewingModal({ open, onClose, projectName }) {
+export default function ScheduleViewingModal({ open, onClose, projectName, lang = 'en' }) {
+  const t = getDict(lang).pages.detail.scheduleViewing;
   const [form, setForm] = useState({ name: '', email: '', phone: '', date: '', message: '' });
   const [status, setStatus] = useState(null); // null | 'submitting' | 'success' | 'error'
 
@@ -39,7 +41,6 @@ export default function ScheduleViewingModal({ open, onClose, projectName }) {
     setStatus('submitting');
     // eslint-disable-next-line no-console
     console.log('[schedule-viewing] submit', { project: projectName, ...form });
-    // Pretend network — keep it snappy (200ms)
     setTimeout(() => setStatus('success'), 200);
   };
 
@@ -77,7 +78,7 @@ export default function ScheduleViewingModal({ open, onClose, projectName }) {
           <div className="flex items-start justify-between gap-4 px-6 pt-5 pb-3">
             <div>
               <h2 id="schedule-viewing-title" className="text-xl font-semibold" style={{ color: 'var(--neutral-900)' }}>
-                Schedule a viewing
+                {t.title}
               </h2>
               {projectName && (
                 <div className="mt-1 text-sm" style={{ color: 'var(--neutral-500)' }}>
@@ -88,7 +89,7 @@ export default function ScheduleViewingModal({ open, onClose, projectName }) {
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close"
+              aria-label={t.close}
               className="inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors hover:bg-[var(--neutral-100)]"
               style={{ color: 'var(--neutral-700)' }}
             >
@@ -115,10 +116,10 @@ export default function ScheduleViewingModal({ open, onClose, projectName }) {
                 </svg>
               </div>
               <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--neutral-900)' }}>
-                Request received
+                {t.received}
               </h3>
               <p className="text-sm mb-6" style={{ color: 'var(--neutral-500)' }}>
-                A senior advisor will reply within one business day to confirm.
+                {t.receivedSub}
               </p>
               <button
                 type="button"
@@ -126,16 +127,16 @@ export default function ScheduleViewingModal({ open, onClose, projectName }) {
                 className="inline-flex items-center justify-center w-full md:w-auto md:px-8 h-12 text-sm font-semibold text-white"
                 style={{ background: 'var(--accent-coral)', borderRadius: 'var(--atom-radius-pill)' }}
               >
-                Done
+                {t.done}
               </button>
             </div>
           ) : (
             <form onSubmit={submit} className="px-6 pb-6 pt-2 flex flex-col gap-3">
-              <Field label="Name" required value={form.name} onChange={update('name')} />
-              <Field label="Email" type="email" required value={form.email} onChange={update('email')} />
-              <Field label="Phone" type="tel" required value={form.phone} onChange={update('phone')} placeholder="+90 5XX XXX XX XX" />
-              <Field label="Preferred date" type="date" value={form.date} onChange={update('date')} />
-              <Field label="Message (optional)" textarea value={form.message} onChange={update('message')} />
+              <Field label={t.name} required value={form.name} onChange={update('name')} />
+              <Field label={t.email} type="email" required value={form.email} onChange={update('email')} />
+              <Field label={t.phone} type="tel" required value={form.phone} onChange={update('phone')} placeholder="+90 5XX XXX XX XX" />
+              <Field label={t.preferredDate} type="date" value={form.date} onChange={update('date')} />
+              <Field label={t.messageOptional} textarea value={form.message} onChange={update('message')} />
               <button
                 type="submit"
                 disabled={status === 'submitting'}
@@ -147,7 +148,7 @@ export default function ScheduleViewingModal({ open, onClose, projectName }) {
                   boxShadow: '0 6px 18px rgba(255,107,92,0.35)',
                 }}
               >
-                {status === 'submitting' ? 'Submitting…' : 'Request viewing'}
+                {status === 'submitting' ? t.submitting : t.requestViewing}
               </button>
             </form>
           )}

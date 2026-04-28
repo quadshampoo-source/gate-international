@@ -15,6 +15,7 @@ import FaqAccordion from './detail/faq-accordion';
 import SimilarProperties from './detail/similar-properties';
 import BuildingSpecs from './detail/building-specs';
 import ProjectReels from './detail/project-reels';
+import { getDict } from '@/lib/i18n';
 
 // Hero gallery is exterior-only. If a project has no exterior images we
 // fall through to the legacy unified `gallery` array, then to the cover
@@ -34,23 +35,24 @@ function getHeroGallery(project) {
   return out;
 }
 
-function buildSpecs(project) {
+function buildSpecs(project, t) {
   const specs = [];
-  if (project.bedrooms) specs.push({ label: 'Bedrooms', value: project.bedrooms });
-  if (project.bathrooms) specs.push({ label: 'Bathrooms', value: project.bathrooms });
-  if (project.area) specs.push({ label: 'Area', value: `${project.area} m²` });
-  if (project.propertyType || project.typology) specs.push({ label: 'Type', value: project.propertyType || project.typology });
-  if (project.deliveryStatus === 'DELIVERED') specs.push({ label: 'Delivery', value: 'Delivered' });
-  else if (project.deliveryMonth && project.deliveryYear) specs.push({ label: 'Delivery', value: `${String(project.deliveryMonth).padStart(2, '0')}/${project.deliveryYear}` });
-  else if (project.delivery) specs.push({ label: 'Delivery', value: project.delivery });
-  if (project.view) specs.push({ label: 'View', value: project.view });
+  if (project.bedrooms) specs.push({ label: t.bedrooms, value: project.bedrooms });
+  if (project.bathrooms) specs.push({ label: t.bathrooms, value: project.bathrooms });
+  if (project.area) specs.push({ label: t.area, value: `${project.area} m²` });
+  if (project.propertyType || project.typology) specs.push({ label: t.type, value: project.propertyType || project.typology });
+  if (project.deliveryStatus === 'DELIVERED') specs.push({ label: t.delivery, value: t.delivered });
+  else if (project.deliveryMonth && project.deliveryYear) specs.push({ label: t.delivery, value: `${String(project.deliveryMonth).padStart(2, '0')}/${project.deliveryYear}` });
+  else if (project.delivery) specs.push({ label: t.delivery, value: project.delivery });
+  if (project.view) specs.push({ label: t.view, value: project.view });
   return specs;
 }
 
 export default function AtomProjectDetail({ project, lang = 'en', allProjects = [] }) {
+  const t = getDict(lang).pages.detail;
   const heroGallery = getHeroGallery(project);
   const interiorImages = Array.isArray(project.interiorImages) ? project.interiorImages.filter(Boolean) : [];
-  const specs = buildSpecs(project);
+  const specs = buildSpecs(project, t.specs);
   const developerInfo = project.developerInfo || project.developer_info;
   const distances = project.distances || {};
   const heroTagline = project.heroTagline || project.hero_tagline;
@@ -76,13 +78,13 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">
           <div className="flex items-center gap-2 text-sm mb-5" style={{ color: 'var(--neutral-500)' }}>
             <Link href={`/${lang}/projects`} className="hover:text-atom-primary-600 transition-colors">
-              All residences
+              {t.breadcrumb.allResidences}
             </Link>
             <span>/</span>
             <span style={{ color: 'var(--neutral-900)' }}>{project.name}</span>
           </div>
 
-          <GalleryMosaic images={heroGallery} alt={project.name} />
+          <GalleryMosaic images={heroGallery} alt={project.name} lang={lang} />
         </div>
       </section>
 
@@ -139,9 +141,9 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
                 </div>
               )}
 
-              <BuildingSpecs techSpecs={techSpecs} />
-              <HighlightsList amenities={amenities} />
-              <MarkdownDescription markdown={description} />
+              <BuildingSpecs techSpecs={techSpecs} lang={lang} />
+              <HighlightsList amenities={amenities} lang={lang} />
+              <MarkdownDescription markdown={description} lang={lang} />
               <ProjectReels reels={reels} lang={lang} />
               <ConfigurationsTabs
                 priceTable={priceTable}
@@ -149,19 +151,21 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
                 unitTypes={project.unit_types || project.unitTypes}
                 priceNote={priceNote}
                 priceLastUpdated={priceLastUpdated}
+                lang={lang}
               />
-              <PaymentPlanTimeline paymentPlan={paymentPlan} />
-              <FloorPlans images={interiorImages} alt={`${project.name} interior`} />
-              <AmenitiesGrid amenities={amenities} />
+              <PaymentPlanTimeline paymentPlan={paymentPlan} lang={lang} />
+              <FloorPlans images={interiorImages} alt={`${project.name} interior`} lang={lang} />
+              <AmenitiesGrid amenities={amenities} lang={lang} />
               <LocationDistances
                 distances={distances}
                 district={project.district}
                 projectName={project.name}
+                lang={lang}
               />
-              <DeveloperCard developerInfo={developerInfo} />
-              <InvestmentBlock investment={investment} />
-              <VideoTour project={project} />
-              <FaqAccordion faqs={faqs} />
+              <DeveloperCard developerInfo={developerInfo} lang={lang} />
+              <InvestmentBlock investment={investment} lang={lang} />
+              <VideoTour project={project} lang={lang} />
+              <FaqAccordion faqs={faqs} lang={lang} />
             </div>
 
             {/* Sticky / mobile bottom CTA */}

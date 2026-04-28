@@ -1,7 +1,10 @@
 'use client';
 
+import { getDict } from '@/lib/i18n';
+
 // Native <details>/<summary> accordion — no Radix dependency. Atom-styled.
-export default function FaqAccordion({ faqs = [] }) {
+export default function FaqAccordion({ faqs = [], lang = 'en' }) {
+  const t = getDict(lang).pages.detail.faq;
   const items = (faqs || []).filter((f) => f && (f.question || f.answer));
   if (items.length === 0) return null;
 
@@ -14,7 +17,7 @@ export default function FaqAccordion({ faqs = [] }) {
       `}</style>
 
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Frequently asked questions
+        {t.heading}
       </h2>
 
       <div className="atom-faq flex flex-col gap-2">

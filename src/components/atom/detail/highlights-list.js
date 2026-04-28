@@ -1,14 +1,17 @@
 'use client';
 
+import { getDict } from '@/lib/i18n';
+
 // Top 5 amenities — horizontal scroll on mobile, 5-up grid on desktop.
-export default function HighlightsList({ amenities = [] }) {
+export default function HighlightsList({ amenities = [], lang = 'en' }) {
+  const t = getDict(lang).pages.detail.highlights;
   const items = (amenities || []).filter(Boolean).slice(0, 5);
   if (items.length === 0) return null;
 
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-semibold mb-5" style={{ color: 'var(--neutral-900)', letterSpacing: '-0.02em' }}>
-        Why this property
+        {t.heading}
       </h2>
 
       <div
