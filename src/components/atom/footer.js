@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { getDict } from '@/lib/i18n';
 
 export default function AtomFooter({ lang = 'en' }) {
+  const t = getDict(lang).pages.footer;
   return (
     <footer style={{ background: 'var(--neutral-900)', color: '#fff' }}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 py-16 md:py-24">
@@ -23,32 +25,32 @@ export default function AtomFooter({ lang = 'en' }) {
               <span className="font-semibold text-lg">Gate International</span>
             </div>
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, lineHeight: 1.65, maxWidth: 320 }}>
-              A boutique advisory for premium Turkish residences. Istanbul, Bodrum, and Bursa — sourced privately, underwritten with care.
+              {t.tagline}
             </p>
           </div>
 
-          <FooterCol heading="Properties">
-            <FooterLink href={`/${lang}/projects?district=Beşiktaş`}>Istanbul</FooterLink>
-            <FooterLink href={`/${lang}/districts/bodrum`}>Bodrum</FooterLink>
-            <FooterLink href={`/${lang}/districts/bursa`}>Bursa</FooterLink>
-            <FooterLink href={`/${lang}/projects`}>All properties</FooterLink>
+          <FooterCol heading={t.columns.properties.heading}>
+            <FooterLink href={`/${lang}/projects?district=Beşiktaş`}>{t.columns.properties.istanbul}</FooterLink>
+            <FooterLink href={`/${lang}/districts/bodrum`}>{t.columns.properties.bodrum}</FooterLink>
+            <FooterLink href={`/${lang}/districts/bursa`}>{t.columns.properties.bursa}</FooterLink>
+            <FooterLink href={`/${lang}/projects`}>{t.columns.properties.all}</FooterLink>
           </FooterCol>
 
-          <FooterCol heading="Services">
-            <FooterLink href={`/${lang}/citizenship`}>Citizenship</FooterLink>
-            <FooterLink href={`/${lang}/services`}>Legal & title</FooterLink>
-            <FooterLink href={`/${lang}/services`}>After-sale</FooterLink>
-            <FooterLink href={`/${lang}/calculator`}>ROI calculator</FooterLink>
+          <FooterCol heading={t.columns.services.heading}>
+            <FooterLink href={`/${lang}/citizenship`}>{t.columns.services.citizenship}</FooterLink>
+            <FooterLink href={`/${lang}/services`}>{t.columns.services.legal}</FooterLink>
+            <FooterLink href={`/${lang}/services`}>{t.columns.services.afterSale}</FooterLink>
+            <FooterLink href={`/${lang}/calculator`}>{t.columns.services.roi}</FooterLink>
           </FooterCol>
 
-          <FooterCol heading="Company">
-            <FooterLink href={`/${lang}/about`}>About</FooterLink>
-            <FooterLink href={`/${lang}/why-us`}>Why us</FooterLink>
-            <FooterLink href={`/${lang}/compare`}>Compare</FooterLink>
-            <FooterLink href={`/${lang}/contact`}>Contact</FooterLink>
+          <FooterCol heading={t.columns.company.heading}>
+            <FooterLink href={`/${lang}/about`}>{t.columns.company.about}</FooterLink>
+            <FooterLink href={`/${lang}/why-us`}>{t.columns.company.why}</FooterLink>
+            <FooterLink href={`/${lang}/compare`}>{t.columns.company.compare}</FooterLink>
+            <FooterLink href={`/${lang}/contact`}>{t.columns.company.contact}</FooterLink>
           </FooterCol>
 
-          <FooterCol heading="Connect">
+          <FooterCol heading={t.columns.connect.heading}>
             <FooterLink href="https://instagram.com" external>Instagram</FooterLink>
             <FooterLink href="https://wa.me/" external>WhatsApp</FooterLink>
             <FooterLink href="https://linkedin.com" external>LinkedIn</FooterLink>
@@ -57,8 +59,8 @@ export default function AtomFooter({ lang = 'en' }) {
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 pt-8" style={{ color: 'rgba(255,255,255,0.55)', fontSize: 12 }}>
-          <span>© 2026 Gate International</span>
-          <span>Privacy · Terms · Cookies</span>
+          <span>{t.copyright}</span>
+          <span>{t.legal.privacy} · {t.legal.terms} · {t.legal.cookies}</span>
         </div>
       </div>
     </footer>

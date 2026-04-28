@@ -531,6 +531,37 @@ const en = {
         buttonCalc: 'Try the ROI calculator',
       },
     },
+    footer: {
+      tagline: 'A boutique advisory for premium Turkish residences. Istanbul, Bodrum, and Bursa — sourced privately, underwritten with care.',
+      columns: {
+        properties: {
+          heading: 'Properties',
+          istanbul: 'Istanbul',
+          bodrum: 'Bodrum',
+          bursa: 'Bursa',
+          all: 'All properties',
+        },
+        services: {
+          heading: 'Services',
+          citizenship: 'Citizenship',
+          legal: 'Legal & title',
+          afterSale: 'After-sale',
+          roi: 'ROI calculator',
+        },
+        company: {
+          heading: 'Company',
+          about: 'About',
+          why: 'Why us',
+          compare: 'Compare',
+          contact: 'Contact',
+        },
+        connect: {
+          heading: 'Connect',
+        },
+      },
+      copyright: '© 2026 Gate International',
+      legal: { privacy: 'Privacy', terms: 'Terms', cookies: 'Cookies' },
+    },
   },
 };
 
@@ -1059,6 +1090,37 @@ const ar = {
         buttonContact: 'تواصل معنا',
         buttonCalc: 'جرّب حاسبة العائد',
       },
+    },
+    footer: {
+      tagline: 'استشارة بوتيك للعقارات التركية المتميزة. إسطنبول وبودروم وبورصة — توريد خاص، تأمين بعناية.',
+      columns: {
+        properties: {
+          heading: 'العقارات',
+          istanbul: 'إسطنبول',
+          bodrum: 'بودروم',
+          bursa: 'بورصة',
+          all: 'جميع العقارات',
+        },
+        services: {
+          heading: 'الخدمات',
+          citizenship: 'الجنسية',
+          legal: 'القانون والملكية',
+          afterSale: 'ما بعد البيع',
+          roi: 'حاسبة العائد',
+        },
+        company: {
+          heading: 'الشركة',
+          about: 'حول',
+          why: 'لماذا نحن',
+          compare: 'مقارنة',
+          contact: 'تواصل',
+        },
+        connect: {
+          heading: 'تواصل اجتماعي',
+        },
+      },
+      copyright: '© 2026 Gate International',
+      legal: { privacy: 'الخصوصية', terms: 'الشروط', cookies: 'الكوكيز' },
     },
   },
 };
@@ -1589,6 +1651,37 @@ const zh = {
         buttonCalc: '试用回报计算器',
       },
     },
+    footer: {
+      tagline: '专注于土耳其优质住宅的精品咨询。伊斯坦布尔、博德鲁姆与布尔萨 — 私下选品,审慎承销。',
+      columns: {
+        properties: {
+          heading: '物业',
+          istanbul: '伊斯坦布尔',
+          bodrum: '博德鲁姆',
+          bursa: '布尔萨',
+          all: '全部物业',
+        },
+        services: {
+          heading: '服务',
+          citizenship: '入籍',
+          legal: '法律与产权',
+          afterSale: '售后服务',
+          roi: '回报计算器',
+        },
+        company: {
+          heading: '公司',
+          about: '关于',
+          why: '为何选我们',
+          compare: '比较',
+          contact: '联系',
+        },
+        connect: {
+          heading: '关注我们',
+        },
+      },
+      copyright: '© 2026 Gate International',
+      legal: { privacy: '隐私', terms: '条款', cookies: 'Cookies' },
+    },
   },
 };
 
@@ -2117,6 +2210,37 @@ const ru = {
         buttonContact: 'Связаться',
         buttonCalc: 'Калькулятор ROI',
       },
+    },
+    footer: {
+      tagline: 'Бутиковое агентство премиальной недвижимости в Турции. Стамбул, Бодрум и Бурса — частный поиск, тщательная проверка.',
+      columns: {
+        properties: {
+          heading: 'Объекты',
+          istanbul: 'Стамбул',
+          bodrum: 'Бодрум',
+          bursa: 'Бурса',
+          all: 'Все объекты',
+        },
+        services: {
+          heading: 'Услуги',
+          citizenship: 'Гражданство',
+          legal: 'Право и титул',
+          afterSale: 'Постпродажа',
+          roi: 'Калькулятор ROI',
+        },
+        company: {
+          heading: 'Компания',
+          about: 'О нас',
+          why: 'Почему мы',
+          compare: 'Сравнение',
+          contact: 'Контакты',
+        },
+        connect: {
+          heading: 'Связь',
+        },
+      },
+      copyright: '© 2026 Gate International',
+      legal: { privacy: 'Конфиденциальность', terms: 'Условия', cookies: 'Cookies' },
     },
   },
 };
@@ -2647,6 +2771,37 @@ const fa = {
         buttonCalc: 'ماشین حساب ROI',
       },
     },
+    footer: {
+      tagline: 'مشاوره بوتیک برای املاک پرمیوم ترکیه. استانبول، بودروم و بورسا — تأمین خصوصی، با دقت بررسی‌شده.',
+      columns: {
+        properties: {
+          heading: 'املاک',
+          istanbul: 'استانبول',
+          bodrum: 'بودروم',
+          bursa: 'بورسا',
+          all: 'همه املاک',
+        },
+        services: {
+          heading: 'خدمات',
+          citizenship: 'شهروندی',
+          legal: 'حقوق و سند',
+          afterSale: 'پس از فروش',
+          roi: 'ماشین حساب ROI',
+        },
+        company: {
+          heading: 'شرکت',
+          about: 'درباره ما',
+          why: 'چرا ما',
+          compare: 'مقایسه',
+          contact: 'تماس',
+        },
+        connect: {
+          heading: 'شبکه‌ها',
+        },
+      },
+      copyright: '© ۲۰۲۶ Gate International',
+      legal: { privacy: 'حریم خصوصی', terms: 'شرایط', cookies: 'کوکی‌ها' },
+    },
   },
 };
 
@@ -3175,6 +3330,37 @@ const fr = {
         buttonContact: 'Nous contacter',
         buttonCalc: 'Calculateur ROI',
       },
+    },
+    footer: {
+      tagline: 'Un cabinet boutique pour résidences turques premium. Istanbul, Bodrum et Bursa — sourcés en privé, instruits avec soin.',
+      columns: {
+        properties: {
+          heading: 'Biens',
+          istanbul: 'Istanbul',
+          bodrum: 'Bodrum',
+          bursa: 'Bursa',
+          all: 'Tous les biens',
+        },
+        services: {
+          heading: 'Services',
+          citizenship: 'Citoyenneté',
+          legal: 'Juridique & titre',
+          afterSale: 'Après-vente',
+          roi: 'Calculateur ROI',
+        },
+        company: {
+          heading: 'Société',
+          about: 'À propos',
+          why: 'Pourquoi nous',
+          compare: 'Comparer',
+          contact: 'Contact',
+        },
+        connect: {
+          heading: 'Réseaux',
+        },
+      },
+      copyright: '© 2026 Gate International',
+      legal: { privacy: 'Confidentialité', terms: 'CGU', cookies: 'Cookies' },
     },
   },
 };
