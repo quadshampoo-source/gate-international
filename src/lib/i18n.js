@@ -447,6 +447,43 @@ const en = {
     popupTitle: 'Chat with our team',
     popupSub: 'Pick a consultant — message opens in WhatsApp.',
   },
+  pages: {
+    about: {
+      hero: {
+        eyebrow: 'About',
+        titleLead: 'A boutique advisory,',
+        titleHighlight: 'since 2009.',
+        sub: 'Gate International serves discerning clients across the Gulf, Greater China, and Europe. We source privately, underwrite carefully, and stand behind every transaction with our in-house legal and after-sale teams.',
+      },
+      stats: {
+        years: { label: 'Years', caption: 'In Turkish real estate' },
+        offices: { label: 'Offices', caption: '4 countries' },
+        languages: { label: 'Languages', caption: 'Native-speaker desks' },
+        citizenships: { label: 'Citizenships', caption: 'Successfully approved' },
+      },
+      practice: {
+        kicker: 'Practice',
+        title: 'How we work.',
+        p1: 'We focus on a narrow slice of the Turkish market — premium residences in Istanbul, Bodrum, and Bursa — and on doing each transaction with the patience it deserves.',
+        p2: 'No listings-site volume, no hidden commissions. Private sourcing, transparent fees, in-house legal. A short list of residences we would own ourselves.',
+      },
+      credentials: {
+        kicker: 'Credentials',
+        title: 'Licensed, audited, insured.',
+        licenses: [
+          { title: 'TAK Licensed', body: 'Turkish Real Estate Brokerage, Permit № 34-TAK-00128.' },
+          { title: 'Bar-certified', body: 'Legal partners registered with the Istanbul Bar Association.' },
+          { title: 'Privacy (KVKK)', body: 'Registered data controller under Turkish KVKK — GDPR-equivalent.' },
+          { title: 'Anti-money laundering', body: 'Annual MASAK training + full customer due-diligence workflow.' },
+        ],
+      },
+      cta: {
+        title: 'Talk to a senior advisor.',
+        sub: "First call is free. We'll understand your brief and revert within one business day.",
+        button: 'Get in touch',
+      },
+    },
+  },
 };
 
 const ar = {
@@ -890,6 +927,43 @@ const ar = {
     chinaSoonCta: 'تواصل مع مكتب إسطنبول',
     popupTitle: 'تحدث مع فريقنا',
     popupSub: 'اختر مستشاراً — تُفتح المحادثة على واتساب.',
+  },
+  pages: {
+    about: {
+      hero: {
+        eyebrow: 'حول',
+        titleLead: 'استشارة بوتيك،',
+        titleHighlight: 'منذ ٢٠٠٩.',
+        sub: 'تخدم Gate International عملاء متميزين عبر الخليج والصين الكبرى وأوروبا. نحن نوفر العقارات بصفة خاصة، ونقيِّم بدقة، ونقف وراء كل صفقة بفضل فريقَي الشؤون القانونية وما بعد البيع لدينا.',
+      },
+      stats: {
+        years: { label: 'سنة', caption: 'في العقارات التركية' },
+        offices: { label: 'مكاتب', caption: '٤ دول' },
+        languages: { label: 'لغات', caption: 'مكاتب بمتحدثين أصليين' },
+        citizenships: { label: 'جنسية', caption: 'تمت الموافقة عليها بنجاح' },
+      },
+      practice: {
+        kicker: 'الممارسة',
+        title: 'كيف نعمل.',
+        p1: 'نركّز على شريحة ضيقة من السوق التركي — مساكن متميزة في إسطنبول وبودروم وبورصة — وعلى إنجاز كل صفقة بالصبر الذي تستحقه.',
+        p2: 'لا حجم مواقع إعلانات، لا عمولات خفية. توريد خاص، رسوم شفافة، شؤون قانونية داخلية. قائمة قصيرة من المساكن التي نرغب نحن بامتلاكها.',
+      },
+      credentials: {
+        kicker: 'الاعتمادات',
+        title: 'مرخصون، مدققون، مؤمَّنون.',
+        licenses: [
+          { title: 'مرخّص من TAK', body: 'وساطة عقارية تركية، تصريح رقم 34-TAK-00128.' },
+          { title: 'معتمد من النقابة', body: 'شركاء قانونيون مسجلون لدى نقابة محامي إسطنبول.' },
+          { title: 'الخصوصية (KVKK)', body: 'مسؤول بيانات مسجل وفق KVKK التركي — يعادل GDPR.' },
+          { title: 'مكافحة غسل الأموال', body: 'تدريب MASAK سنوي + سير عمل العناية الواجبة الكاملة بالعميل.' },
+        ],
+      },
+      cta: {
+        title: 'تحدّث مع مستشار أول.',
+        sub: 'المكالمة الأولى مجانية. نفهم احتياجك ونعود إليك خلال يوم عمل واحد.',
+        button: 'تواصل معنا',
+      },
+    },
   },
 };
 
@@ -1335,6 +1409,43 @@ const zh = {
     popupTitle: '与团队对话',
     popupSub: '选择顾问 — 在 WhatsApp 中打开对话。',
   },
+  pages: {
+    about: {
+      hero: {
+        eyebrow: '关于',
+        titleLead: '精品咨询,',
+        titleHighlight: '自 2009 年起。',
+        sub: 'Gate International 服务于海湾、大中华地区及欧洲的高净值客户。我们以私下渠道选品,审慎承销,并依靠内部法律与售后团队为每一笔交易负责到底。',
+      },
+      stats: {
+        years: { label: '年', caption: '深耕土耳其地产' },
+        offices: { label: '办公室', caption: '4 个国家' },
+        languages: { label: '语种', caption: '母语级专属席位' },
+        citizenships: { label: '入籍案例', caption: '成功获批' },
+      },
+      practice: {
+        kicker: '专业实践',
+        title: '我们的工作方式。',
+        p1: '我们专注于土耳其市场的细分领域 — 伊斯坦布尔、博德鲁姆与布尔萨的高端住宅 — 并以应有的耐心完成每一笔交易。',
+        p2: '不堆砌房源,无隐性佣金。私下选品,透明费用,内部法务。一份我们自己也愿意持有的精选名单。',
+      },
+      credentials: {
+        kicker: '资质',
+        title: '持牌、受审、保险齐备。',
+        licenses: [
+          { title: 'TAK 持牌', body: '土耳其房地产经纪许可证,编号 № 34-TAK-00128。' },
+          { title: '律师协会认证', body: '法律合作方注册于伊斯坦布尔律师协会。' },
+          { title: '隐私 (KVKK)', body: '依土耳其 KVKK 注册数据控制方 — 等同 GDPR。' },
+          { title: '反洗钱', body: '年度 MASAK 培训 + 完整的客户尽职调查流程。' },
+        ],
+      },
+      cta: {
+        title: '与高级顾问对话。',
+        sub: '首次通话免费。我们将厘清您的需求,并在一个工作日内回复。',
+        button: '立即联系',
+      },
+    },
+  },
 };
 
 const ru = {
@@ -1778,6 +1889,43 @@ const ru = {
     chinaSoonCta: 'Связаться со Стамбулом',
     popupTitle: 'Связь с командой',
     popupSub: 'Выберите консультанта — чат откроется в WhatsApp.',
+  },
+  pages: {
+    about: {
+      hero: {
+        eyebrow: 'О нас',
+        titleLead: 'Бутиковое агентство,',
+        titleHighlight: 'с 2009 года.',
+        sub: 'Gate International обслуживает взыскательных клиентов из Персидского залива, Большого Китая и Европы. Мы подбираем недвижимость частным образом, тщательно проверяем и сопровождаем каждую сделку силами собственных юридического и постпродажного подразделений.',
+      },
+      stats: {
+        years: { label: 'лет', caption: 'в турецкой недвижимости' },
+        offices: { label: 'офисов', caption: '4 страны' },
+        languages: { label: 'языков', caption: 'команды носителей' },
+        citizenships: { label: 'паспортов', caption: 'успешно оформлено' },
+      },
+      practice: {
+        kicker: 'Подход',
+        title: 'Как мы работаем.',
+        p1: 'Мы концентрируемся на узком сегменте турецкого рынка — премиальная недвижимость в Стамбуле, Бодруме и Бурсе — и проводим каждую сделку с должной выдержкой.',
+        p2: 'Без объёмов листингов, без скрытых комиссий. Частный поиск, прозрачные гонорары, штатные юристы. Короткий список объектов, которыми мы владели бы сами.',
+      },
+      credentials: {
+        kicker: 'Сертификация',
+        title: 'Лицензия, аудит, страхование.',
+        licenses: [
+          { title: 'Лицензия TAK', body: 'Турецкая брокерская деятельность, разрешение № 34-TAK-00128.' },
+          { title: 'Адвокатская коллегия', body: 'Юридические партнёры состоят в Стамбульской адвокатской палате.' },
+          { title: 'Конфиденциальность (KVKK)', body: 'Зарегистрированный оператор данных по турецкому KVKK — эквивалент GDPR.' },
+          { title: 'Противодействие отмыванию', body: 'Ежегодное обучение MASAK + полная процедура комплаенса клиентов.' },
+        ],
+      },
+      cta: {
+        title: 'Поговорите со старшим консультантом.',
+        sub: 'Первый звонок бесплатный. Мы разберёмся в задаче и вернёмся в течение одного рабочего дня.',
+        button: 'Связаться',
+      },
+    },
   },
 };
 
@@ -2223,6 +2371,43 @@ const fa = {
     popupTitle: 'گفت‌وگو با تیم ما',
     popupSub: 'یک مشاور انتخاب کنید — پیام در واتساپ باز می‌شود.',
   },
+  pages: {
+    about: {
+      hero: {
+        eyebrow: 'درباره ما',
+        titleLead: 'یک مشاوره بوتیک،',
+        titleHighlight: 'از سال ۲۰۰۹.',
+        sub: 'Gate International به مشتریان ممتاز در خلیج فارس، چین بزرگ و اروپا خدمت می‌کند. ما به‌صورت خصوصی تأمین می‌کنیم، با دقت ارزیابی می‌کنیم و پشت هر معامله با تیم‌های حقوقی و پس از فروش داخلی خود می‌ایستیم.',
+      },
+      stats: {
+        years: { label: 'سال', caption: 'در املاک ترکیه' },
+        offices: { label: 'دفتر', caption: '۴ کشور' },
+        languages: { label: 'زبان', caption: 'میز با گویشوران بومی' },
+        citizenships: { label: 'تابعیت', caption: 'با موفقیت تأیید شده' },
+      },
+      practice: {
+        kicker: 'روش کار',
+        title: 'چطور کار می‌کنیم.',
+        p1: 'ما روی یک برش باریک از بازار ترکیه تمرکز می‌کنیم — مسکن‌های پرمیوم در استانبول، بودروم و بورسا — و هر معامله را با صبری که شایسته‌اش است انجام می‌دهیم.',
+        p2: 'نه حجم سایت لیستینگ، نه کمیسیون پنهان. تأمین خصوصی، حق‌الزحمه شفاف، حقوقی داخلی. فهرستی کوتاه از مسکن‌هایی که خودمان مالک‌شان می‌شدیم.',
+      },
+      credentials: {
+        kicker: 'اعتبارنامه‌ها',
+        title: 'دارای مجوز، بازرسی‌شده، بیمه‌شده.',
+        licenses: [
+          { title: 'دارای مجوز TAK', body: 'واسطه‌گری املاک ترکیه، مجوز شماره ۳۴-TAK-۰۰۱۲۸.' },
+          { title: 'تأیید کانون وکلا', body: 'شرکای حقوقی ثبت‌شده در کانون وکلای استانبول.' },
+          { title: 'حریم خصوصی (KVKK)', body: 'کنترل‌کننده داده ثبت‌شده تحت KVKK ترکیه — معادل GDPR.' },
+          { title: 'مبارزه با پولشویی', body: 'آموزش سالانه MASAK + جریان کامل بررسی مشتری.' },
+        ],
+      },
+      cta: {
+        title: 'با یک مشاور ارشد گفتگو کنید.',
+        sub: 'اولین تماس رایگان است. خواسته شما را درک می‌کنیم و ظرف یک روز کاری پاسخ می‌دهیم.',
+        button: 'تماس با ما',
+      },
+    },
+  },
 };
 
 const fr = {
@@ -2666,6 +2851,43 @@ const fr = {
     chinaSoonCta: 'Contacter le bureau Istanbul',
     popupTitle: 'Chat avec notre équipe',
     popupSub: "Choisissez un conseiller — le message s'ouvre dans WhatsApp.",
+  },
+  pages: {
+    about: {
+      hero: {
+        eyebrow: 'À propos',
+        titleLead: 'Un cabinet boutique,',
+        titleHighlight: 'depuis 2009.',
+        sub: "Gate International accompagne une clientèle exigeante du Golfe, de la Grande Chine et d'Europe. Nous sourçons en privé, instruisons avec rigueur et défendons chaque transaction grâce à nos équipes juridique et après-vente internalisées.",
+      },
+      stats: {
+        years: { label: 'Années', caption: "Dans l'immobilier turc" },
+        offices: { label: 'Bureaux', caption: '4 pays' },
+        languages: { label: 'Langues', caption: 'Équipes natives' },
+        citizenships: { label: 'Naturalisations', caption: 'Approuvées avec succès' },
+      },
+      practice: {
+        kicker: 'Pratique',
+        title: 'Notre méthode.',
+        p1: 'Nous nous concentrons sur une part étroite du marché turc — résidences premium à Istanbul, Bodrum et Bursa — et menons chaque transaction avec la patience qui lui est due.',
+        p2: "Pas de volume de site d'annonces, pas de commissions cachées. Sourcing privé, honoraires transparents, juristes internes. Une liste courte de résidences que nous posséderions nous-mêmes.",
+      },
+      credentials: {
+        kicker: 'Accréditations',
+        title: 'Licences, audits, assurances.',
+        licenses: [
+          { title: 'Licence TAK', body: 'Courtage immobilier turc, autorisation n° 34-TAK-00128.' },
+          { title: 'Barreau certifié', body: "Partenaires juridiques inscrits au Barreau d'Istanbul." },
+          { title: 'Confidentialité (KVKK)', body: 'Responsable de traitement enregistré au titre du KVKK turc — équivalent RGPD.' },
+          { title: 'Lutte anti-blanchiment', body: 'Formation MASAK annuelle + diligence client complète.' },
+        ],
+      },
+      cta: {
+        title: 'Parlez à un conseiller senior.',
+        sub: 'Le premier appel est gratuit. Nous comprenons votre besoin et revenons sous un jour ouvré.',
+        button: 'Nous contacter',
+      },
+    },
   },
 };
 
