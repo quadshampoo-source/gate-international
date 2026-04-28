@@ -1,3 +1,4 @@
+import { getDict } from '@/lib/i18n';
 import AtomHeroSearch from './hero-search';
 
 // v1 home hero — gradient aura background with eyebrow pill, accent
@@ -5,6 +6,7 @@ import AtomHeroSearch from './hero-search';
 // extraction of what used to live inline in `home.js`; output is identical
 // pixel-for-pixel so flipping back to v1 is risk-free.
 export default function AtomHomeHero({ lang = 'en', districtList = [] }) {
+  const t = getDict(lang).pages.home.hero;
   return (
     <section className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
       <Aura />
@@ -20,14 +22,14 @@ export default function AtomHomeHero({ lang = 'en', districtList = [] }) {
           }}
         >
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--primary-500)' }} />
-          Citizenship eligible from $400K
+          {t.eyebrow}
         </div>
         <h1 className="atom-h1" style={{ fontSize: 'clamp(40px, 6.5vw, 72px)', fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.025em' }}>
-          Premium Turkish residences,{' '}
-          <span className="atom-accent">sourced privately.</span>
+          {t.titleLead}{' '}
+          <span className="atom-accent">{t.titleHighlight}</span>
         </h1>
         <p className="atom-body-lg mt-6 max-w-[640px] mx-auto" style={{ color: 'var(--neutral-500)' }}>
-          A curated portfolio of investor-grade homes across Istanbul, Bodrum and Bursa — vetted for location, developer track record, and clean title.
+          {t.sub}
         </p>
 
         <div className="mt-10">
@@ -35,10 +37,9 @@ export default function AtomHomeHero({ lang = 'en', districtList = [] }) {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-6 mt-10 text-sm" style={{ color: 'var(--neutral-500)' }}>
-          <TrustPill>Bar-licensed legal</TrustPill>
-          <TrustPill>Private listings</TrustPill>
-          <TrustPill>6 languages</TrustPill>
-          <TrustPill>15 years advisory</TrustPill>
+          {t.trustPills.map((label, i) => (
+            <TrustPill key={i}>{label}</TrustPill>
+          ))}
         </div>
       </div>
     </section>

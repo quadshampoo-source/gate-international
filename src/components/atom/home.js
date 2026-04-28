@@ -2,21 +2,14 @@ import Link from 'next/link';
 import { getProjects, getDistricts } from '@/lib/data';
 import { getTestimonials } from '@/lib/testimonials';
 import { getSiteSettings } from '@/lib/site-settings';
+import { getDict } from '@/lib/i18n';
 import AtomProjectCard from './project-card';
 import AtomHomeHero from './home-hero';
 import AtomHomeHeroV2 from './home-hero-v2';
 import { Button, Card, StatCard, PillTag, IconContainer } from '@/components/ui';
 
-const SERVICES = [
-  { title: 'Citizenship pathway', body: 'End-to-end legal guidance from purchase to passport — drafting, filing, follow-up with Nüfus.', link: 'Learn more' },
-  { title: 'Property tours', body: 'Curated site visits across Istanbul, Bodrum and Bursa with private drivers and advisors.', link: 'Arrange a tour' },
-  { title: 'Legal & title', body: 'Due diligence, TAPU transfer, notarised translations in EN · AR · ZH.', link: 'How it works' },
-  { title: 'After-sale', body: 'Furniture procurement, rental management on Airbnb and Booking, tax filings.', link: 'Explore' },
-  { title: 'Investment advisory', body: 'ROI and capital-gains modelling, off-plan vs ready, district thesis in plain language.', link: 'Book a call' },
-  { title: 'Concierge', body: 'Bank accounts, residency permits, schools, private healthcare — handled on your behalf.', link: 'See list' },
-];
-
 export default async function AtomHome({ lang = 'en', searchParams }) {
+  const t = getDict(lang).pages.home;
   const [projects, districts, testimonials, settings] = await Promise.all([
     getProjects(),
     getDistricts(),
@@ -47,16 +40,16 @@ export default async function AtomHome({ lang = 'en', searchParams }) {
         <div className="max-w-[1100px] mx-auto px-6 md:px-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <Card padding="md" align="left">
-              <StatCard number={String(projects.length)} accent="+" label="Residences" caption="Curated portfolio" />
+              <StatCard number={String(projects.length)} accent="+" label={t.stats.residences.label} caption={t.stats.residences.caption} />
             </Card>
             <Card padding="md" align="left">
-              <StatCard number="3" label="Cities" caption="Istanbul · Bodrum · Bursa" />
+              <StatCard number="3" label={t.stats.cities.label} caption={t.stats.cities.caption} />
             </Card>
             <Card padding="md" align="left">
-              <StatCard number="$400" accent="K" label="Citizenship" caption="Minimum investment" />
+              <StatCard number="$400" accent="K" label={t.stats.citizenship.label} caption={t.stats.citizenship.caption} />
             </Card>
             <Card padding="md" align="left">
-              <StatCard number="98" accent="%" label="Success" caption="Citizenship approvals" />
+              <StatCard number="98" accent="%" label={t.stats.success.label} caption={t.stats.success.caption} />
             </Card>
           </div>
         </div>
@@ -67,16 +60,16 @@ export default async function AtomHome({ lang = 'en', searchParams }) {
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">
           <div className="flex items-end justify-between gap-8 mb-10 md:mb-12 flex-wrap">
             <div>
-              <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— Portfolio —</span>
+              <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— {t.featured.kicker} —</span>
               <h2 className="atom-h2 mt-3" style={{ fontSize: 'clamp(32px, 4vw, 48px)' }}>
-                Featured <span className="atom-accent">residences.</span>
+                {t.featured.titleLead} <span className="atom-accent">{t.featured.titleHighlight}</span>
               </h2>
             </div>
-            <Button href={`/${lang}/projects`} variant="ghost">View all</Button>
+            <Button href={`/${lang}/projects`} variant="ghost">{t.featured.viewAll}</Button>
           </div>
 
           <div className="flex flex-wrap gap-2 mb-8">
-            <PillTag active href={`/${lang}/projects`}>All</PillTag>
+            <PillTag active href={`/${lang}/projects`}>{t.featured.filterAll}</PillTag>
             <PillTag href={`/${lang}/projects?district=Beşiktaş`}>Istanbul</PillTag>
             <PillTag href={`/${lang}/districts/bodrum`}>Bodrum</PillTag>
             <PillTag href={`/${lang}/districts/bursa`}>Bursa</PillTag>
@@ -96,14 +89,14 @@ export default async function AtomHome({ lang = 'en', searchParams }) {
       <section className="py-16 md:py-24" style={{ background: 'var(--neutral-100)' }}>
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">
           <div className="text-center mb-12 md:mb-16">
-            <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— End-to-end —</span>
+            <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— {t.services.kicker} —</span>
             <h2 className="atom-h2 mt-3" style={{ fontSize: 'clamp(32px, 4vw, 48px)' }}>
-              Concierge <span className="atom-accent">for investors.</span>
+              {t.services.titleLead} <span className="atom-accent">{t.services.titleHighlight}</span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {SERVICES.map((s, i) => (
+            {t.services.items.map((s, i) => (
               <Card key={i} padding="md" align="left" hairline={false} className="flex flex-col gap-4">
                 <IconContainer size="md">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -132,14 +125,14 @@ export default async function AtomHome({ lang = 'en', searchParams }) {
         <section className="py-16 md:py-24">
           <div className="max-w-[1200px] mx-auto px-6 md:px-10">
             <div className="text-center mb-12 md:mb-16">
-              <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— Client stories —</span>
+              <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— {t.testimonials.kicker} —</span>
               <h2 className="atom-h2 mt-3" style={{ fontSize: 'clamp(32px, 4vw, 48px)' }}>
-                Trusted by <span className="atom-accent">investors.</span>
+                {t.testimonials.titleLead} <span className="atom-accent">{t.testimonials.titleHighlight}</span>
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {testimonials.slice(0, 3).map((t, i) => (
+              {testimonials.slice(0, 3).map((te, i) => (
                 <Card key={i} padding="md" align="left" hairline={i === 1} className="flex flex-col gap-5">
                   <div
                     style={{
@@ -151,15 +144,15 @@ export default async function AtomHome({ lang = 'en', searchParams }) {
                   >
                     &ldquo;
                   </div>
-                  <p className="atom-body" style={{ color: 'var(--neutral-700)' }}>{t.quote || t.body || '—'}</p>
+                  <p className="atom-body" style={{ color: 'var(--neutral-700)' }}>{te.quote || te.body || '—'}</p>
                   <div className="flex items-center gap-3 mt-auto pt-4" style={{ borderTop: '1px solid var(--neutral-100)' }}>
-                    {(t.avatar_url || t.avatar) && (
+                    {(te.avatar_url || te.avatar) && (
                       /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={t.avatar_url || t.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
+                      <img src={te.avatar_url || te.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
                     )}
                     <div>
-                      <div className="font-semibold text-sm" style={{ color: 'var(--neutral-900)' }}>{t.name || 'Anonymous'}</div>
-                      <div className="text-xs" style={{ color: 'var(--neutral-400)' }}>{t.role || t.location || ''}</div>
+                      <div className="font-semibold text-sm" style={{ color: 'var(--neutral-900)' }}>{te.name || t.testimonials.anonymous}</div>
+                      <div className="text-xs" style={{ color: 'var(--neutral-400)' }}>{te.role || te.location || ''}</div>
                     </div>
                   </div>
                 </Card>
@@ -181,12 +174,12 @@ export default async function AtomHome({ lang = 'en', searchParams }) {
               boxShadow: '0 20px 60px rgba(99,102,241,0.30)',
             }}
           >
-            <span className="atom-caption" style={{ color: 'rgba(255,255,255,0.8)' }}>— Start here —</span>
+            <span className="atom-caption" style={{ color: 'rgba(255,255,255,0.8)' }}>— {t.cta.kicker} —</span>
             <h2 className="mt-4" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', fontWeight: 700, lineHeight: 1.08, letterSpacing: '-0.02em' }}>
-              Begin your Turkish chapter.
+              {t.cta.title}
             </h2>
             <p className="mt-5 max-w-[620px] mx-auto" style={{ color: 'rgba(255,255,255,0.85)', fontSize: 17 }}>
-              Tell us what you&apos;re looking for. A senior advisor will send a tailored shortlist within one business day.
+              {t.cta.sub}
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Button
@@ -194,10 +187,10 @@ export default async function AtomHome({ lang = 'en', searchParams }) {
                 variant="ghost"
                 className="!bg-white !text-atom-primary-700 !border-transparent hover:!bg-atom-neutral-100"
               >
-                Get in touch
+                {t.cta.buttonContact}
               </Button>
               <Button href={`/${lang}/calculator`} variant="ghost" className="!bg-transparent !text-white !border-white/50 hover:!bg-white/10">
-                Try the ROI calculator
+                {t.cta.buttonCalc}
               </Button>
             </div>
           </div>

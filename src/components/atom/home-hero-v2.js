@@ -1,3 +1,4 @@
+import { getDict } from '@/lib/i18n';
 import AtomHeroSearch from './hero-search';
 import AtomHomeHeroV1 from './home-hero';
 
@@ -6,6 +7,7 @@ import AtomHomeHeroV1 from './home-hero';
 // search bar, trust chips) — only the visuals change. Falls back to v1 if
 // no image URL is set so the site never breaks.
 export default function AtomHomeHeroV2({ lang = 'en', districtList = [], settings }) {
+  const t = getDict(lang).pages.home.hero;
   const desktopUrl = settings?.heroImageUrl || null;
   const mobileUrl = settings?.heroImageMobileUrl || desktopUrl;
   const overlay = clamp(settings?.heroOverlayOpacity ?? 0.4, 0, 1);
@@ -55,7 +57,7 @@ export default function AtomHomeHeroV2({ lang = 'en', districtList = [], setting
           }}
         >
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-coral)' }} />
-          Citizenship eligible from $400K
+          {t.eyebrow}
         </div>
         <h1
           className="atom-h1"
@@ -68,14 +70,14 @@ export default function AtomHomeHeroV2({ lang = 'en', districtList = [], setting
             textShadow: '0 2px 24px rgba(0,0,0,0.35)',
           }}
         >
-          Premium Turkish residences,{' '}
-          <span style={{ color: 'var(--accent-coral)' }}>sourced privately.</span>
+          {t.titleLead}{' '}
+          <span style={{ color: 'var(--accent-coral)' }}>{t.titleHighlight}</span>
         </h1>
         <p
           className="atom-body-lg mt-6 max-w-[640px] mx-auto"
           style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(0,0,0,0.45)' }}
         >
-          A curated portfolio of investor-grade homes across Istanbul, Bodrum and Bursa — vetted for location, developer track record, and clean title.
+          {t.sub}
         </p>
 
         <div className="mt-10">
@@ -83,10 +85,9 @@ export default function AtomHomeHeroV2({ lang = 'en', districtList = [], setting
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-6 mt-10 text-sm">
-          <TrustPillLight>Bar-licensed legal</TrustPillLight>
-          <TrustPillLight>Private listings</TrustPillLight>
-          <TrustPillLight>6 languages</TrustPillLight>
-          <TrustPillLight>15 years advisory</TrustPillLight>
+          {t.trustPills.map((label, i) => (
+            <TrustPillLight key={i}>{label}</TrustPillLight>
+          ))}
         </div>
       </div>
     </section>
