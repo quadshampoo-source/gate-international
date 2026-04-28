@@ -34,7 +34,7 @@ export default function AtomCitizenship({ lang = 'en' }) {
           <h2 className="atom-h2 mt-3 mb-8 md:mb-10" style={{ fontSize: 'clamp(28px, 3.5vw, 40px)' }}>{t.process.title}</h2>
           <div className="space-y-4">
             {t.process.steps.map((s, i) => (
-              <div key={i} className="grid grid-cols-[auto_1fr] gap-5 md:gap-8 p-6 md:p-8 bg-white" style={{ borderRadius: 'var(--atom-radius-lg)', border: '1px solid var(--neutral-200)' }}>
+              <div key={i} className="grid grid-cols-[auto_1fr] gap-5 md:gap-8 p-6 md:p-8" style={{ background: 'var(--atom-surface)', borderRadius: 'var(--atom-radius-lg)', border: '1px solid var(--neutral-200)' }}>
                 <div
                   className="inline-grid place-items-center font-bold"
                   style={{
@@ -58,7 +58,7 @@ export default function AtomCitizenship({ lang = 'en' }) {
         <div className="max-w-[900px] mx-auto px-6 md:px-10">
           <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— {t.faq.kicker} —</span>
           <h2 className="atom-h2 mt-3 mb-8" style={{ fontSize: 'clamp(28px, 3.5vw, 40px)' }}>{t.faq.title}</h2>
-          <div className="bg-white" style={{ borderRadius: 'var(--atom-radius-lg)', border: '1px solid var(--neutral-200)', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--atom-surface)', borderRadius: 'var(--atom-radius-lg)', border: '1px solid var(--neutral-200)', overflow: 'hidden' }}>
             {t.faq.items.map((item, i) => (
               <div key={i} style={{ borderTop: i === 0 ? 'none' : '1px solid var(--neutral-100)' }}>
                 <button

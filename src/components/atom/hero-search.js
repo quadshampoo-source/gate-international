@@ -183,8 +183,8 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
         }}
       >
         <div
-          className="flex flex-row items-stretch gap-2 bg-white p-2 rounded-full"
-          style={{ boxShadow: 'var(--atom-shadow-md)' }}
+          className="flex flex-row items-stretch gap-2 p-2 rounded-full"
+          style={{ background: 'var(--atom-surface)', boxShadow: 'var(--atom-shadow-md)' }}
         >
           <Field label={t.fieldCity} value={city} open={openIdx === 0} onToggle={(o) => setOpenIdx(o ? 0 : -1)}>
             {cities.map((c) => (

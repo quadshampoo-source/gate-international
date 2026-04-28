@@ -71,7 +71,7 @@ export default async function AtomDistrict({ lang = 'en', district = 'Bodrum', p
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {c.subRegions.map((r) => (
-              <div key={r.name} className="p-6 bg-white" style={{ borderRadius: 'var(--atom-radius-lg)', border: '1px solid var(--neutral-200)' }}>
+              <div key={r.name} className="p-6" style={{ background: 'var(--atom-surface)', borderRadius: 'var(--atom-radius-lg)', border: '1px solid var(--neutral-200)' }}>
                 <h3 className="text-lg font-semibold" style={{ color: 'var(--neutral-900)' }}>{r.name}</h3>
                 <p className="mt-1.5 text-sm" style={{ color: 'var(--neutral-500)' }}>{r.body}</p>
               </div>

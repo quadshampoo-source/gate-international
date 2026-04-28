@@ -43,7 +43,7 @@ export default async function AtomServices({ lang = 'en' }) {
           <h2 className="atom-h2 mt-3 mb-8" style={{ fontSize: 'clamp(28px, 3.5vw, 40px)' }}>{t.extras.title}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {t.extras.items.map((s, i) => (
-              <div key={i} className="p-5 bg-white" style={{ borderRadius: 'var(--atom-radius-lg)', border: '1px solid var(--neutral-200)' }}>
+              <div key={i} className="p-5" style={{ background: 'var(--atom-surface)', borderRadius: 'var(--atom-radius-lg)', border: '1px solid var(--neutral-200)' }}>
                 <h3 className="font-semibold" style={{ color: 'var(--neutral-900)' }}>{s.title}</h3>
                 <p className="mt-1 text-sm" style={{ color: 'var(--neutral-500)' }}>{s.body}</p>
               </div>
