@@ -50,7 +50,11 @@ function TrustPill({ children }) {
   return (
     <span
       className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full"
-      style={{ background: 'var(--neutral-100)', color: 'var(--neutral-500)', fontSize: 12, fontWeight: 500 }}
+      // --neutral-700 (vs the previous --neutral-500) brings the pill
+      // text from a soft mid-grey to a confident graphite in light
+      // mode, and from #94A3B8 to #CBD5E1 in dark mode — both modes
+      // gain ~2 stops of contrast over the pill background.
+      style={{ background: 'var(--neutral-100)', color: 'var(--neutral-700)', fontSize: 12, fontWeight: 500 }}
     >
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="20 6 9 17 4 12" />
