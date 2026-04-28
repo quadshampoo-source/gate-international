@@ -59,7 +59,7 @@ export default function AtomNav({ lang = 'en', logoUrl = null, logoAlt = null })
       <header
         className="fixed top-0 inset-x-0 z-50 transition-all duration-200"
         style={{
-          background: scrolled || open ? 'rgba(255,255,255,0.88)' : 'transparent',
+          background: scrolled || open ? 'var(--atom-overlay-bg)' : 'transparent',
           backdropFilter: scrolled || open ? 'blur(16px)' : 'none',
           WebkitBackdropFilter: scrolled || open ? 'blur(16px)' : 'none',
           borderBottom: scrolled || open ? '1px solid var(--neutral-200)' : '1px solid transparent',
@@ -126,7 +126,7 @@ export default function AtomNav({ lang = 'en', logoUrl = null, logoAlt = null })
           open ? 'translate-x-0 pointer-events-auto' : 'translate-x-full rtl:-translate-x-full pointer-events-none'
         }`}
         style={{
-          background: 'rgba(255,255,255,0.96)',
+          background: 'var(--atom-overlay-bg)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
         }}
