@@ -25,6 +25,7 @@
   --neutral-50:  #F8FAFC;
   --neutral-100: #F1F5F9;
   --neutral-200: #E2E8F0;
+  --neutral-300: #CBD5E1;
   --neutral-400: #94A3B8;
   --neutral-500: #64748B;
   --neutral-700: #334155;
@@ -79,6 +80,7 @@ html[data-theme="dark"],
   --neutral-50:  #0F1624;
   --neutral-100: #1E293B;
   --neutral-200: #334155;
+  --neutral-300: #475569;
   --neutral-400: #64748B;
   --neutral-500: #94A3B8;
   --neutral-700: #CBD5E1;
