@@ -6,6 +6,7 @@ import DistrictPicker from './_components/district-picker';
 import AmenitiesEditor from './_components/amenities-editor';
 import FaqsEditor from './_components/faqs-editor';
 import ReelsEditor from './_components/reels-editor';
+import I18nDetails from './_components/i18n-details';
 
 export default function ProjectForm({ action, project = {}, isNew = false, deleteAction }) {
   const v = (k, fallback = '') => project[k] ?? fallback;
@@ -354,58 +355,5 @@ function Row({ label, children }) {
       <label>{label}</label>
       <div>{children}</div>
     </div>
-  );
-}
-
-// Collapsible block of 5 inputs/textareas (AR/ZH/RU/FA/FR) for fields that
-// also have a flagship EN textarea above. The EN value lives in the legacy
-// column (`description`, `hero_tagline`); the five locale values are read
-// out of `<bundleKey>` jsonb on load and submitted as `<fieldKey>_<lang>`
-// inputs that actions.js stitches back into a jsonb bundle on save.
-const TRANSLATION_LANGS = [
-  { code: 'ar', label: 'العربية (AR)', dir: 'rtl' },
-  { code: 'zh', label: '中文 (ZH)', dir: 'ltr' },
-  { code: 'ru', label: 'Русский (RU)', dir: 'ltr' },
-  { code: 'fa', label: 'فارسی (FA)', dir: 'rtl' },
-  { code: 'fr', label: 'Français (FR)', dir: 'ltr' },
-];
-
-function I18nDetails({ label, fieldKey, bundleKey, project, kind, rows, maxLength }) {
-  const bundle = (project && project[bundleKey] && typeof project[bundleKey] === 'object')
-    ? project[bundleKey]
-    : {};
-  const filled = TRANSLATION_LANGS.filter((l) => bundle[l.code]).length;
-  return (
-    <details className="admin-row" style={{ marginTop: -8 }}>
-      <summary style={{ cursor: 'pointer', fontSize: 13, padding: '6px 0' }}>
-        {label} {filled > 0 ? `(${filled}/5 filled)` : '(0/5)'}
-      </summary>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 8 }}>
-        {TRANSLATION_LANGS.map((l) => (
-          <div key={l.code}>
-            <label style={{ display: 'block', fontSize: 12, marginBottom: 4, color: 'var(--admin-fg-muted, #888)' }}>
-              {l.label}
-            </label>
-            {kind === 'textarea' ? (
-              <textarea
-                name={`${fieldKey}_${l.code}`}
-                defaultValue={bundle[l.code] || ''}
-                rows={rows || 6}
-                dir={l.dir}
-                className="admin-textarea"
-              />
-            ) : (
-              <input
-                name={`${fieldKey}_${l.code}`}
-                defaultValue={bundle[l.code] || ''}
-                maxLength={maxLength}
-                dir={l.dir}
-                className="admin-input"
-              />
-            )}
-          </div>
-        ))}
-      </div>
-    </details>
   );
 }

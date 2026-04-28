@@ -256,6 +256,81 @@ export async function updateProject(formData) {
   redirect('/admin/projects');
 }
 
+// AI translation server action — called from the admin form's
+// "Translate from EN" button. Takes the English source text and returns
+// drafts for the five non-EN locales. Uses OpenAI's Chat Completions API
+// directly via fetch so we don't pull in the openai SDK as a dependency.
+//
+// kind: 'short' (taglines, names) → terse, max ~120 chars
+// kind: 'long'  (descriptions)    → preserve markdown, paragraph structure
+//
+// Returns { ar, zh, ru, fa, fr } — caller fills the 5 textareas. If the
+// env key is missing or the call errors, throws so the client can show
+// the message instead of silently inserting placeholders.
+export async function translateProjectField(text, kind = 'long') {
+  await requireAdmin();
+  const source = String(text || '').trim();
+  if (!source) throw new Error('source text is empty');
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error('OPENAI_API_KEY is not configured');
+
+  const toneNote = kind === 'short'
+    ? 'Keep each translation under 120 characters. Tone: luxurious, concise, magazine-pull-quote energy.'
+    : 'Preserve any markdown formatting (headings, lists, bold, links). Tone: refined, factual, luxury real-estate editorial.';
+
+  const system = [
+    'You translate Turkish real estate marketing copy from English into five target languages:',
+    '- ar: Modern Standard Arabic',
+    '- zh: Simplified Chinese',
+    '- ru: Russian',
+    '- fa: Persian (Farsi)',
+    '- fr: French',
+    toneNote,
+    'Respond ONLY with a JSON object matching this exact shape: {"ar":"...","zh":"...","ru":"...","fa":"...","fr":"..."}.',
+    'Do not add commentary, do not wrap in code fences, do not include any locale not listed above.',
+  ].join('\n');
+
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      response_format: { type: 'json_object' },
+      temperature: 0.3,
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: source },
+      ],
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`translation API failed (${res.status}): ${errText.slice(0, 200)}`);
+  }
+
+  const data = await res.json();
+  const content = data?.choices?.[0]?.message?.content || '';
+  let parsed;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    throw new Error('translation API returned non-JSON response');
+  }
+
+  const out = {};
+  for (const lang of ['ar', 'zh', 'ru', 'fa', 'fr']) {
+    if (typeof parsed[lang] === 'string') out[lang] = parsed[lang];
+  }
+  if (Object.keys(out).length === 0) {
+    throw new Error('translation API response missing all expected locales');
+  }
+  return out;
+}
+
 export async function deleteProject(formData) {
   await requireAdmin();
   const id = String(formData.get('id') || '');
