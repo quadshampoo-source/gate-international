@@ -3,11 +3,9 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchBottomSheet from './search-bottom-sheet';
+import { getDict } from '@/lib/i18n';
 
 const BEDROOMS = ['Any', '1+', '2+', '3+', '4+', '5+'];
-
-const ANY_CITY = 'Any city';
-const ANY_DISTRICT = 'Any district';
 
 function Field({ label, value, open, onToggle, children }) {
   const ref = useRef(null);
@@ -93,17 +91,24 @@ function SearchIcon({ size = 20, stroke = 'currentColor' }) {
 }
 
 export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
+  const t = getDict(lang).pages.search;
   const router = useRouter();
+
+  // Localised display values for the "any" sentinel options.
+  const ANY_CITY = t.anyCity;
+  const ANY_DISTRICT = t.anyDistrict;
+  const ANY_BEDS = t.anyBedrooms;
+  const BEDS_OPTIONS = useMemo(() => [ANY_BEDS, '1+', '2+', '3+', '4+', '5+'], [ANY_BEDS]);
 
   const cities = useMemo(() => {
     const set = new Set();
     districts.forEach((d) => { if (d?.city) set.add(d.city); });
     return [ANY_CITY, ...Array.from(set).sort()];
-  }, [districts]);
+  }, [districts, ANY_CITY]);
 
   const [city, setCity] = useState(ANY_CITY);
   const [district, setDistrict] = useState(ANY_DISTRICT);
-  const [beds, setBeds] = useState('Any');
+  const [beds, setBeds] = useState(ANY_BEDS);
   const [openIdx, setOpenIdx] = useState(-1);
   const [sheetOpen, setSheetOpen] = useState(false);
   const triggerRef = useRef(null);
@@ -114,7 +119,7 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
       : districts.filter((d) => d.city === city);
     const names = scoped.map((d) => d.name).filter(Boolean);
     return [ANY_DISTRICT, ...names];
-  }, [city, districts]);
+  }, [city, districts, ANY_CITY, ANY_DISTRICT]);
 
   const submit = () => {
     const qs = new URLSearchParams();
@@ -125,7 +130,7 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
     }
     if (effectiveCity !== ANY_CITY) qs.set('city', effectiveCity);
     if (district !== ANY_DISTRICT) qs.set('district', district);
-    if (beds !== 'Any') qs.set('bedrooms', beds);
+    if (beds !== ANY_BEDS) qs.set('bedrooms', beds);
     router.push(`/${lang}/projects${qs.toString() ? `?${qs}` : ''}`);
   };
 
@@ -140,21 +145,21 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
     if (c !== city) setDistrict(ANY_DISTRICT);
   };
 
-  const hasSelection = city !== ANY_CITY || district !== ANY_DISTRICT || beds !== 'Any';
+  const hasSelection = city !== ANY_CITY || district !== ANY_DISTRICT || beds !== ANY_BEDS;
   const selectionParts = [
     city !== ANY_CITY ? city : null,
     district !== ANY_DISTRICT ? district : null,
-    beds !== 'Any' ? `${beds} beds` : null,
+    beds !== ANY_BEDS ? `${beds} ${t.bedsSuffix}` : null,
   ].filter(Boolean);
   const triggerText = hasSelection
     ? selectionParts.join(' · ')
-    : 'Search by city, district, bedrooms';
+    : t.triggerPlaceholder;
 
   const clearAll = (e) => {
     if (e) { e.preventDefault(); e.stopPropagation(); }
     setCity(ANY_CITY);
     setDistrict(ANY_DISTRICT);
-    setBeds('Any');
+    setBeds(ANY_BEDS);
   };
 
   const closeSheet = () => {
@@ -181,27 +186,27 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
           className="flex flex-row items-stretch gap-2 bg-white p-2 rounded-full"
           style={{ boxShadow: 'var(--atom-shadow-md)' }}
         >
-          <Field label="City" value={city} open={openIdx === 0} onToggle={(o) => setOpenIdx(o ? 0 : -1)}>
+          <Field label={t.fieldCity} value={city} open={openIdx === 0} onToggle={(o) => setOpenIdx(o ? 0 : -1)}>
             {cities.map((c) => (
               <Option key={c} active={city === c} onClick={() => pickCity(c)}>{c}</Option>
             ))}
           </Field>
           <div className="self-center" style={{ width: 1, background: 'var(--neutral-200)', height: 32 }} />
-          <Field label="District" value={district} open={openIdx === 1} onToggle={(o) => setOpenIdx(o ? 1 : -1)}>
+          <Field label={t.fieldDistrict} value={district} open={openIdx === 1} onToggle={(o) => setOpenIdx(o ? 1 : -1)}>
             {districtOptions.map((d) => (
               <Option key={d} active={district === d} onClick={() => { setDistrict(d); setOpenIdx(-1); }}>{d}</Option>
             ))}
           </Field>
           <div className="self-center" style={{ width: 1, background: 'var(--neutral-200)', height: 32 }} />
-          <Field label="Bedrooms" value={beds} open={openIdx === 2} onToggle={(o) => setOpenIdx(o ? 2 : -1)}>
-            {BEDROOMS.map((b) => (
+          <Field label={t.fieldBedrooms} value={beds} open={openIdx === 2} onToggle={(o) => setOpenIdx(o ? 2 : -1)}>
+            {BEDS_OPTIONS.map((b) => (
               <Option key={b} active={beds === b} onClick={() => { setBeds(b); setOpenIdx(-1); }}>{b}</Option>
             ))}
           </Field>
           <button
             type="submit"
             onClick={(e) => { e.preventDefault(); submit(); }}
-            aria-label="Search"
+            aria-label={t.ariaSearch}
             className="flex-shrink-0 inline-grid place-items-center transition-transform hover:scale-105 rounded-full self-center"
             style={{
               width: 52, height: 52,
@@ -226,7 +231,7 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
         }}
         aria-haspopup="dialog"
         aria-expanded={sheetOpen}
-        aria-label={hasSelection ? `Edit search: ${triggerText}` : 'Open search'}
+        aria-label={hasSelection ? `${t.ariaEditPrefix} ${triggerText}` : t.ariaOpen}
         className="md:hidden mx-auto flex items-center gap-3 pl-5 pr-2 cursor-pointer"
         style={{
           width: '100%',
@@ -254,7 +259,7 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
             type="button"
             onClick={clearAll}
             onPointerDown={(e) => e.stopPropagation()}
-            aria-label="Clear search"
+            aria-label={t.ariaClear}
             className="inline-flex items-center justify-center w-8 h-8 rounded-full transition-colors hover:bg-[var(--neutral-100)]"
             style={{ color: 'var(--neutral-500)' }}
           >
@@ -283,6 +288,14 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
         open={sheetOpen}
         onClose={closeSheet}
         onSubmit={submit}
+        title={t.sheetTitle}
+        labels={{
+          city: t.fieldCity,
+          district: t.fieldDistrict,
+          bedrooms: t.fieldBedrooms,
+          submit: t.sheetSubmit,
+          close: t.ariaClose,
+        }}
         city={city}
         onCityChange={pickCityInSheet}
         cities={cities}
@@ -291,7 +304,7 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
         districtOptions={districtOptions}
         beds={beds}
         onBedsChange={setBeds}
-        bedroomOptions={BEDROOMS}
+        bedroomOptions={BEDS_OPTIONS}
       />
     </>
   );

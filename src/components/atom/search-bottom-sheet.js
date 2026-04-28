@@ -10,6 +10,7 @@ export default function SearchBottomSheet({
   onClose,
   onSubmit,
   title = 'Find your residence',
+  labels = {},
   city,
   onCityChange,
   cities = [],
@@ -103,7 +104,7 @@ export default function SearchBottomSheet({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close search"
+            aria-label={labels.close || 'Close search'}
             className="inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors hover:bg-[var(--neutral-100)]"
             style={{ color: 'var(--neutral-700)' }}
           >
@@ -122,19 +123,19 @@ export default function SearchBottomSheet({
         <form onSubmit={handleSubmit} className="px-5 pb-4 pt-2 flex flex-col gap-[10px]">
           <SheetSelect
             ref={firstFieldRef}
-            label="City"
+            label={labels.city || 'City'}
             value={city}
             options={cities}
             onChange={onCityChange}
           />
           <SheetSelect
-            label="District"
+            label={labels.district || 'District'}
             value={district}
             options={districtOptions}
             onChange={onDistrictChange}
           />
           <SheetSelect
-            label="Bedrooms"
+            label={labels.bedrooms || 'Bedrooms'}
             value={beds}
             options={bedroomOptions}
             onChange={onBedsChange}
@@ -158,7 +159,7 @@ export default function SearchBottomSheet({
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            Search
+            {labels.submit || 'Search'}
           </button>
         </form>
       </div>
