@@ -25,8 +25,9 @@ export default function AtomProjectCard({ project, lang }) {
   return (
     <Link
       href={`/${lang}/project/${project.id}`}
-      className="group block overflow-hidden bg-white transition-all duration-200 hover:-translate-y-0.5"
+      className="group block overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
       style={{
+        background: 'var(--atom-surface)',
         borderRadius: 'var(--atom-radius-lg)',
         boxShadow: 'var(--atom-shadow-md)',
         border: '1px solid var(--neutral-200)',
@@ -46,9 +47,15 @@ export default function AtomProjectCard({ project, lang }) {
           className="absolute top-4 left-4 text-xs font-medium rounded-full"
           style={{
             padding: '6px 12px',
-            background: isDelivered ? 'var(--neutral-900)' : 'rgba(255,255,255,0.92)',
-            color: isDelivered ? '#fff' : 'var(--neutral-900)',
+            // Status pill sits on the project photo. "Delivered" gets an
+            // always-dark pill (#0F1624 → #F8FAFC text); "For sale" gets
+            // a near-white pill that reads as light over any image. We
+            // peg the surfaces to non-flipping rgb tuples so the pills
+            // stay legible regardless of theme.
+            background: isDelivered ? 'rgba(15,22,36,0.92)' : 'rgba(248,250,252,0.94)',
+            color: isDelivered ? 'rgba(248,250,252,0.96)' : 'rgba(15,22,36,0.92)',
             backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
           }}
         >
           {status}
@@ -59,10 +66,14 @@ export default function AtomProjectCard({ project, lang }) {
             style={{
               padding: '8px 14px',
               borderRadius: 'var(--atom-radius-md)',
-              background: 'rgba(255,255,255,0.95)',
-              color: 'var(--neutral-900)',
+              // Price pill — same logic as the status pill: always-light
+              // surface over the photo, always-dark text. Pegged to fixed
+              // rgb tuples so it stays a "frosted card" in both modes.
+              background: 'rgba(248,250,252,0.95)',
+              color: 'rgba(15,22,36,0.95)',
               fontSize: 15,
               backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
               boxShadow: 'var(--atom-shadow-sm)',
             }}
           >
