@@ -703,6 +703,11 @@ const en = {
       bedroomsChip: 'Bedrooms',
       noMatches: 'No matches. Try relaxing the filters.',
     },
+    compare: {
+      hero: { eyebrow: 'Compare', titleLead: 'Districts,', titleHighlight: 'side by side.', sub: 'Entry price, median price, spread, metro access and inventory density — across the districts we cover.' },
+      table: { district: 'District', projects: 'Projects', entry: 'Entry', median: 'Median', top: 'Top', metroAccess: 'Metro access', metroRich: 'Metro-rich' },
+      footnoteTemplate: 'Based on {count} active residences. Prices in USD, listing values — not transacted. Metro access = % of projects within 500 m of a station.',
+    },
   },
 };
 
@@ -1403,6 +1408,11 @@ const ar = {
       },
       bedroomsChip: 'غرف النوم',
       noMatches: 'لا نتائج. جرّب تخفيف المرشحات.',
+    },
+    compare: {
+      hero: { eyebrow: 'مقارنة', titleLead: 'الأحياء،', titleHighlight: 'جنباً إلى جنب.', sub: 'سعر الدخول، السعر الوسيط، الفجوة، الوصول للمترو وكثافة المعروض — عبر الأحياء التي نغطيها.' },
+      table: { district: 'الحي', projects: 'مشاريع', entry: 'الدخول', median: 'الوسيط', top: 'الأعلى', metroAccess: 'الوصول للمترو', metroRich: 'متروبولي' },
+      footnoteTemplate: 'بناءً على {count} عقار نشط. الأسعار بالدولار، قيم إعلانية — ليست متداولة. الوصول للمترو = نسبة المشاريع ضمن 500 م من محطة.',
     },
   },
 };
@@ -2105,6 +2115,11 @@ const zh = {
       bedroomsChip: '卧室',
       noMatches: '无匹配。请尝试放宽筛选条件。',
     },
+    compare: {
+      hero: { eyebrow: '比较', titleLead: '各区,', titleHighlight: '并列对比。', sub: '入门价、中位价、价差、地铁可达性与房源密度 — 覆盖我们所在的各区。' },
+      table: { district: '区域', projects: '项目数', entry: '起价', median: '中位价', top: '顶价', metroAccess: '地铁可达', metroRich: '地铁密集' },
+      footnoteTemplate: '基于 {count} 个在售住宅。价格为美元挂牌价 — 非成交价。地铁可达 = 距地铁站 500 米内的项目占比。',
+    },
   },
 };
 
@@ -2805,6 +2820,11 @@ const ru = {
       },
       bedroomsChip: 'Спальни',
       noMatches: 'Совпадений нет. Попробуйте ослабить фильтры.',
+    },
+    compare: {
+      hero: { eyebrow: 'Сравнение', titleLead: 'Районы,', titleHighlight: 'бок о бок.', sub: 'Стартовая цена, медиана, разброс, доступность метро и плотность предложений — по районам, которые мы охватываем.' },
+      table: { district: 'Район', projects: 'Проекты', entry: 'Старт', median: 'Медиана', top: 'Топ', metroAccess: 'Доступ к метро', metroRich: 'У метро' },
+      footnoteTemplate: 'На основе {count} активных объектов. Цены в USD, листинговые — не сделочные. Доступ к метро = % проектов в 500 м от станции.',
     },
   },
 };
@@ -3507,6 +3527,11 @@ const fa = {
       bedroomsChip: 'اتاق خواب',
       noMatches: 'موردی پیدا نشد. فیلترها را ساده‌تر کنید.',
     },
+    compare: {
+      hero: { eyebrow: 'مقایسه', titleLead: 'محله‌ها،', titleHighlight: 'کنار هم.', sub: 'قیمت ورود، قیمت میانه، شکاف، دسترسی مترو و چگالی موجودی — در محله‌هایی که پوشش می‌دهیم.' },
+      table: { district: 'محله', projects: 'پروژه', entry: 'ورود', median: 'میانه', top: 'برتر', metroAccess: 'دسترسی مترو', metroRich: 'پر مترو' },
+      footnoteTemplate: 'بر اساس {count} ملک فعال. قیمت‌ها به دلار، ارزش‌های آگهی — نه معامله. دسترسی مترو = درصد پروژه‌ها در ۵۰۰ متری ایستگاه.',
+    },
   },
 };
 
@@ -4207,6 +4232,11 @@ const fr = {
       },
       bedroomsChip: 'Chambres',
       noMatches: "Aucun résultat. Essayez d'assouplir les filtres.",
+    },
+    compare: {
+      hero: { eyebrow: 'Comparer', titleLead: 'Quartiers,', titleHighlight: 'côte à côte.', sub: "Prix d'entrée, prix médian, écart, accès métro et densité d'offres — sur les quartiers que nous couvrons." },
+      table: { district: 'Quartier', projects: 'Biens', entry: 'Entrée', median: 'Médian', top: 'Haut', metroAccess: 'Accès métro', metroRich: 'Métro dense' },
+      footnoteTemplate: "Sur la base de {count} résidences actives. Prix en USD, valeurs de listing — non transactés. Accès métro = % de biens à moins de 500 m d'une station.",
     },
   },
 };

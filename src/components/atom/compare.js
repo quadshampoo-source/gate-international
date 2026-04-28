@@ -1,6 +1,7 @@
 import AtomShell from './shell';
 import AtomPageHero from './page-hero';
 import { Card, PillTag } from '@/components/ui';
+import { getDict } from '@/lib/i18n';
 
 function fmtPrice(n) {
   if (!n) return '—';
@@ -9,6 +10,8 @@ function fmtPrice(n) {
 }
 
 export default async function AtomCompare({ lang = 'en', projects = [] }) {
+  const t = getDict(lang).pages.compare;
+
   // Aggregate per-district median price + count.
   const byDistrict = new Map();
   for (const p of projects) {
@@ -35,9 +38,9 @@ export default async function AtomCompare({ lang = 'en', projects = [] }) {
   return (
     <AtomShell lang={lang}>
       <AtomPageHero
-        eyebrow="Compare"
-        title={<>Districts, <span className="atom-accent">side by side.</span></>}
-        sub="Entry price, median price, spread, metro access and inventory density — across the districts we cover."
+        eyebrow={t.hero.eyebrow}
+        title={<>{t.hero.titleLead} <span className="atom-accent">{t.hero.titleHighlight}</span></>}
+        sub={t.hero.sub}
       />
 
       <section className="pb-20">
@@ -47,12 +50,12 @@ export default async function AtomCompare({ lang = 'en', projects = [] }) {
               <table className="w-full text-sm" style={{ borderCollapse: 'separate', borderSpacing: 0 }}>
                 <thead>
                   <tr style={{ background: 'var(--neutral-50)' }}>
-                    <Th>District</Th>
-                    <Th align="right">Projects</Th>
-                    <Th align="right">Entry</Th>
-                    <Th align="right">Median</Th>
-                    <Th align="right">Top</Th>
-                    <Th align="right">Metro access</Th>
+                    <Th>{t.table.district}</Th>
+                    <Th align="right">{t.table.projects}</Th>
+                    <Th align="right">{t.table.entry}</Th>
+                    <Th align="right">{t.table.median}</Th>
+                    <Th align="right">{t.table.top}</Th>
+                    <Th align="right">{t.table.metroAccess}</Th>
                   </tr>
                 </thead>
                 <tbody>
@@ -61,7 +64,7 @@ export default async function AtomCompare({ lang = 'en', projects = [] }) {
                       <Td>
                         <div className="flex items-center gap-3">
                           <span className="font-semibold" style={{ color: 'var(--neutral-900)' }}>{r.name}</span>
-                          {r.metroRatio >= 0.6 && <PillTag>Metro-rich</PillTag>}
+                          {r.metroRatio >= 0.6 && <PillTag>{t.table.metroRich}</PillTag>}
                         </div>
                       </Td>
                       <Td align="right">{r.count}</Td>
@@ -76,7 +79,7 @@ export default async function AtomCompare({ lang = 'en', projects = [] }) {
             </div>
           </Card>
           <p className="text-xs mt-4" style={{ color: 'var(--neutral-400)' }}>
-            Based on {projects.length} active residences. Prices in USD, listing values — not transacted. Metro access = % of projects within 500 m of a station.
+            {t.footnoteTemplate.replace('{count}', projects.length)}
           </p>
         </div>
       </section>
