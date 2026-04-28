@@ -4,7 +4,7 @@
 //
 // Prerequisites:
 //   1. Apply supabase/migration_project_i18n_content.sql in Supabase SQL Editor.
-//   2. Add OPENAI_API_KEY=sk-... to .env.local.
+//   2. Add ANTHROPIC_API_KEY=sk-ant-... to .env.local.
 //
 // Usage:
 //   node scripts/translate-projects-i18n.mjs --dry-run --limit=1
@@ -12,8 +12,8 @@
 //   node scripts/translate-projects-i18n.mjs                # full run, skip already-translated locales
 //   node scripts/translate-projects-i18n.mjs --force        # overwrite even already-translated locales
 //
-// Cost estimate at gpt-4o-mini rates: ~$0.05 per project across all 4 fields.
-// Full 100-project run ≈ $5.
+// Backed by Anthropic claude-haiku-4-5 via the Messages API. Bump MODEL
+// below to claude-sonnet-4-6 if any locale's draft quality is unsatisfactory.
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
@@ -26,13 +26,15 @@ envText.split('\n').forEach((line) => {
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const OPENAI_KEY = process.env.OPENAI_API_KEY;
+const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   console.error('SUPABASE env vars missing in .env.local'); process.exit(2);
 }
-if (!OPENAI_KEY) {
-  console.error('OPENAI_API_KEY missing in .env.local'); process.exit(2);
+if (!ANTHROPIC_KEY) {
+  console.error('ANTHROPIC_API_KEY missing in .env.local'); process.exit(2);
 }
+
+const MODEL = 'claude-haiku-4-5-20251001';
 
 const args = process.argv.slice(2);
 const DRY_RUN = args.includes('--dry-run');
@@ -70,36 +72,43 @@ const SYSTEM_BASE = [
   'Numbers, prices, areas (m²), dates: keep numerals as-is, translate only the units / surrounding words.',
 ].join('\n');
 
-async function callOpenAI(systemSuffix, userText, { retries = 2 } = {}) {
+async function callAnthropic(systemSuffix, userText, { retries = 2 } = {}) {
   const body = {
-    model: 'gpt-4o-mini',
-    response_format: { type: 'json_object' },
+    model: MODEL,
+    max_tokens: 8192,
     temperature: 0.3,
+    system: SYSTEM_BASE + '\n\n' + systemSuffix,
     messages: [
-      { role: 'system', content: SYSTEM_BASE + '\n\n' + systemSuffix },
       { role: 'user', content: userText },
     ],
   };
   let lastErr;
   for (let i = 0; i <= retries; i++) {
     try {
-      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
+        headers: {
+          'x-api-key': ANTHROPIC_KEY,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+        },
         body: JSON.stringify(body),
       });
       if (!res.ok) {
         const t = await res.text().catch(() => '');
-        if ((res.status === 429 || res.status >= 500) && i < retries) {
+        if ((res.status === 429 || res.status >= 500 || res.status === 529) && i < retries) {
           await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
           continue;
         }
-        throw new Error(`OpenAI ${res.status}: ${t.slice(0, 250)}`);
+        throw new Error(`Anthropic ${res.status}: ${t.slice(0, 250)}`);
       }
       const data = await res.json();
-      const content = data?.choices?.[0]?.message?.content || '';
-      try { return JSON.parse(content); }
-      catch { throw new Error('Non-JSON response: ' + content.slice(0, 200)); }
+      const raw = (data?.content?.[0]?.text || '').trim();
+      // Defensive code-fence strip — Claude usually returns clean JSON when
+      // instructed, but the occasional ```json ... ``` wrapper still happens.
+      const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+      try { return JSON.parse(cleaned); }
+      catch { throw new Error('Non-JSON response: ' + cleaned.slice(0, 200)); }
     } catch (e) {
       lastErr = e;
       if (i < retries) await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
@@ -111,7 +120,7 @@ async function callOpenAI(systemSuffix, userText, { retries = 2 } = {}) {
 async function translateString(text, { short = false } = {}) {
   const suffix = (short ? 'Keep each translation under 120 characters. ' : '')
     + 'Return JSON exactly: {"ar":"...","zh":"...","ru":"...","fa":"...","fr":"..."}.';
-  const out = await callOpenAI(suffix, text);
+  const out = await callAnthropic(suffix, text);
   const result = {};
   for (const l of TARGET_LANGS) {
     if (typeof out[l] === 'string' && out[l].trim()) result[l] = out[l];
@@ -128,7 +137,7 @@ async function translateAmenities(items) {
     'Return JSON exactly: {"ar":[...],"zh":[...],"ru":[...],"fa":[...],"fr":[...]} where each array has the SAME LENGTH and SAME ORDER as the input.',
     'Each output array element must be {"label":"...","description":"..."}.',
   ].join('\n');
-  const out = await callOpenAI(suffix, JSON.stringify(payload));
+  const out = await callAnthropic(suffix, JSON.stringify(payload));
   const result = {};
   for (const l of TARGET_LANGS) {
     if (!Array.isArray(out[l]) || out[l].length !== items.length) continue;
@@ -148,7 +157,7 @@ async function translateFaqs(items) {
     'Return JSON exactly: {"ar":[...],"zh":[...],"ru":[...],"fa":[...],"fr":[...]} where each array has the SAME LENGTH and SAME ORDER as the input.',
     'Each output array element must be {"question":"...","answer":"..."}.',
   ].join('\n');
-  const out = await callOpenAI(suffix, JSON.stringify(payload));
+  const out = await callAnthropic(suffix, JSON.stringify(payload));
   const result = {};
   for (const l of TARGET_LANGS) {
     if (!Array.isArray(out[l]) || out[l].length !== items.length) continue;

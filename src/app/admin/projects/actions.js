@@ -258,8 +258,8 @@ export async function updateProject(formData) {
 
 // AI translation server action — called from the admin form's
 // "Translate from EN" button. Takes the English source text and returns
-// drafts for the five non-EN locales. Uses OpenAI's Chat Completions API
-// directly via fetch so we don't pull in the openai SDK as a dependency.
+// drafts for the five non-EN locales. Uses Anthropic's Messages API
+// directly via fetch so we don't pull in an SDK as a dependency.
 //
 // kind: 'short' (taglines, names) → terse, max ~120 chars
 // kind: 'long'  (descriptions)    → preserve markdown, paragraph structure
@@ -271,8 +271,8 @@ export async function translateProjectField(text, kind = 'long') {
   await requireAdmin();
   const source = String(text || '').trim();
   if (!source) throw new Error('source text is empty');
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error('OPENAI_API_KEY is not configured');
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not configured');
 
   const toneNote = kind === 'short'
     ? 'Keep each translation under 120 characters. Tone: luxurious, concise, magazine-pull-quote energy.'
@@ -290,18 +290,19 @@ export async function translateProjectField(text, kind = 'long') {
     'Do not add commentary, do not wrap in code fences, do not include any locale not listed above.',
   ].join('\n');
 
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      response_format: { type: 'json_object' },
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 4096,
       temperature: 0.3,
+      system,
       messages: [
-        { role: 'system', content: system },
         { role: 'user', content: source },
       ],
     }),
@@ -313,10 +314,13 @@ export async function translateProjectField(text, kind = 'long') {
   }
 
   const data = await res.json();
-  const content = data?.choices?.[0]?.message?.content || '';
+  const raw = (data?.content?.[0]?.text || '').trim();
+  // Claude usually returns clean JSON when instructed, but defensively
+  // strip a code fence if one slipped through.
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
   let parsed;
   try {
-    parsed = JSON.parse(content);
+    parsed = JSON.parse(cleaned);
   } catch {
     throw new Error('translation API returned non-JSON response');
   }
