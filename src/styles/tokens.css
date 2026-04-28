@@ -40,6 +40,20 @@
   /* Card / sheet / dropdown surface — flips in dark mode below.
      Use this anywhere a component used to hardcode `background: #fff`. */
   --atom-surface: #FFFFFF;
+  /* Translucent header / drawer overlay — flips below so the blurred
+     backdrop reads as a tinted version of the page bg in either mode. */
+  --atom-overlay-bg: rgba(255, 255, 255, 0.88);
+  /* Footer / "always dark" inverse surface — does NOT flip. The footer
+     is an intentional contrast block in light mode and stays the same
+     surface in dark mode. Foreground tokens below match. */
+  --atom-footer-bg: #0F1624;
+  --atom-footer-fg: #F8FAFC;
+  /* Same opacity ramp the footer uses for muted/secondary text on top
+     of --atom-footer-bg. Stable across modes since the surface is too. */
+  --atom-footer-fg-muted: rgba(248, 250, 252, 0.6);
+  --atom-footer-fg-dim:   rgba(248, 250, 252, 0.5);
+  --atom-footer-fg-faint: rgba(248, 250, 252, 0.55);
+  --atom-footer-border:   rgba(248, 250, 252, 0.12);
 
   /* ── Gradients ───────────────────────────────────────────────── */
   --gradient-primary: linear-gradient(135deg, #4F8CFF 0%, #6366F1 50%, #8B5CF6 100%);
@@ -93,6 +107,11 @@ html[data-theme="dark"],
   /* Card surface — one notch lighter than page bg (#0F1624) to give
      elevation; matches the neutral-100 mid-tone. */
   --atom-surface: #1A2235;
+  /* Header overlay — tinted version of the page bg so the blur reads
+     correctly over dark content. */
+  --atom-overlay-bg: rgba(20, 28, 45, 0.85);
+  /* footer-bg / footer-fg / footer-* intentionally NOT redefined here —
+     the footer is meant to look identical in light + dark mode. */
 
   --atom-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.30);
   --atom-shadow-md: 0 4px 24px rgba(0, 0, 0, 0.40);
