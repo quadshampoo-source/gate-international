@@ -4,28 +4,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import AtomProjectCard from './project-card';
 import { PillTag } from '@/components/ui';
-
-const CITY_FILTERS = [
-  { key: 'any', label: 'All', test: null },
-  { key: 'Istanbul', label: 'Istanbul', test: (p) => !['Bodrum', 'Bursa'].includes(p.district) },
-  { key: 'Bodrum', label: 'Bodrum', test: (p) => p.district === 'Bodrum' },
-  { key: 'Bursa', label: 'Bursa', test: (p) => p.district === 'Bursa' },
-];
-
-const TYPE_FILTERS = [
-  { key: 'all', label: 'All types' },
-  { key: 'Apartment', label: 'Apartment' },
-  { key: 'Villa', label: 'Villa' },
-  { key: 'Penthouse', label: 'Penthouse' },
-  { key: 'Duplex', label: 'Duplex' },
-  { key: 'Office', label: 'Office' },
-];
-
-const SORTS = [
-  { key: 'sort', label: 'Editor picks' },
-  { key: 'price-asc', label: 'Price, low to high' },
-  { key: 'price-desc', label: 'Price, high to low' },
-];
+import { getDict } from '@/lib/i18n';
 
 const priceOf = (p) => Number(p.priceUsd ?? p.price_usd) || 0;
 
@@ -44,10 +23,38 @@ const cityTag = (p) => {
 };
 const neighborhood = (p) => (cityTag(p) === 'Istanbul' ? p?.district : p?.subDistrict || p?.district);
 
-function resolveCity(raw) {
+function buildCityFilters(t) {
+  return [
+    { key: 'any', label: t.all, test: null },
+    { key: 'Istanbul', label: t.istanbul, test: (p) => !['Bodrum', 'Bursa'].includes(p.district) },
+    { key: 'Bodrum', label: t.bodrum, test: (p) => p.district === 'Bodrum' },
+    { key: 'Bursa', label: t.bursa, test: (p) => p.district === 'Bursa' },
+  ];
+}
+
+function buildTypeFilters(t) {
+  return [
+    { key: 'all', label: t.typeAll },
+    { key: 'Apartment', label: t.apartment },
+    { key: 'Villa', label: t.villa },
+    { key: 'Penthouse', label: t.penthouse },
+    { key: 'Duplex', label: t.duplex },
+    { key: 'Office', label: t.office },
+  ];
+}
+
+function buildSorts(t) {
+  return [
+    { key: 'sort', label: t.sortEditor },
+    { key: 'price-asc', label: t.sortPriceAsc },
+    { key: 'price-desc', label: t.sortPriceDesc },
+  ];
+}
+
+function resolveCity(raw, cityFilters) {
   if (!raw) return 'any';
   const lc = norm(raw);
-  const hit = CITY_FILTERS.find((f) => norm(f.key) === lc);
+  const hit = cityFilters.find((f) => norm(f.key) === lc);
   return hit ? hit.key : 'any';
 }
 
@@ -62,11 +69,16 @@ function resolveDistrict(raw, projects) {
 }
 
 export default function AtomProjectsList({ lang = 'en', projects = [] }) {
+  const t = getDict(lang).pages.projectsList;
+  const cityFilters = useMemo(() => buildCityFilters(t.filters), [t]);
+  const typeFilters = useMemo(() => buildTypeFilters(t.filters), [t]);
+  const sorts = useMemo(() => buildSorts(t.filters), [t]);
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  const [city, setCity] = useState(() => resolveCity(searchParams.get('city')));
+  const [city, setCity] = useState(() => resolveCity(searchParams.get('city'), cityFilters));
   const [district, setDistrict] = useState(() => resolveDistrict(searchParams.get('district'), projects));
   const [bedrooms, setBedrooms] = useState(() => searchParams.get('bedrooms') || 'any');
   const [type, setType] = useState('all');
@@ -114,7 +126,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
 
   const visible = useMemo(() => {
     let list = projects;
-    const cityFilter = CITY_FILTERS.find((f) => f.key === city);
+    const cityFilter = cityFilters.find((f) => f.key === city);
     if (cityFilter?.test) list = list.filter(cityFilter.test);
     if (district !== 'any') {
       const d = norm(district);
@@ -133,7 +145,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
     if (sortKey === 'price-asc') list = [...list].sort((a, b) => priceOf(a) - priceOf(b));
     else if (sortKey === 'price-desc') list = [...list].sort((a, b) => priceOf(b) - priceOf(a));
     return list;
-  }, [projects, city, district, bedrooms, type, sortKey]);
+  }, [projects, city, district, bedrooms, type, sortKey, cityFilters]);
 
   const pickCity = (k) => {
     setCity(k);
@@ -150,14 +162,14 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
     <>
       <section className="pt-32 md:pt-40 pb-10 md:pb-14">
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">
-          <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— Portfolio —</span>
+          <span className="atom-caption" style={{ color: 'var(--primary-600)' }}>— {t.kicker} —</span>
           <h1 className="atom-h1 mt-3" style={{ fontSize: 'clamp(40px, 5.5vw, 64px)' }}>
-            All <span className="atom-accent">residences.</span>
+            {t.titleLead} <span className="atom-accent">{t.titleHighlight}</span>
           </h1>
           <p className="atom-body-lg mt-4 max-w-[560px]" style={{ color: 'var(--neutral-500)' }}>
-            {visible.length} {visible.length === 1 ? 'project' : 'projects'}
-            {hasFilters ? ' matching your filters' : ' across Istanbul, Bodrum, and Bursa'}
-            {' '}— filter, compare, shortlist.
+            {visible.length} {visible.length === 1 ? t.intro.projectSingular : t.intro.projectPlural}
+            {hasFilters ? ` ${t.intro.matching}` : ` ${t.intro.acrossCities}`}
+            {' '}{t.intro.suffix}
           </p>
           {bedrooms !== 'any' && (
             <div className="flex flex-wrap items-center gap-2 mt-4 text-sm" style={{ color: 'var(--neutral-500)' }}>
@@ -167,7 +179,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full"
                 style={{ background: 'var(--primary-50)', color: 'var(--primary-700)', border: '1px solid var(--primary-200)' }}
               >
-                Bedrooms: {bedrooms}+
+                {t.bedroomsChip}: {bedrooms}+
                 <span aria-hidden>×</span>
               </button>
             </div>
@@ -179,7 +191,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
         <div className="max-w-[1360px] mx-auto px-6 md:px-10 py-4 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-6 flex-wrap">
             <div className="flex flex-wrap gap-2">
-              {CITY_FILTERS.map((f) => (
+              {cityFilters.map((f) => (
                 <PillTag key={f.key} active={city === f.key} onClick={() => pickCity(f.key)}>
                   {f.label}
                 </PillTag>
@@ -192,7 +204,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
                 className="text-sm font-medium rounded-atom-md px-3 py-2"
                 style={{ border: '1px solid var(--neutral-200)', background: '#fff', color: 'var(--neutral-700)' }}
               >
-                {TYPE_FILTERS.map((f) => <option key={f.key} value={f.key}>{f.label}</option>)}
+                {typeFilters.map((f) => <option key={f.key} value={f.key}>{f.label}</option>)}
               </select>
               <select
                 value={sortKey}
@@ -200,14 +212,14 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
                 className="text-sm font-medium rounded-atom-md px-3 py-2"
                 style={{ border: '1px solid var(--neutral-200)', background: '#fff', color: 'var(--neutral-700)' }}
               >
-                {SORTS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
+                {sorts.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
               </select>
             </div>
           </div>
           {showDistrictRow && (
             <div className="flex flex-wrap gap-2 pt-1" style={{ borderTop: '1px solid var(--neutral-100)' }}>
               <PillTag active={district === 'any'} onClick={() => setDistrict('any')}>
-                All districts
+                {t.filters.allDistricts}
               </PillTag>
               {districtsForCurrentCity.map((d) => (
                 <PillTag key={d} active={norm(district) === norm(d)} onClick={() => toggleDistrict(d)}>
@@ -223,7 +235,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
         <div className="max-w-[1360px] mx-auto px-6 md:px-10">
           {visible.length === 0 ? (
             <div className="text-center py-24" style={{ color: 'var(--neutral-500)' }}>
-              No matches. Try relaxing the filters.
+              {t.noMatches}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
