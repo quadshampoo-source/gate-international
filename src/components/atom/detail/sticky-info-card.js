@@ -75,7 +75,11 @@ export default function StickyInfoCard({ project, lang = 'en' }) {
       <div
         className="cta-sticky cta-with-wa visible md:hidden fixed inset-x-0 bottom-0 z-30 flex items-center gap-3 px-4 py-3"
         style={{
-          background: 'rgba(255,255,255,0.95)',
+          // Same translucent-blur pattern as the header — flips with the
+          // theme via --atom-overlay-bg so the bar reads as a tinted
+          // version of the page bg (light over light content, dark over
+          // dark) instead of a hardcoded white pane.
+          background: 'var(--atom-overlay-bg)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderTop: '1px solid var(--neutral-200)',
