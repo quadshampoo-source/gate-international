@@ -1,4 +1,5 @@
 import { LOCALES, DEFAULT_LOCALE } from '@/lib/i18n';
+import { localizedField } from '@/lib/i18n-content';
 
 // All SEO helpers reach for the same site URL.
 // Falls back to the production hostname when the env is missing in dev.
@@ -229,8 +230,11 @@ export function residenceSchema(project, lang = DEFAULT_LOCALE) {
   };
   if (dedupedImages.length) schema.image = dedupedImages;
 
-  const description = (project.heroTagline || project.hero_tagline || '').trim();
-  if (description) schema.description = description;
+  // Prefer per-locale tagline → per-locale description → legacy English.
+  const tagline = localizedField(project, 'hero_tagline', lang);
+  const longText = localizedField(project, 'description', lang);
+  const description = (tagline || longText || '').toString().trim();
+  if (description) schema.description = description.slice(0, 320);
 
   // Address — Bodrum/Bursa rows store the city in `district`; Istanbul
   // rows store the neighbourhood there.

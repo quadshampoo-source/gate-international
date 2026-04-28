@@ -16,6 +16,7 @@ import SimilarProperties from './detail/similar-properties';
 import BuildingSpecs from './detail/building-specs';
 import ProjectReels from './detail/project-reels';
 import { getDict } from '@/lib/i18n';
+import { localizedField } from '@/lib/i18n-content';
 
 // Hero gallery is exterior-only. If a project has no exterior images we
 // fall through to the legacy unified `gallery` array, then to the cover
@@ -55,10 +56,14 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
   const specs = buildSpecs(project, t.specs);
   const developerInfo = project.developerInfo || project.developer_info;
   const distances = project.distances || {};
-  const heroTagline = project.heroTagline || project.hero_tagline;
-  const description = project.description;
-  const amenities = Array.isArray(project.amenities) ? project.amenities : [];
-  const faqs = Array.isArray(project.faqs) ? project.faqs : [];
+  // Localized content: prefers the per-locale jsonb bundle, falls back to
+  // the legacy column when the bundle has no entry for `lang`.
+  const heroTagline = localizedField(project, 'hero_tagline', lang);
+  const description = localizedField(project, 'description', lang);
+  const localizedAmenities = localizedField(project, 'amenities', lang);
+  const amenities = Array.isArray(localizedAmenities) ? localizedAmenities : [];
+  const localizedFaqs = localizedField(project, 'faqs', lang);
+  const faqs = Array.isArray(localizedFaqs) ? localizedFaqs : [];
   const investment = project.investment;
   const techSpecs = project.techSpecs || project.tech_specs;
   const paymentPlan = project.payment_plan || project.paymentPlan;

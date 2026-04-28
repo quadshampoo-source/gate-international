@@ -14,6 +14,7 @@ import {
   faqSchema,
   localeUrl,
 } from '@/lib/seo';
+import { localizedField } from '@/lib/i18n-content';
 import JsonLd from '@/components/seo/json-ld';
 
 export const revalidate = 60;
@@ -28,13 +29,13 @@ export function generateStaticParams() {
   return params;
 }
 
-// Prefer hero_tagline (concise marketing line) → first line of description
-// → location-derived fallback. Truncated to ~160 chars so Google snippets
-// stay clean.
-function deriveDescription(project) {
-  const fromTagline = (project.heroTagline || project.hero_tagline || '').trim();
+// Prefer per-locale hero_tagline (concise marketing line) → per-locale
+// description → location-derived fallback. Truncated to ~160 chars so
+// Google snippets stay clean.
+function deriveDescription(project, lang) {
+  const fromTagline = (localizedField(project, 'hero_tagline', lang) || '').toString().trim();
   if (fromTagline) return fromTagline.slice(0, 160);
-  const fromDesc = (project.description || '').trim();
+  const fromDesc = (localizedField(project, 'description', lang) || '').toString().trim();
   if (fromDesc) {
     const first = fromDesc.split(/\n+/)[0].replace(/[#*_>`]/g, '').trim();
     if (first) return first.slice(0, 160);
@@ -60,7 +61,7 @@ export async function generateMetadata({ params }) {
   const localName = localizedProjectName(project, lang);
   const district = project.district || project.subDistrict || project.sub_district;
   const title = district ? `${localName} — ${district}` : localName;
-  const description = deriveDescription(project);
+  const description = deriveDescription(project, lang);
   const image = pickHeroImage(project);
 
   return buildPageMetadata({
@@ -91,7 +92,11 @@ export default async function ProjectDetailPage({ params }) {
     { name: dict.nav?.projects || 'Residences', url: localeUrl('/projects', lang) },
     { name: localName },
   ]);
-  const faq = faqSchema(project.faqs);
+  // Use the locale-resolved faq array so the schema matches what the
+  // detail page actually renders to the user (avoids Google flagging a
+  // mismatch between visible content and structured data).
+  const faqList = localizedField(project, 'faqs', lang);
+  const faq = faqSchema(Array.isArray(faqList) ? faqList : []);
 
   const themed = (() => {
     if (theme === 'atom') return <AtomProjectDetail project={project} lang={lang} allProjects={all} />;

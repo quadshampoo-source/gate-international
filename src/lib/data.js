@@ -62,6 +62,14 @@ function fromRow(r) {
     amenities: r.amenities,
     developerInfo: r.developer_info,
     faqs: r.faqs,
+    // Locale bundles — see supabase/migration_project_i18n_content.sql.
+    // Components read these via lib/i18n-content.localizedField() and
+    // fall back to the legacy single-locale columns above when a bundle
+    // is empty or missing the active locale.
+    descriptionI18n: r.description_i18n,
+    heroTaglineI18n: r.hero_tagline_i18n,
+    amenitiesI18n: r.amenities_i18n,
+    faqsI18n: r.faqs_i18n,
     investment: r.investment,
     brochureUrl: r.brochure_url,
     masterPlanUrl: r.master_plan_url,
