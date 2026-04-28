@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import Lightbox from './lightbox';
 import { getDict } from '@/lib/i18n';
 
@@ -159,18 +160,17 @@ export default function GalleryMosaic({ images = [], alt = 'Gallery', lang = 'en
                 <button
                   type="button"
                   onClick={() => openLightbox(i)}
-                  className="block w-full overflow-hidden"
-                  style={{ borderRadius: 16, background: 'var(--neutral-100)' }}
+                  className="relative block w-full overflow-hidden"
+                  style={{ aspectRatio: '4 / 3', borderRadius: 16, background: 'var(--neutral-100)' }}
                   aria-label={`${alt} ${i + 1} / ${valid.length}`}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={img.url}
                     alt={img.alt || `${alt} ${i + 1}`}
-                    loading={i === 0 ? 'eager' : 'lazy'}
-                    fetchPriority={i === 0 ? 'high' : 'auto'}
-                    className="w-full object-cover"
-                    style={{ aspectRatio: '4 / 3', display: 'block' }}
+                    fill
+                    priority={i === 0}
+                    sizes="(max-width: 768px) 88vw, 600px"
+                    className="object-cover"
                   />
                 </button>
 
@@ -311,8 +311,14 @@ export default function GalleryMosaic({ images = [], alt = 'Gallery', lang = 'en
                       cursor: 'pointer',
                     }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={img.url} alt="" loading="lazy" className="w-full h-full object-cover block" />
+                    <Image
+                      src={img.url}
+                      alt=""
+                      width={60}
+                      height={44}
+                      sizes="60px"
+                      className="w-full h-full object-cover block"
+                    />
                   </button>
                 );
               })}
@@ -369,9 +375,15 @@ function Mosaic({ images, alt, onOpen }) {
 
   if (n === 1) {
     return (
-      <button type="button" onClick={() => onOpen(0)} className="block w-full" style={{ borderRadius: radius, ...baseStyle, aspectRatio: '16 / 9' }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={images[0].url} alt={images[0].alt || alt} className="w-full h-full object-cover" />
+      <button type="button" onClick={() => onOpen(0)} className="relative block w-full" style={{ borderRadius: radius, ...baseStyle, aspectRatio: '16 / 9' }}>
+        <Image
+          src={images[0].url}
+          alt={images[0].alt || alt}
+          fill
+          priority
+          sizes="(max-width: 1280px) 100vw, 1280px"
+          className="object-cover"
+        />
       </button>
     );
   }
@@ -384,11 +396,17 @@ function Mosaic({ images, alt, onOpen }) {
             key={i}
             type="button"
             onClick={() => onOpen(i)}
-            className="block w-full h-full"
+            className="relative block w-full h-full"
             style={{ borderRadius: radius, ...baseStyle }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={img.url} alt={img.alt || `${alt} ${i + 1}`} className="w-full h-full object-cover" loading={i === 0 ? 'eager' : 'lazy'} />
+            <Image
+              src={img.url}
+              alt={img.alt || `${alt} ${i + 1}`}
+              fill
+              priority={i === 0}
+              sizes="(max-width: 1280px) 50vw, 640px"
+              className="object-cover"
+            />
           </button>
         ))}
       </div>
@@ -407,8 +425,14 @@ function Mosaic({ images, alt, onOpen }) {
       }}
     >
       <button type="button" onClick={() => onOpen(0)} className="relative" style={{ borderRadius: radius, ...baseStyle }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={large.url} alt={large.alt || `${alt} 1`} className="absolute inset-0 w-full h-full object-cover" />
+        <Image
+          src={large.url}
+          alt={large.alt || `${alt} 1`}
+          fill
+          priority
+          sizes="(max-width: 1280px) 50vw, 800px"
+          className="object-cover"
+        />
       </button>
       {small.length > 0 && (
         <div className={`grid gap-2 ${small.length >= 3 ? 'grid-cols-2 grid-rows-2' : 'grid-cols-1'}`}>
@@ -420,12 +444,12 @@ function Mosaic({ images, alt, onOpen }) {
               className="relative"
               style={{ borderRadius: radius, ...baseStyle }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={img.url}
                 alt={img.alt || `${alt} ${i + 2}`}
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover"
+                fill
+                sizes="(max-width: 1280px) 25vw, 320px"
+                className="object-cover"
               />
             </button>
           ))}

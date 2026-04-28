@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getDict } from '@/lib/i18n';
 import AtomHeroSearch from './hero-search';
 import AtomHomeHeroV1 from './home-hero';
@@ -19,23 +20,28 @@ export default function AtomHomeHeroV2({ lang = 'en', districtList = [], setting
 
   return (
     <section className="relative isolate overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
-      {/* Mobile / desktop image stack — single <picture> would also work but
-          keeping two layered <img>s keeps the markup zero-JS. */}
+      {/* Mobile / desktop image stack. Above-the-fold hero — `priority`
+          tells next/image to preload, `sizes` lets it pick the right
+          breakpoint resolution from the responsive srcset. */}
       {mobileUrl && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={mobileUrl}
           alt=""
           aria-hidden
-          className="md:hidden absolute inset-0 w-full h-full object-cover z-0"
+          fill
+          priority
+          sizes="100vw"
+          className="md:hidden object-cover z-0"
         />
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={desktopUrl}
         alt=""
         aria-hidden
-        className="hidden md:block absolute inset-0 w-full h-full object-cover z-0"
+        fill
+        priority
+        sizes="100vw"
+        className="hidden md:block object-cover z-0"
       />
       <div
         aria-hidden

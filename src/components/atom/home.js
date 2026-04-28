@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getProjects, getDistricts } from '@/lib/data';
 import { getTestimonials } from '@/lib/testimonials';
 import { getSiteSettings } from '@/lib/site-settings';
@@ -147,8 +148,14 @@ export default async function AtomHome({ lang = 'en', searchParams }) {
                   <p className="atom-body" style={{ color: 'var(--neutral-700)' }}>{te.quote || te.body || '—'}</p>
                   <div className="flex items-center gap-3 mt-auto pt-4" style={{ borderTop: '1px solid var(--neutral-100)' }}>
                     {(te.avatar_url || te.avatar) && (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={te.avatar_url || te.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
+                      <Image
+                        src={te.avatar_url || te.avatar}
+                        alt=""
+                        width={40}
+                        height={40}
+                        sizes="40px"
+                        className="rounded-full object-cover"
+                      />
                     )}
                     <div>
                       <div className="font-semibold text-sm" style={{ color: 'var(--neutral-900)' }}>{te.name || t.testimonials.anonymous}</div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getDict } from '@/lib/i18n';
 
@@ -248,8 +249,14 @@ export default function Lightbox({ images, startIndex = 0, onClose, alt = 'Photo
                       cursor: 'pointer',
                     }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={img.url} alt="" loading="lazy" className="w-full h-full object-cover block" />
+                    <Image
+                      src={img.url}
+                      alt=""
+                      width={80}
+                      height={56}
+                      sizes="80px"
+                      className="w-full h-full object-cover block"
+                    />
                   </button>
                 );
               })}

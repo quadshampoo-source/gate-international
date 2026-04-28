@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { youtubeEmbedUrl, youtubeThumbnail } from '@/lib/video';
 import ReelLightbox from './reel-lightbox';
 import { getDict } from '@/lib/i18n';
@@ -319,13 +320,14 @@ function ReelCard({
       onClick={isActive ? undefined : onClickPoster}
     >
       {poster && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={poster}
           alt=""
           onError={onPosterError}
-          className="absolute inset-0 w-full h-full object-cover"
-          loading={distance > 1 ? 'lazy' : 'eager'}
+          fill
+          sizes="280px"
+          priority={distance === 0}
+          className="object-cover"
           aria-hidden
         />
       )}

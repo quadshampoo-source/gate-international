@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import ScheduleViewingModal from './schedule-viewing-modal';
 import BottomSheet from './bottom-sheet';
 import { getDict } from '@/lib/i18n';
@@ -268,8 +269,14 @@ function CardBody({ project, priceLabel, priceNote, paymentPlan, brochureUrl, ma
           }}
         >
           {ADVISOR.photo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={ADVISOR.photo} alt="" className="w-full h-full object-cover rounded-full" />
+            <Image
+              src={ADVISOR.photo}
+              alt=""
+              width={44}
+              height={44}
+              sizes="44px"
+              className="object-cover rounded-full"
+            />
           ) : (
             <span className="text-sm font-bold">IA</span>
           )}

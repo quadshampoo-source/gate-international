@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 function priceLabel(p) {
   const n = Number(p.priceUsd ?? p.price_usd) || 0;
@@ -33,12 +34,12 @@ export default function AtomProjectCard({ project, lang }) {
     >
       <div className="relative overflow-hidden" style={{ aspectRatio: '4 / 3.2', background: 'var(--neutral-100)' }}>
         {img && (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
+          <Image
             src={img}
             alt={project.name}
-            loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         )}
         <span

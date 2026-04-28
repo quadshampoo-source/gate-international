@@ -8,7 +8,12 @@ const nextConfig = {
       // Supabase Storage — team photos, project photos, gallery uploads.
       { protocol: 'https', hostname: '*.supabase.co' },
       { protocol: 'https', hostname: '*.supabase.in' },
+      // YouTube poster thumbnails for the project reels carousel.
+      { protocol: 'https', hostname: 'i.ytimg.com' },
+      { protocol: 'https', hostname: 'img.youtube.com' },
     ],
+    // Modern formats — smaller payloads, identical quality.
+    formats: ['image/avif', 'image/webp'],
   },
   experimental: {
     // Hero banner uploads can be a few MB. Default Server Action body

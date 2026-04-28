@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 /**
  * Renders the brand link — either an admin-uploaded PNG logo, or a
@@ -27,13 +28,17 @@ export default function SiteLogo({
 }) {
   const alt = logoAlt || 'Gate International';
 
+  // For admin-uploaded logos, dimensions vary so we use width/height=auto via
+  // explicit base size + responsive style. `unoptimized` avoids re-encoding
+  // the brand mark (PNGs uploaded by admins are already tuned).
   const inner = logoUrl ? (
-    /* eslint-disable-next-line @next/next/no-img-element */
-    <img
+    <Image
       src={logoUrl}
       alt={alt}
-      width={0}
-      height={0}
+      width={200}
+      height={height || 32}
+      sizes={`${height || 32}px`}
+      unoptimized
       className="w-auto select-none"
       style={{
         height: height ? `${height}px` : undefined,

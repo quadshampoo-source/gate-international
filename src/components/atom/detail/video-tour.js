@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { resolveVideo } from '@/lib/video';
 import { getDict } from '@/lib/i18n';
 
@@ -53,12 +54,12 @@ export default function VideoTour({ project, poster, lang = 'en' }) {
             className="absolute inset-0 w-full h-full group"
           >
             {cover && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={cover}
                 alt=""
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
+                fill
+                sizes="(max-width: 768px) 100vw, 800px"
+                className="object-cover"
               />
             )}
             <div

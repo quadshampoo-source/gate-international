@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { WHATSAPP_DEFAULT_MESSAGES } from '@/lib/utils';
 import { LANG_FLAGS, localizedTitle, sortTeamForLang } from '@/lib/team-constants';
 
@@ -265,8 +266,7 @@ export default function WhatsappFab({ lang = 'en', team = [] }) {
                 >
                   <div className="wa-avatar" data-office={m.office}>
                     {m.photo_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={m.photo_url} alt="" />
+                      <Image src={m.photo_url} alt="" width={40} height={40} sizes="40px" />
                     ) : initials}
                   </div>
                   <div className="wa-info">

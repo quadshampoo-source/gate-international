@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { getDict } from '@/lib/i18n';
 
 // Renders project.developerInfo. Returns null if missing/empty so the
@@ -41,8 +42,14 @@ export default function DeveloperCard({ developerInfo, lang = 'en' }) {
           }}
         >
           {logo_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={logo_url} alt={`${name} logo`} className="w-full h-full object-contain p-3" />
+            <Image
+              src={logo_url}
+              alt={`${name} logo`}
+              width={96}
+              height={96}
+              sizes="96px"
+              className="w-full h-full object-contain p-3"
+            />
           ) : (
             <span className="text-2xl font-bold" style={{ color: 'var(--primary-600)' }}>
               {name.split(' ').map((w) => w[0]).slice(0, 2).join('')}

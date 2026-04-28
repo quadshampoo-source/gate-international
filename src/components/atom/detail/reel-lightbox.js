@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { youtubeEmbedUrl, youtubeThumbnail } from '@/lib/video';
 import { getDict } from '@/lib/i18n';
 
@@ -186,12 +187,13 @@ export default function ReelLightbox({
           }}
         >
           {poster && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={poster}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-              loading="eager"
+              fill
+              priority
+              sizes="(max-width: 768px) 95vw, 506px"
+              className="object-cover"
               aria-hidden
             />
           )}

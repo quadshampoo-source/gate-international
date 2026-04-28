@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Lightbox from './lightbox';
 import { getDict } from '@/lib/i18n';
 
@@ -30,7 +31,7 @@ export default function FloorPlans({ images = [], alt = 'Interior', lang = 'en' 
             key={i}
             type="button"
             onClick={() => openAt(i)}
-            className="block w-full overflow-hidden transition-transform hover:scale-[1.01]"
+            className="relative block w-full overflow-hidden transition-transform hover:scale-[1.01]"
             style={{
               aspectRatio: '4 / 3',
               background: 'var(--neutral-100)',
@@ -39,12 +40,12 @@ export default function FloorPlans({ images = [], alt = 'Interior', lang = 'en' 
             }}
             aria-label={`${alt} ${i + 1} / ${valid.length}`}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={src}
               alt={`${alt} ${i + 1}`}
-              loading="lazy"
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+              className="object-cover"
             />
           </button>
         ))}
