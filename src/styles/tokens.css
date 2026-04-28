@@ -59,6 +59,10 @@
   --gradient-primary: linear-gradient(135deg, #4F8CFF 0%, #6366F1 50%, #8B5CF6 100%);
   --gradient-border:  linear-gradient(90deg,  #4F8CFF 0%, #8B5CF6 50%, #6EE7E7 100%);
   --gradient-cta:     linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
+  /* Text-only gradient (.atom-accent class). Same hue family as
+     --gradient-primary in light mode; the dark override below shifts to
+     brighter stops so accent text on a dark page bg keeps its punch. */
+  --atom-accent-gradient: linear-gradient(135deg, #4F8CFF 0%, #6366F1 50%, #8B5CF6 100%);
 
   /* ── Shadows (soft, never hard black) ────────────────────────── */
   --atom-shadow-sm: 0 2px 8px rgba(15, 22, 36, 0.04);
@@ -110,6 +114,11 @@ html[data-theme="dark"],
   /* Header overlay — tinted version of the page bg so the blur reads
      correctly over dark content. */
   --atom-overlay-bg: rgba(20, 28, 45, 0.85);
+  /* Brighter accent gradient stops — the light-mode hues blend into
+     the dark page bg (#0F1624) and the +/K/% glyphs on stat cards
+     visually fade. These tones (sky-300/violet-300/purple-300) hold
+     contrast against #0F1624 while keeping the same color family. */
+  --atom-accent-gradient: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #C084FC 100%);
   /* footer-bg / footer-fg / footer-* intentionally NOT redefined here —
      the footer is meant to look identical in light + dark mode. */
 
@@ -120,7 +129,10 @@ html[data-theme="dark"],
 
 /* ── Text utility: gradient accent words ─────────────────────── */
 .atom-accent {
-  background: var(--gradient-primary);
+  /* Uses --atom-accent-gradient (not --gradient-primary) so dark mode
+     can shift to brighter stops without affecting CTA box surfaces
+     that legitimately want the original gradient. */
+  background: var(--atom-accent-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
