@@ -6,7 +6,8 @@ import { LOCALES, dirOf, getDict } from '@/lib/i18n';
 import { getActiveTheme } from '@/lib/theme';
 import { getTeam } from '@/lib/team';
 import { notFound } from 'next/navigation';
-import { SITE_URL, OG_LOCALE_MAP, buildAlternateLocales } from '@/lib/seo';
+import { SITE_URL, OG_LOCALE_MAP, buildAlternateLocales, organizationSchema } from '@/lib/seo';
+import JsonLd from '@/components/seo/json-ld';
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -76,6 +77,9 @@ export default async function LangLayout({ children, params }) {
     <html lang={lang} dir={dir} data-theme="light" data-active-theme={theme}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: NO_FLASH_SCRIPT }} />
+        {/* Organization / RealEstateAgent — emitted on every page so
+            crawlers always have brand-level context. */}
+        <JsonLd data={organizationSchema()} />
       </head>
       <body className={bodyClass}>
         <Analytics />

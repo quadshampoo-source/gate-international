@@ -2,11 +2,18 @@ import { notFound } from 'next/navigation';
 import DetailClient from '@/components/detail-client';
 import EditorialProjectDetail from '@/components/editorial/project-detail';
 import AtomProjectDetail from '@/components/atom/project-detail';
-import { LOCALES } from '@/lib/i18n';
+import { LOCALES, getDict } from '@/lib/i18n';
 import { PROJECTS } from '@/lib/projects';
 import { getProject, getProjects } from '@/lib/data';
 import { getActiveTheme } from '@/lib/theme';
-import { buildPageMetadata, localizedProjectName } from '@/lib/seo';
+import {
+  buildPageMetadata,
+  localizedProjectName,
+  residenceSchema,
+  breadcrumbSchema,
+  localeUrl,
+} from '@/lib/seo';
+import JsonLd from '@/components/seo/json-ld';
 
 export const revalidate = 60;
 
@@ -70,11 +77,29 @@ export default async function ProjectDetailPage({ params }) {
   const project = await getProject(id);
   if (!project) notFound();
   const [all, theme] = await Promise.all([getProjects(), getActiveTheme()]);
-  if (theme === 'atom') {
-    return <AtomProjectDetail project={project} lang={lang} allProjects={all} />;
-  }
-  if (theme === 'editorial') {
-    return <EditorialProjectDetail project={project} lang={lang} allProjects={all} />;
-  }
-  return <DetailClient project={project} lang={lang} allProjects={all} />;
+
+  // Structured data — Residence + BreadcrumbList. Residence powers
+  // Google's listing rich result; the breadcrumb populates the SERP path.
+  const dict = getDict(lang);
+  const residence = residenceSchema(project, lang);
+  const localName = localizedProjectName(project, lang);
+  const breadcrumb = breadcrumbSchema([
+    { name: dict.brand, url: localeUrl('', lang) },
+    { name: dict.nav?.projects || 'Residences', url: localeUrl('/projects', lang) },
+    { name: localName },
+  ]);
+
+  const themed = (() => {
+    if (theme === 'atom') return <AtomProjectDetail project={project} lang={lang} allProjects={all} />;
+    if (theme === 'editorial') return <EditorialProjectDetail project={project} lang={lang} allProjects={all} />;
+    return <DetailClient project={project} lang={lang} allProjects={all} />;
+  })();
+
+  return (
+    <>
+      {residence && <JsonLd data={residence} />}
+      {breadcrumb && <JsonLd data={breadcrumb} />}
+      {themed}
+    </>
+  );
 }
