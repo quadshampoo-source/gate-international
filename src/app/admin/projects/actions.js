@@ -45,6 +45,22 @@ function parseJsonOrNull(s) {
   try { return JSON.parse(s); } catch { return null; }
 }
 
+// Build a jsonb locale bundle for fields that have a flagship EN column plus
+// `<field>_<lang>` inputs for ar/zh/ru/fa/fr. Empty entries are dropped so the
+// reader's fallback chain (lib/i18n-content.localizedField) does not return
+// blank strings instead of the EN copy.
+function buildI18nBundle(formData, fieldKey, baseEnValue) {
+  const bundle = {};
+  if (baseEnValue && String(baseEnValue).trim()) bundle.en = String(baseEnValue);
+  for (const lang of ['ar', 'zh', 'ru', 'fa', 'fr']) {
+    const raw = formData.get(`${fieldKey}_${lang}`);
+    if (raw == null) continue;
+    const trimmed = String(raw).trim();
+    if (trimmed) bundle[lang] = trimmed;
+  }
+  return Object.keys(bundle).length ? bundle : null;
+}
+
 function payloadFrom(formData) {
   const unitTypesCsv = String(formData.get('unit_types_csv') || '').trim();
   const reasonsLines = String(formData.get('reasons_lines') || '').trim();
@@ -121,20 +137,35 @@ function payloadFrom(formData) {
   if (citizenshipEligible) investmentEntries.push(['citizenship_eligible', true]);
   const investmentValue = investmentEntries.length ? Object.fromEntries(investmentEntries) : null;
 
+  const heroTaglineEn = str('hero_tagline');
+  const descriptionEn = str('description');
+
   return {
     id: String(formData.get('id') || '').trim().toLowerCase(),
     sort_index: num('sort_index') ?? 0,
     name: str('name'),
     name_ar: str('name_ar'),
     name_zh: str('name_zh'),
+    name_ru: str('name_ru'),
+    name_fa: str('name_fa'),
+    name_fr: str('name_fr'),
     district: str('district'),
     district_ar: str('district_ar'),
     district_zh: str('district_zh'),
+    district_ru: str('district_ru'),
+    district_fa: str('district_fa'),
+    district_fr: str('district_fr'),
     sub_district: str('sub_district') || null,
     developer: developerText,
     developer_info: developerInfo,
-    hero_tagline: str('hero_tagline'),
-    description: str('description'),
+    hero_tagline: heroTaglineEn,
+    description: descriptionEn,
+    // Locale bundles — keep the EN copy in the legacy column above so
+    // any reader that hasn't migrated still works, and additionally
+    // mirror it into the bundle's `en` key alongside the 5 translated
+    // entries the form just submitted.
+    hero_tagline_i18n: buildI18nBundle(formData, 'hero_tagline', heroTaglineEn),
+    description_i18n: buildI18nBundle(formData, 'description', descriptionEn),
     amenities: Array.isArray(amenitiesJson) ? amenitiesJson : null,
     faqs: Array.isArray(faqsJson) ? faqsJson : null,
     investment: investmentValue,

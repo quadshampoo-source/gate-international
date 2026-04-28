@@ -35,6 +35,9 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       <Row label="Name (EN)"><input name="name" required defaultValue={v('name')} className="admin-input" /></Row>
       <Row label="Name (AR)"><input name="name_ar" defaultValue={v('name_ar')} className="admin-input" /></Row>
       <Row label="Name (ZH)"><input name="name_zh" defaultValue={v('name_zh')} className="admin-input" /></Row>
+      <Row label="Name (RU)"><input name="name_ru" defaultValue={v('name_ru')} className="admin-input" /></Row>
+      <Row label="Name (FA)"><input name="name_fa" defaultValue={v('name_fa')} className="admin-input" /></Row>
+      <Row label="Name (FR)"><input name="name_fr" defaultValue={v('name_fr')} className="admin-input" /></Row>
       <Row label="District">
         <DistrictPicker
           initialDistrict={v('district')}
@@ -43,9 +46,12 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
       </Row>
       <Row label="District (AR)"><input name="district_ar" defaultValue={v('district_ar')} className="admin-input" /></Row>
       <Row label="District (ZH)"><input name="district_zh" defaultValue={v('district_zh')} className="admin-input" /></Row>
+      <Row label="District (RU)"><input name="district_ru" defaultValue={v('district_ru')} className="admin-input" /></Row>
+      <Row label="District (FA)"><input name="district_fa" defaultValue={v('district_fa')} className="admin-input" /></Row>
+      <Row label="District (FR)"><input name="district_fr" defaultValue={v('district_fr')} className="admin-input" /></Row>
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Hero & Description</h3>
-      <Row label="Hero tagline">
+      <Row label="Hero tagline (EN)">
         <input
           name="hero_tagline"
           defaultValue={v('hero_tagline')}
@@ -54,7 +60,9 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           placeholder="One-line pitch shown in the hero (max 120 chars)"
         />
       </Row>
-      <Row label="Description">
+      <I18nDetails label="Hero tagline translations" fieldKey="hero_tagline" bundleKey="hero_tagline_i18n" project={project} kind="input" maxLength={120} />
+
+      <Row label="Description (EN)">
         <textarea
           name="description"
           defaultValue={v('description')}
@@ -63,6 +71,7 @@ export default function ProjectForm({ action, project = {}, isNew = false, delet
           placeholder="Long-form description. Markdown supported."
         />
       </Row>
+      <I18nDetails label="Description translations" fieldKey="description" bundleKey="description_i18n" project={project} kind="textarea" rows={10} />
 
       <h3 className="font-serif text-[22px] mt-8 mb-4">Property Specs</h3>
       <SpecsPicker
@@ -345,5 +354,58 @@ function Row({ label, children }) {
       <label>{label}</label>
       <div>{children}</div>
     </div>
+  );
+}
+
+// Collapsible block of 5 inputs/textareas (AR/ZH/RU/FA/FR) for fields that
+// also have a flagship EN textarea above. The EN value lives in the legacy
+// column (`description`, `hero_tagline`); the five locale values are read
+// out of `<bundleKey>` jsonb on load and submitted as `<fieldKey>_<lang>`
+// inputs that actions.js stitches back into a jsonb bundle on save.
+const TRANSLATION_LANGS = [
+  { code: 'ar', label: 'العربية (AR)', dir: 'rtl' },
+  { code: 'zh', label: '中文 (ZH)', dir: 'ltr' },
+  { code: 'ru', label: 'Русский (RU)', dir: 'ltr' },
+  { code: 'fa', label: 'فارسی (FA)', dir: 'rtl' },
+  { code: 'fr', label: 'Français (FR)', dir: 'ltr' },
+];
+
+function I18nDetails({ label, fieldKey, bundleKey, project, kind, rows, maxLength }) {
+  const bundle = (project && project[bundleKey] && typeof project[bundleKey] === 'object')
+    ? project[bundleKey]
+    : {};
+  const filled = TRANSLATION_LANGS.filter((l) => bundle[l.code]).length;
+  return (
+    <details className="admin-row" style={{ marginTop: -8 }}>
+      <summary style={{ cursor: 'pointer', fontSize: 13, padding: '6px 0' }}>
+        {label} {filled > 0 ? `(${filled}/5 filled)` : '(0/5)'}
+      </summary>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 8 }}>
+        {TRANSLATION_LANGS.map((l) => (
+          <div key={l.code}>
+            <label style={{ display: 'block', fontSize: 12, marginBottom: 4, color: 'var(--admin-fg-muted, #888)' }}>
+              {l.label}
+            </label>
+            {kind === 'textarea' ? (
+              <textarea
+                name={`${fieldKey}_${l.code}`}
+                defaultValue={bundle[l.code] || ''}
+                rows={rows || 6}
+                dir={l.dir}
+                className="admin-textarea"
+              />
+            ) : (
+              <input
+                name={`${fieldKey}_${l.code}`}
+                defaultValue={bundle[l.code] || ''}
+                maxLength={maxLength}
+                dir={l.dir}
+                className="admin-input"
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </details>
   );
 }
