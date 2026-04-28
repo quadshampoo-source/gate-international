@@ -630,6 +630,41 @@ const en = {
         buttonBrowse: 'Browse portfolio',
       },
     },
+    citizenship: {
+      hero: { eyebrow: 'Citizenship by investment', titleLead: 'Your family,', titleHighlight: 'Turkish.', sub: 'A qualifying residence from $400K gives your family Turkish citizenship — approved in roughly three months on average, with visa-free access to 110+ countries.' },
+      stats: {
+        minimum: { label: 'Minimum', caption: 'Investment threshold' },
+        years: { label: 'Years', caption: 'Property hold period' },
+        countries: { label: 'Countries', caption: 'Visa-free travel' },
+        approval: { label: 'Approval', caption: 'Our client success rate' },
+      },
+      process: {
+        kicker: 'Process',
+        title: 'Five steps, managed.',
+        steps: [
+          { title: 'Qualifying purchase', body: 'Buy a Turkish residence worth at least $400,000 and commit to holding it for three years.' },
+          { title: 'Appraisal & deed', body: 'Independent SPK-licensed appraisal, TAPU transfer, and certificate of conformity filed with the Land Registry.' },
+          { title: 'Application bundle', body: 'Passport, biometric photos, notarised translations, bank proof, marriage & birth certificates (family).' },
+          { title: 'Nüfus processing', body: 'Average 2–3 months for approval at the Citizenship Directorate. We track and follow up weekly.' },
+          { title: 'Oath & passport', body: 'Appointment at your nearest consulate to receive Turkish ID and apply for the e-passport.' },
+        ],
+      },
+      faq: {
+        kicker: 'FAQ',
+        title: 'Common questions.',
+        items: [
+          { q: 'Does the investment have to be a single property?', a: 'No — you can aggregate multiple properties as long as the combined appraisal meets the $400,000 threshold.' },
+          { q: 'Who counts as family?', a: 'Your spouse and any children under 18. Dependent adults can be added with additional documentation.' },
+          { q: 'Can I rent the property during the 3-year hold?', a: 'Yes — rental income is permitted. You must not sell, transfer, or encumber the property during the restriction period.' },
+          { q: 'Which currency is the $400K threshold in?', a: "It's fixed in USD. The TAPU value in TRY is converted at the Central Bank rate on the transaction date." },
+        ],
+      },
+      cta: {
+        title: 'Ready to start?',
+        sub: 'A senior advisor will walk you through timing, cost, and documentation on a 30-minute call.',
+        button: 'Book a call',
+      },
+    },
   },
 };
 
@@ -1256,6 +1291,41 @@ const ar = {
         sub: 'الميزانية والتوقيت والمدينة والغرض — وسنعود إليك بقائمة مختصرة خلال يوم عمل.',
         buttonContact: 'تواصل معنا',
         buttonBrowse: 'تصفح المحفظة',
+      },
+    },
+    citizenship: {
+      hero: { eyebrow: 'الجنسية بالاستثمار', titleLead: 'عائلتك،', titleHighlight: 'تركية.', sub: 'عقار مؤهَّل بدءاً من 400 ألف دولار يمنح عائلتك الجنسية التركية — يُوافَق عليه خلال ثلاثة أشهر تقريباً، مع وصول دون تأشيرة لأكثر من 110 دول.' },
+      stats: {
+        minimum: { label: 'الحد الأدنى', caption: 'عتبة الاستثمار' },
+        years: { label: 'سنوات', caption: 'فترة الاحتفاظ بالعقار' },
+        countries: { label: 'دولة', caption: 'سفر دون تأشيرة' },
+        approval: { label: 'الموافقة', caption: 'نسبة نجاح عملائنا' },
+      },
+      process: {
+        kicker: 'العملية',
+        title: 'خمس خطوات، مُدارة.',
+        steps: [
+          { title: 'الشراء المؤهَّل', body: 'اشترِ مسكناً تركياً بقيمة 400 ألف دولار على الأقل والتزم بالاحتفاظ به لثلاث سنوات.' },
+          { title: 'التثمين والسند', body: 'تثمين مستقل من مرخَّص SPK، نقل الطابو، وشهادة المطابقة لدى السجل العقاري.' },
+          { title: 'حزمة الطلب', body: 'جواز السفر، صور بيومترية، ترجمات معتمدة، إثبات بنكي، شهادات الزواج والميلاد (للعائلة).' },
+          { title: 'معالجة النفوس', body: 'في المتوسط 2–3 أشهر للموافقة في مديرية الجنسية. نتتبَّع ونتابع أسبوعياً.' },
+          { title: 'القسم وجواز السفر', body: 'موعد في أقرب قنصلية لاستلام الهوية التركية وتقديم طلب الجواز الإلكتروني.' },
+        ],
+      },
+      faq: {
+        kicker: 'الأسئلة الشائعة',
+        title: 'أسئلة متكررة.',
+        items: [
+          { q: 'هل يجب أن يكون الاستثمار في عقار واحد؟', a: 'لا — يمكن جمع عدة عقارات طالما أن إجمالي التثمين يبلغ عتبة 400 ألف دولار.' },
+          { q: 'من يُعتبر من العائلة؟', a: 'الزوج/الزوجة والأطفال دون 18 سنة. يمكن إضافة بالغين معالين بمستندات إضافية.' },
+          { q: 'هل يمكنني تأجير العقار خلال فترة الاحتفاظ لثلاث سنوات؟', a: 'نعم — الدخل من الإيجار مسموح. لا يجوز البيع أو النقل أو الرهن خلال فترة التقييد.' },
+          { q: 'بأي عملة عتبة الـ400 ألف دولار؟', a: 'ثابتة بالدولار. تُحوَّل قيمة الطابو بالليرة وفق سعر البنك المركزي يوم المعاملة.' },
+        ],
+      },
+      cta: {
+        title: 'جاهز للبدء؟',
+        sub: 'سيشرح لك مستشار أول التوقيت والتكلفة والمستندات في مكالمة 30 دقيقة.',
+        button: 'احجز مكالمة',
       },
     },
   },
@@ -1886,6 +1956,41 @@ const zh = {
         buttonBrowse: '浏览名册',
       },
     },
+    citizenship: {
+      hero: { eyebrow: '投资入籍', titleLead: '让全家成为', titleHighlight: '土耳其公民。', sub: '40 万美元起的合规住宅,可为全家获得土耳其国籍 — 平均三个月获批,享 110+ 国家免签。' },
+      stats: {
+        minimum: { label: '最低', caption: '投资门槛' },
+        years: { label: '年', caption: '持有期' },
+        countries: { label: '国', caption: '免签出行' },
+        approval: { label: '%', caption: '客户获批率' },
+      },
+      process: {
+        kicker: '流程',
+        title: '五步全程托管。',
+        steps: [
+          { title: '合规购置', body: '购置至少 40 万美元的土耳其住宅,并承诺持有三年。' },
+          { title: '估值与产权', body: 'SPK 持牌独立估值、TAPU 过户,并向土地登记处提交合规证明。' },
+          { title: '申请材料', body: '护照、生物识别照片、公证翻译、银行证明、结婚与出生证明(家属)。' },
+          { title: '户籍局审批', body: '入籍局平均审批 2–3 个月。我们每周跟进。' },
+          { title: '宣誓与护照', body: '在最近领事馆办理预约,领取土耳其身份证并申请电子护照。' },
+        ],
+      },
+      faq: {
+        kicker: '常见问答',
+        title: '常见问题。',
+        items: [
+          { q: '投资必须是单一房产吗?', a: '不需要 — 可合并多套房产,只要综合估值达到 40 万美元门槛。' },
+          { q: '谁算家属?', a: '配偶及 18 岁以下子女。被赡养成年人可凭附加材料一并申请。' },
+          { q: '三年持有期内可以出租吗?', a: '可以 — 允许租金收入。但限制期内不得出售、转让或抵押。' },
+          { q: '40 万美元门槛是哪种货币?', a: '以美元固定计算。TAPU 上的土耳其里拉值按交易日中央银行汇率折算。' },
+        ],
+      },
+      cta: {
+        title: '准备开始?',
+        sub: '资深顾问将在 30 分钟通话中,为您讲解时间、成本与所需材料。',
+        button: '预约通话',
+      },
+    },
   },
 };
 
@@ -2512,6 +2617,41 @@ const ru = {
         sub: 'Бюджет, сроки, город, цель — и мы вернёмся с подборкой за один рабочий день.',
         buttonContact: 'Связаться',
         buttonBrowse: 'Смотреть портфолио',
+      },
+    },
+    citizenship: {
+      hero: { eyebrow: 'Гражданство за инвестиции', titleLead: 'Ваша семья —', titleHighlight: 'граждане Турции.', sub: 'Подходящая недвижимость от $400 000 даёт вашей семье турецкое гражданство — в среднем три месяца на одобрение, безвизовый доступ в 110+ стран.' },
+      stats: {
+        minimum: { label: 'Минимум', caption: 'Порог инвестиций' },
+        years: { label: 'года', caption: 'Срок удержания' },
+        countries: { label: 'стран', caption: 'Безвизовый въезд' },
+        approval: { label: 'Одобрение', caption: 'Успешность клиентов' },
+      },
+      process: {
+        kicker: 'Процесс',
+        title: 'Пять шагов под управлением.',
+        steps: [
+          { title: 'Квалифицирующая покупка', body: 'Покупка турецкой недвижимости от $400 000 с обязательством держать её три года.' },
+          { title: 'Оценка и сделка', body: 'Независимая оценка SPK, передача TAPU, сертификат соответствия в Земельном кадастре.' },
+          { title: 'Пакет документов', body: 'Паспорт, биометрия, нотариальные переводы, банковские подтверждения, свидетельства о браке и рождении (семья).' },
+          { title: 'Обработка в Нюфусе', body: 'В среднем 2–3 месяца на одобрение в Управлении по гражданству. Мы отслеживаем еженедельно.' },
+          { title: 'Присяга и паспорт', body: 'Запись в ближайшем консульстве для получения турецкого ID и подачи на e-паспорт.' },
+        ],
+      },
+      faq: {
+        kicker: 'FAQ',
+        title: 'Частые вопросы.',
+        items: [
+          { q: 'Должна ли инвестиция быть одним объектом?', a: 'Нет — можно объединить несколько объектов, пока совокупная оценка достигает $400 000.' },
+          { q: 'Кто считается семьёй?', a: 'Супруг(а) и дети до 18 лет. Зависимые взрослые — с дополнительными документами.' },
+          { q: 'Можно сдавать недвижимость в 3-летний период удержания?', a: 'Да — арендный доход разрешён. Нельзя продавать, передавать или закладывать в течение периода ограничений.' },
+          { q: 'В какой валюте порог $400K?', a: 'Фиксирован в USD. Стоимость TAPU в TRY конвертируется по курсу ЦБ на дату сделки.' },
+        ],
+      },
+      cta: {
+        title: 'Готовы начать?',
+        sub: 'Старший консультант разберёт сроки, расходы и документацию на 30-минутном звонке.',
+        button: 'Записаться на звонок',
       },
     },
   },
@@ -3142,6 +3282,41 @@ const fa = {
         buttonBrowse: 'مرور مجموعه',
       },
     },
+    citizenship: {
+      hero: { eyebrow: 'شهروندی از طریق سرمایه‌گذاری', titleLead: 'خانواده شما،', titleHighlight: 'ترکیه‌ای.', sub: 'یک ملک واجد شرایط از ۴۰۰ هزار دلار شهروندی ترکیه را برای خانواده شما می‌آورد — به‌طور میانگین در سه ماه تأیید می‌شود، با سفر بدون ویزا به بیش از ۱۱۰ کشور.' },
+      stats: {
+        minimum: { label: 'حداقل', caption: 'آستانه سرمایه‌گذاری' },
+        years: { label: 'سال', caption: 'دوره نگهداری' },
+        countries: { label: 'کشور', caption: 'سفر بدون ویزا' },
+        approval: { label: 'تأیید', caption: 'نرخ موفقیت مشتریان' },
+      },
+      process: {
+        kicker: 'فرآیند',
+        title: 'پنج گام مدیریت‌شده.',
+        steps: [
+          { title: 'خرید واجد شرایط', body: 'یک ملک ترکیه به ارزش حداقل ۴۰۰ هزار دلار بخرید و تعهد دهید سه سال نگه دارید.' },
+          { title: 'ارزیابی و سند', body: 'ارزیابی مستقل دارای مجوز SPK، انتقال طاپو و گواهی انطباق در ثبت اسناد.' },
+          { title: 'بسته درخواست', body: 'گذرنامه، عکس بیومتریک، ترجمه‌های رسمی، تأییدیه بانکی، گواهی ازدواج و تولد (خانواده).' },
+          { title: 'پردازش در ثبت احوال', body: 'به‌طور میانگین ۲–۳ ماه برای تأیید در اداره شهروندی. هر هفته پیگیری می‌کنیم.' },
+          { title: 'سوگند و گذرنامه', body: 'وقت در نزدیک‌ترین کنسولگری برای دریافت کارت ملی ترکیه و درخواست گذرنامه الکترونیکی.' },
+        ],
+      },
+      faq: {
+        kicker: 'پرسش‌های متداول',
+        title: 'سؤالات رایج.',
+        items: [
+          { q: 'آیا سرمایه‌گذاری باید یک ملک واحد باشد؟', a: 'خیر — می‌توان چند ملک را تجمیع کرد به شرطی که ارزیابی کل به آستانه ۴۰۰ هزار دلار برسد.' },
+          { q: 'چه کسی به‌عنوان خانواده محسوب می‌شود؟', a: 'همسر و فرزندان زیر ۱۸ سال. بزرگسالان وابسته با مدارک تکمیلی قابل افزودن هستند.' },
+          { q: 'آیا می‌توانم در دوره نگهداری سه‌ساله ملک را اجاره دهم؟', a: 'بله — درآمد اجاره مجاز است. در دوره محدودیت نباید بفروشید، انتقال دهید یا رهن گذارید.' },
+          { q: 'آستانه ۴۰۰ هزار دلار به چه ارزی است؟', a: 'ثابت به دلار. ارزش طاپو به لیر بر اساس نرخ بانک مرکزی روز معامله تبدیل می‌شود.' },
+        ],
+      },
+      cta: {
+        title: 'آماده شروع هستید؟',
+        sub: 'مشاور ارشد در یک تماس ۳۰ دقیقه‌ای زمان‌بندی، هزینه و مدارک را برایتان تشریح می‌کند.',
+        button: 'رزرو تماس',
+      },
+    },
   },
 };
 
@@ -3768,6 +3943,41 @@ const fr = {
         sub: 'Budget, calendrier, ville, but — nous revenons avec une short list sous un jour ouvré.',
         buttonContact: 'Nous contacter',
         buttonBrowse: 'Voir le portfolio',
+      },
+    },
+    citizenship: {
+      hero: { eyebrow: 'Citoyenneté par investissement', titleLead: 'Votre famille,', titleHighlight: 'turque.', sub: "Une résidence éligible dès 400 000 $ donne à votre famille la nationalité turque — environ trois mois pour l'approbation, accès sans visa à plus de 110 pays." },
+      stats: {
+        minimum: { label: 'Minimum', caption: "Seuil d'investissement" },
+        years: { label: 'Ans', caption: 'Durée de détention' },
+        countries: { label: 'Pays', caption: 'Voyage sans visa' },
+        approval: { label: 'Approbation', caption: 'Taux de succès clients' },
+      },
+      process: {
+        kicker: 'Processus',
+        title: 'Cinq étapes pilotées.',
+        steps: [
+          { title: 'Achat éligible', body: "Acheter une résidence turque d'au moins 400 000 $ et s'engager à la conserver trois ans." },
+          { title: 'Expertise & titre', body: 'Expertise indépendante agréée SPK, transfert TAPU, certificat de conformité au Cadastre.' },
+          { title: 'Dossier de demande', body: 'Passeport, photos biométriques, traductions notariées, justificatifs bancaires, actes de mariage et naissance (famille).' },
+          { title: 'Traitement Nüfus', body: "En moyenne 2–3 mois d'approbation à la Direction de la citoyenneté. Suivi hebdomadaire de notre côté." },
+          { title: 'Serment & passeport', body: 'Rendez-vous au consulat le plus proche pour recevoir la carte turque et demander le passeport électronique.' },
+        ],
+      },
+      faq: {
+        kicker: 'FAQ',
+        title: 'Questions fréquentes.',
+        items: [
+          { q: "L'investissement doit-il porter sur un seul bien ?", a: "Non — vous pouvez agréger plusieurs biens tant que l'expertise combinée atteint 400 000 $." },
+          { q: 'Qui compte comme famille ?', a: 'Conjoint(e) et enfants de moins de 18 ans. Adultes à charge possibles avec documents complémentaires.' },
+          { q: 'Puis-je louer le bien pendant la période de 3 ans ?', a: 'Oui — les revenus locatifs sont autorisés. Vente, cession ou nantissement interdits durant la période de restriction.' },
+          { q: 'Dans quelle devise est fixé le seuil de 400 000 $ ?', a: 'Fixé en USD. La valeur TAPU en TRY est convertie au taux de la Banque centrale à la date de la transaction.' },
+        ],
+      },
+      cta: {
+        title: 'Prêt à commencer ?',
+        sub: 'Un conseiller senior vous expliquera calendrier, coûts et documentation lors d’un appel de 30 minutes.',
+        button: 'Réserver un appel',
       },
     },
   },
