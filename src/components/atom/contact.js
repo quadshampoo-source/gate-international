@@ -1,14 +1,16 @@
 import AtomShell from './shell';
 import AtomPageHero from './page-hero';
 import ContactClient from '@/components/contact-client';
+import { getDict } from '@/lib/i18n';
 
 export default async function AtomContact({ lang = 'en', team = {} }) {
+  const t = getDict(lang).pages.contact;
   return (
     <AtomShell lang={lang}>
       <AtomPageHero
-        eyebrow="Contact"
-        title={<>Let&apos;s <span className="atom-accent">talk.</span></>}
-        sub="Tell us what you&apos;re looking for. A senior advisor replies within one business day — often within an hour during office time."
+        eyebrow={t.hero.eyebrow}
+        title={<>{t.hero.titleLead} <span className="atom-accent">{t.hero.titleHighlight}</span></>}
+        sub={t.hero.sub}
       />
       <section className="pb-20">
         <div className="max-w-[1100px] mx-auto px-6 md:px-10">

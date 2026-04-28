@@ -665,6 +665,14 @@ const en = {
         button: 'Book a call',
       },
     },
+    contact: {
+      hero: {
+        eyebrow: 'Contact',
+        titleLead: "Let's",
+        titleHighlight: 'talk.',
+        sub: "Tell us what you're looking for. A senior advisor replies within one business day — often within an hour during office time.",
+      },
+    },
   },
 };
 
@@ -1326,6 +1334,14 @@ const ar = {
         title: 'جاهز للبدء؟',
         sub: 'سيشرح لك مستشار أول التوقيت والتكلفة والمستندات في مكالمة 30 دقيقة.',
         button: 'احجز مكالمة',
+      },
+    },
+    contact: {
+      hero: {
+        eyebrow: 'تواصل',
+        titleLead: 'هيا',
+        titleHighlight: 'نتحدّث.',
+        sub: 'أخبرنا بما تبحث عنه. سيرد عليك مستشار أول خلال يوم عمل واحد — وغالباً خلال ساعة في أوقات الدوام.',
       },
     },
   },
@@ -1991,6 +2007,14 @@ const zh = {
         button: '预约通话',
       },
     },
+    contact: {
+      hero: {
+        eyebrow: '联系',
+        titleLead: '让我们',
+        titleHighlight: '聊聊。',
+        sub: '告诉我们您的需求。资深顾问将在一个工作日内回复 — 工作时间内通常一小时内即回。',
+      },
+    },
   },
 };
 
@@ -2652,6 +2676,14 @@ const ru = {
         title: 'Готовы начать?',
         sub: 'Старший консультант разберёт сроки, расходы и документацию на 30-минутном звонке.',
         button: 'Записаться на звонок',
+      },
+    },
+    contact: {
+      hero: {
+        eyebrow: 'Контакты',
+        titleLead: 'Давайте',
+        titleHighlight: 'поговорим.',
+        sub: 'Расскажите, что вы ищете. Старший консультант ответит в течение одного рабочего дня — часто в течение часа в рабочее время.',
       },
     },
   },
@@ -3317,6 +3349,14 @@ const fa = {
         button: 'رزرو تماس',
       },
     },
+    contact: {
+      hero: {
+        eyebrow: 'تماس',
+        titleLead: 'بیایید',
+        titleHighlight: 'صحبت کنیم.',
+        sub: 'به ما بگویید چه می‌خواهید. مشاور ارشد ظرف یک روز کاری پاسخ می‌دهد — در ساعات اداری اغلب در یک ساعت.',
+      },
+    },
   },
 };
 
@@ -3978,6 +4018,14 @@ const fr = {
         title: 'Prêt à commencer ?',
         sub: 'Un conseiller senior vous expliquera calendrier, coûts et documentation lors d’un appel de 30 minutes.',
         button: 'Réserver un appel',
+      },
+    },
+    contact: {
+      hero: {
+        eyebrow: 'Contact',
+        titleLead: 'Discutons',
+        titleHighlight: 'ensemble.',
+        sub: "Dites-nous ce que vous cherchez. Un conseiller senior répond sous un jour ouvré — souvent dans l'heure pendant les horaires de bureau.",
       },
     },
   },
