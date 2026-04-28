@@ -11,6 +11,7 @@ import {
   localizedProjectName,
   residenceSchema,
   breadcrumbSchema,
+  faqSchema,
   localeUrl,
 } from '@/lib/seo';
 import JsonLd from '@/components/seo/json-ld';
@@ -78,8 +79,10 @@ export default async function ProjectDetailPage({ params }) {
   if (!project) notFound();
   const [all, theme] = await Promise.all([getProjects(), getActiveTheme()]);
 
-  // Structured data — Residence + BreadcrumbList. Residence powers
-  // Google's listing rich result; the breadcrumb populates the SERP path.
+  // Structured data — Residence + BreadcrumbList + FAQPage (when the
+  // project has its own FAQ block). Residence powers Google's listing
+  // rich result; the breadcrumb populates the SERP path; FAQPage opens
+  // up the "People also ask" expansion below the main result.
   const dict = getDict(lang);
   const residence = residenceSchema(project, lang);
   const localName = localizedProjectName(project, lang);
@@ -88,6 +91,7 @@ export default async function ProjectDetailPage({ params }) {
     { name: dict.nav?.projects || 'Residences', url: localeUrl('/projects', lang) },
     { name: localName },
   ]);
+  const faq = faqSchema(project.faqs);
 
   const themed = (() => {
     if (theme === 'atom') return <AtomProjectDetail project={project} lang={lang} allProjects={all} />;
@@ -99,6 +103,7 @@ export default async function ProjectDetailPage({ params }) {
     <>
       {residence && <JsonLd data={residence} />}
       {breadcrumb && <JsonLd data={breadcrumb} />}
+      {faq && <JsonLd data={faq} />}
       {themed}
     </>
   );

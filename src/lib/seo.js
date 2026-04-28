@@ -276,6 +276,37 @@ export function residenceSchema(project, lang = DEFAULT_LOCALE) {
 }
 
 /**
+ * FAQPage schema. Pass an array of `{question, answer}` (legacy `q`/`a`
+ * keys also accepted to match dict shapes). Eligible for Google's
+ * "People also ask" SERP feature when content is substantive (>~50 chars
+ * per answer) and matches what's visible on the page.
+ */
+export function faqSchema(items = []) {
+  if (!Array.isArray(items)) return null;
+  const cleaned = items
+    .map((it) => {
+      const question = (it?.question || it?.q || '').trim();
+      const answer = (it?.answer || it?.a || '').trim();
+      if (!question || !answer) return null;
+      return {
+        '@type': 'Question',
+        name: question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: answer,
+        },
+      };
+    })
+    .filter(Boolean);
+  if (cleaned.length === 0) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: cleaned,
+  };
+}
+
+/**
  * BreadcrumbList schema. Pass an ordered list of `{name, url}` items.
  * The last item's `url` is optional (Google treats omission as "current
  * page"); both shapes are accepted.
