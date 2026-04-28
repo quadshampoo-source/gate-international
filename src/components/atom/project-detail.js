@@ -17,6 +17,7 @@ import BuildingSpecs from './detail/building-specs';
 import ProjectReels from './detail/project-reels';
 import { getDict } from '@/lib/i18n';
 import { localizedField } from '@/lib/i18n-content';
+import { localizedName, localizedDistrict } from '@/lib/utils';
 
 // Hero gallery is exterior-only. If a project has no exterior images we
 // fall through to the legacy unified `gallery` array, then to the cover
@@ -64,6 +65,8 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
   const amenities = Array.isArray(localizedAmenities) ? localizedAmenities : [];
   const localizedFaqs = localizedField(project, 'faqs', lang);
   const faqs = Array.isArray(localizedFaqs) ? localizedFaqs : [];
+  const localName = localizedName(project, lang);
+  const localDistrict = localizedDistrict(project, lang);
   const investment = project.investment;
   const techSpecs = project.techSpecs || project.tech_specs;
   const paymentPlan = project.payment_plan || project.paymentPlan;
@@ -72,9 +75,12 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
   const priceLastUpdated = project.priceLastUpdated || project.price_last_updated;
   const reels = Array.isArray(project.reels) ? project.reels : [];
 
-  const districtLabel = (project.subDistrict || project.sub_district) && project.district !== (project.subDistrict || project.sub_district)
-    ? `${project.subDistrict || project.sub_district}, ${project.district}`
-    : project.district;
+  // sub-district has no per-locale columns yet, so it stays in the legacy
+  // (English) value; the parent district uses the localized form.
+  const subDistrict = project.subDistrict || project.sub_district;
+  const districtLabel = subDistrict && project.district !== subDistrict
+    ? `${subDistrict}, ${localDistrict}`
+    : localDistrict;
 
   return (
     <>
@@ -86,10 +92,10 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
               {t.breadcrumb.allResidences}
             </Link>
             <span>/</span>
-            <span style={{ color: 'var(--neutral-900)' }}>{project.name}</span>
+            <span style={{ color: 'var(--neutral-900)' }}>{localName}</span>
           </div>
 
-          <GalleryMosaic images={heroGallery} alt={project.name} lang={lang} />
+          <GalleryMosaic images={heroGallery} alt={localName} lang={lang} />
         </div>
       </section>
 
@@ -105,7 +111,7 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
                 </div>
               )}
               <h1 className="atom-h1" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.025em' }}>
-                {project.name}
+                {localName}
               </h1>
               {heroTagline && (
                 <p className="mt-3 max-w-[700px] text-lg" style={{ color: 'var(--neutral-500)', lineHeight: 1.5 }}>
@@ -159,12 +165,12 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
                 lang={lang}
               />
               <PaymentPlanTimeline paymentPlan={paymentPlan} lang={lang} />
-              <FloorPlans images={interiorImages} alt={`${project.name} interior`} lang={lang} />
+              <FloorPlans images={interiorImages} alt={`${localName} interior`} lang={lang} />
               <AmenitiesGrid amenities={amenities} lang={lang} />
               <LocationDistances
                 distances={distances}
-                district={project.district}
-                projectName={project.name}
+                district={localDistrict}
+                projectName={localName}
                 lang={lang}
               />
               <DeveloperCard developerInfo={developerInfo} lang={lang} />

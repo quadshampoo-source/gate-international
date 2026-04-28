@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { localizedName, localizedDistrict } from '@/lib/utils';
 
 function priceLabel(p) {
   const n = Number(p.priceUsd ?? p.price_usd) || 0;
@@ -21,6 +22,8 @@ export default function AtomProjectCard({ project, lang }) {
     ? 'Delivered'
     : 'For sale';
   const isDelivered = status === 'Delivered';
+  const localName = localizedName(project, lang);
+  const localDistrict = localizedDistrict(project, lang);
 
   return (
     <Link
@@ -37,7 +40,7 @@ export default function AtomProjectCard({ project, lang }) {
         {img && (
           <Image
             src={img}
-            alt={project.name}
+            alt={localName}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
@@ -84,10 +87,10 @@ export default function AtomProjectCard({ project, lang }) {
 
       <div className="p-5 md:p-6 flex flex-col gap-2">
         <h3 className="text-[18px] md:text-[20px] font-semibold leading-tight" style={{ color: 'var(--neutral-900)' }}>
-          {project.name}
+          {localName}
         </h3>
         <div className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--neutral-400)' }}>
-          {project.district}{project.developer ? ` · ${project.developer}` : ''}
+          {localDistrict}{project.developer ? ` · ${project.developer}` : ''}
         </div>
 
         <div

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import ScheduleViewingModal from './schedule-viewing-modal';
 import BottomSheet from './bottom-sheet';
 import { getDict } from '@/lib/i18n';
+import { localizedName } from '@/lib/utils';
 
 const ADVISOR = {
   phone: '+90 535 520 6339',
@@ -33,7 +34,8 @@ export default function StickyInfoCard({ project, lang = 'en' }) {
   const brochureUrl = project.brochure_url || project.brochureUrl;
   const masterPlanUrl = project.master_plan_url || project.masterPlanUrl;
   const priceNote = project.price_note || project.priceNote;
-  const waMsg = encodeURIComponent(t.waMessageTemplate.replace('{project}', project.name));
+  const localName = localizedName(project, lang);
+  const waMsg = encodeURIComponent(t.waMessageTemplate.replace('{project}', localName));
   const waHref = `https://wa.me/${ADVISOR.whatsappNumber}?text=${waMsg}`;
 
   const cardBody = (
@@ -140,7 +142,7 @@ export default function StickyInfoCard({ project, lang = 'en' }) {
       <ScheduleViewingModal
         open={scheduleOpen}
         onClose={() => setScheduleOpen(false)}
-        projectName={project.name}
+        projectName={localName}
         lang={lang}
       />
     </>
