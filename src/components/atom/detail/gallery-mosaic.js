@@ -337,7 +337,7 @@ export default function GalleryMosaic({ images = [], alt = 'Gallery', lang = 'en
           onClick={() => openLightbox(0)}
           className="absolute bottom-4 right-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-transform hover:scale-105"
           style={{
-            background: '#fff',
+            background: 'var(--atom-surface)',
             border: '1px solid var(--neutral-200)',
             borderRadius: 'var(--atom-radius-pill)',
             color: 'var(--neutral-900)',

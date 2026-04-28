@@ -37,6 +37,9 @@
   --accent-coral-hover: #FF5544;
   --accent-cyan: #6EE7E7;
   --atom-white: #FFFFFF;
+  /* Card / sheet / dropdown surface — flips in dark mode below.
+     Use this anywhere a component used to hardcode `background: #fff`. */
+  --atom-surface: #FFFFFF;
 
   /* ── Gradients ───────────────────────────────────────────────── */
   --gradient-primary: linear-gradient(135deg, #4F8CFF 0%, #6366F1 50%, #8B5CF6 100%);
@@ -87,6 +90,9 @@ html[data-theme="dark"],
   --neutral-800: #E2E8F0;
   --neutral-900: #F8FAFC;
   --atom-white:  #0F1624;
+  /* Card surface — one notch lighter than page bg (#0F1624) to give
+     elevation; matches the neutral-100 mid-tone. */
+  --atom-surface: #1A2235;
 
   --atom-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.30);
   --atom-shadow-md: 0 4px 24px rgba(0, 0, 0, 0.40);

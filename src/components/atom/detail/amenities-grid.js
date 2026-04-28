@@ -21,7 +21,7 @@ export default function AmenitiesGrid({ amenities = [], lang = 'en' }) {
             key={i}
             className="flex items-start gap-3 p-4"
             style={{
-              background: '#fff',
+              background: 'var(--atom-surface)',
               border: '1px solid var(--neutral-200)',
               borderRadius: 'var(--atom-radius-md)',
             }}

@@ -125,7 +125,7 @@ export default function AtomProjectDetail({ project, lang = 'en', allProjects = 
                       key={s.label}
                       className="p-4"
                       style={{
-                        background: '#fff',
+                        background: 'var(--atom-surface)',
                         border: '1px solid var(--neutral-200)',
                         borderRadius: 'var(--atom-radius-md)',
                       }}

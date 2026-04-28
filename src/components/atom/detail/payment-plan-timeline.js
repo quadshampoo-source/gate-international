@@ -34,7 +34,7 @@ export default function PaymentPlanTimeline({ paymentPlan, lang = 'en' }) {
                 key={i}
                 className="flex items-start gap-3 p-4"
                 style={{
-                  background: '#fff',
+                  background: 'var(--atom-surface)',
                   border: '1px solid var(--neutral-200)',
                   borderRadius: 'var(--atom-radius-md)',
                 }}
@@ -65,7 +65,7 @@ export default function PaymentPlanTimeline({ paymentPlan, lang = 'en' }) {
           <div
             className="hidden md:flex items-stretch gap-2 p-5"
             style={{
-              background: '#fff',
+              background: 'var(--atom-surface)',
               border: '1px solid var(--neutral-200)',
               borderRadius: 'var(--atom-radius-lg)',
             }}
@@ -109,7 +109,7 @@ export default function PaymentPlanTimeline({ paymentPlan, lang = 'en' }) {
         <div
           className="p-5"
           style={{
-            background: '#fff',
+            background: 'var(--atom-surface)',
             border: '1px solid var(--neutral-200)',
             borderRadius: 'var(--atom-radius-lg)',
             color: 'var(--neutral-700)',
@@ -129,7 +129,7 @@ export default function PaymentPlanTimeline({ paymentPlan, lang = 'en' }) {
         <div
           className="p-5 text-sm"
           style={{
-            background: '#fff',
+            background: 'var(--atom-surface)',
             border: '1px solid var(--neutral-200)',
             borderRadius: 'var(--atom-radius-lg)',
             color: 'var(--neutral-700)',

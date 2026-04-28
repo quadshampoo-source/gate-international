@@ -59,7 +59,7 @@ function CalculatorBody({ lang }) {
             <div
               className="p-6 md:p-8"
               style={{
-                background: '#fff',
+                background: 'var(--atom-surface)',
                 border: '1px solid var(--neutral-200)',
                 borderRadius: 'var(--atom-radius-xl)',
                 boxShadow: 'var(--atom-shadow-sm)',

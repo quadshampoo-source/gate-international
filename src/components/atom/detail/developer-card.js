@@ -24,7 +24,7 @@ export default function DeveloperCard({ developerInfo, lang = 'en' }) {
       <div
         className="p-6 md:p-8 flex flex-col md:flex-row gap-5 md:gap-6"
         style={{
-          background: '#fff',
+          background: 'var(--atom-surface)',
           border: '1px solid var(--neutral-200)',
           borderRadius: 'var(--atom-radius-lg)',
         }}

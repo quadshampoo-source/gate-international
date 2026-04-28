@@ -58,7 +58,7 @@ export default function StickyInfoCard({ project, lang = 'en' }) {
       >
         <div
           style={{
-            background: '#fff',
+            background: 'var(--atom-surface)',
             border: '1px solid var(--neutral-200)',
             borderRadius: 'var(--atom-radius-xl)',
             boxShadow: 'var(--atom-shadow-lg)',
@@ -200,7 +200,7 @@ function CardBody({ project, priceLabel, priceNote, paymentPlan, brochureUrl, ma
           rel="noopener noreferrer"
           className="inline-flex items-center justify-center gap-2 w-full h-12 text-sm font-semibold transition-colors"
           style={{
-            background: '#fff',
+            background: 'var(--atom-surface)',
             border: '1px solid var(--neutral-200)',
             borderRadius: 'var(--atom-radius-pill)',
             color: 'var(--neutral-900)',
@@ -219,7 +219,7 @@ function CardBody({ project, priceLabel, priceNote, paymentPlan, brochureUrl, ma
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 w-full h-11 text-sm font-semibold transition-colors"
             style={{
-              background: '#fff',
+              background: 'var(--atom-surface)',
               border: '1px solid var(--neutral-300)',
               borderRadius: 'var(--atom-radius-pill)',
               color: 'var(--neutral-900)',

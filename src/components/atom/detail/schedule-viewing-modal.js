@@ -61,7 +61,7 @@ export default function ScheduleViewingModal({ open, onClose, projectName, lang 
         <div
           className="w-full md:max-w-lg overflow-y-auto"
           style={{
-            background: '#fff',
+            background: 'var(--atom-surface)',
             borderTopLeftRadius: 'var(--atom-radius-2xl)',
             borderTopRightRadius: 'var(--atom-radius-2xl)',
             borderBottomLeftRadius: 'var(--atom-radius-2xl)',

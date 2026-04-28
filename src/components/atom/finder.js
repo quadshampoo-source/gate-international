@@ -81,7 +81,7 @@ function FinderBody({ lang }) {
               onClick={() => { setStep(0); setAnswers({}); }}
               className="inline-flex items-center justify-center px-5 h-11 text-sm font-semibold transition-colors"
               style={{
-                background: '#fff',
+                background: 'var(--atom-surface)',
                 border: '1px solid var(--neutral-200)',
                 color: 'var(--neutral-900)',
                 borderRadius: 'var(--atom-radius-pill)',
@@ -105,7 +105,7 @@ function FinderBody({ lang }) {
           <div
             className="mt-10 max-w-[480px] mx-auto p-6 text-left"
             style={{
-              background: '#fff',
+              background: 'var(--atom-surface)',
               border: '1px solid var(--neutral-200)',
               borderRadius: 'var(--atom-radius-lg)',
             }}

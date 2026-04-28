@@ -54,7 +54,7 @@ export default async function AtomWhyUs({ lang = 'en' }) {
               <span
                 key={p}
                 className="px-4 py-2 rounded-full text-sm font-medium"
-                style={{ background: '#fff', border: '1px solid var(--neutral-200)', color: 'var(--neutral-700)' }}
+                style={{ background: 'var(--atom-surface)', border: '1px solid var(--neutral-200)', color: 'var(--neutral-700)' }}
               >
                 {p}
               </span>

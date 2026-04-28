@@ -33,7 +33,7 @@ function Card({ amenity, mobile }) {
     <div
       className={mobile ? 'flex-shrink-0 w-[180px]' : ''}
       style={{
-        background: '#fff',
+        background: 'var(--atom-surface)',
         border: '1px solid var(--neutral-200)',
         borderRadius: 'var(--atom-radius-lg)',
         padding: 16,

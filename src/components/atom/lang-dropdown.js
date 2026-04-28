@@ -76,7 +76,7 @@ export default function AtomLangDropdown({ lang = 'en' }) {
           role="listbox"
           className="absolute right-0 rtl:right-auto rtl:left-0 mt-2 min-w-[160px] overflow-hidden z-50"
           style={{
-            background: '#fff',
+            background: 'var(--atom-surface)',
             border: '1px solid var(--neutral-200)',
             borderRadius: 'var(--atom-radius-md)',
             boxShadow: 'var(--atom-shadow-lg)',

@@ -68,7 +68,7 @@ export default function BuildingSpecs({ techSpecs, lang = 'en' }) {
             key={c.key}
             className="p-4"
             style={{
-              background: '#fff',
+              background: 'var(--atom-surface)',
               border: '1px solid var(--neutral-200)',
               borderRadius: 'var(--atom-radius-md)',
             }}

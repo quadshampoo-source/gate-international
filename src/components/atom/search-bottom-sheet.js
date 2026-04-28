@@ -77,7 +77,7 @@ export default function SearchBottomSheet({
         className="fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out"
         style={{
           transform: open ? 'translateY(0)' : 'translateY(100%)',
-          background: '#fff',
+          background: 'var(--atom-surface)',
           borderTopLeftRadius: 'var(--atom-radius-2xl)',
           borderTopRightRadius: 'var(--atom-radius-2xl)',
           maxHeight: '60vh',

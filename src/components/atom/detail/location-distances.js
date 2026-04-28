@@ -81,7 +81,7 @@ export default function LocationDistances({ distances = {}, address, district, p
               key={p.key}
               className="inline-flex items-center gap-2 px-3 py-1.5 text-sm"
               style={{
-                background: '#fff',
+                background: 'var(--atom-surface)',
                 border: '1px solid var(--neutral-200)',
                 borderRadius: 'var(--atom-radius-pill)',
                 color: 'var(--neutral-700)',

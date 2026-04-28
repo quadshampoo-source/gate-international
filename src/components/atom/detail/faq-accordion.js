@@ -26,7 +26,7 @@ export default function FaqAccordion({ faqs = [], lang = 'en' }) {
             key={i}
             className="group"
             style={{
-              background: '#fff',
+              background: 'var(--atom-surface)',
               border: '1px solid var(--neutral-200)',
               borderRadius: 'var(--atom-radius-md)',
             }}

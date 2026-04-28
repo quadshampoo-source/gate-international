@@ -69,7 +69,7 @@ export default function AtomTeamCard({ member, lang, dict }) {
     <div
       className="group p-5 transition-all hover:-translate-y-0.5"
       style={{
-        background: '#fff',
+        background: 'var(--atom-surface)',
         border: '1px solid var(--neutral-200)',
         borderRadius: 'var(--atom-radius-lg)',
         boxShadow: 'var(--atom-shadow-sm)',
@@ -122,7 +122,7 @@ export default function AtomTeamCard({ member, lang, dict }) {
             href={`mailto:${member.email}`}
             className="flex-1 inline-flex items-center justify-center gap-1.5 h-10 text-sm font-semibold transition-colors"
             style={{
-              background: '#fff',
+              background: 'var(--atom-surface)',
               border: '1px solid var(--neutral-200)',
               color: 'var(--primary-700)',
               borderRadius: 'var(--atom-radius-md)',

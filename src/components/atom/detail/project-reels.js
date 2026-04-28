@@ -203,7 +203,7 @@ export default function ProjectReels({ reels, lang = 'en' }) {
             className="md:hidden inline-flex items-center justify-center"
             style={{
               width: 40, height: 40, borderRadius: '50%',
-              background: '#fff',
+              background: 'var(--atom-surface)',
               border: '1px solid var(--neutral-200)',
               color: 'var(--neutral-900)',
               boxShadow: '0 4px 12px rgba(15,22,36,0.08)',
@@ -248,7 +248,7 @@ export default function ProjectReels({ reels, lang = 'en' }) {
             className="md:hidden inline-flex items-center justify-center"
             style={{
               width: 40, height: 40, borderRadius: '50%',
-              background: '#fff',
+              background: 'var(--atom-surface)',
               border: '1px solid var(--neutral-200)',
               color: 'var(--neutral-900)',
               boxShadow: '0 4px 12px rgba(15,22,36,0.08)',
@@ -400,7 +400,7 @@ function NavButton({ direction, ariaLabel, onClick, className }) {
         width: 52,
         height: 52,
         borderRadius: '50%',
-        background: '#fff',
+        background: 'var(--atom-surface)',
         border: '1px solid var(--neutral-200)',
         color: 'var(--neutral-900)',
         boxShadow: '0 8px 24px rgba(15,22,36,0.15)',

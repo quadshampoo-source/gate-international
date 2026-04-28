@@ -50,7 +50,7 @@ export default function InvestmentBlock({ investment, lang = 'en' }) {
               key={i}
               className="p-5"
               style={{
-                background: '#fff',
+                background: 'var(--atom-surface)',
                 border: '1px solid var(--neutral-200)',
                 borderRadius: 'var(--atom-radius-lg)',
               }}

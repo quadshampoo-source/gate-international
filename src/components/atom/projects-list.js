@@ -202,7 +202,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
                 value={type}
                 onChange={(e) => setType(e.target.value)}
                 className="text-sm font-medium rounded-atom-md px-3 py-2"
-                style={{ border: '1px solid var(--neutral-200)', background: '#fff', color: 'var(--neutral-700)' }}
+                style={{ border: '1px solid var(--neutral-200)', background: 'var(--atom-surface)', color: 'var(--neutral-700)' }}
               >
                 {typeFilters.map((f) => <option key={f.key} value={f.key}>{f.label}</option>)}
               </select>
@@ -210,7 +210,7 @@ export default function AtomProjectsList({ lang = 'en', projects = [] }) {
                 value={sortKey}
                 onChange={(e) => setSortKey(e.target.value)}
                 className="text-sm font-medium rounded-atom-md px-3 py-2"
-                style={{ border: '1px solid var(--neutral-200)', background: '#fff', color: 'var(--neutral-700)' }}
+                style={{ border: '1px solid var(--neutral-200)', background: 'var(--atom-surface)', color: 'var(--neutral-700)' }}
               >
                 {sorts.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
               </select>

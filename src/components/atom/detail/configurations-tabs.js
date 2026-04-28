@@ -95,7 +95,7 @@ export default function ConfigurationsTabs({ priceTable, options, unitTypes, pri
       <div
         className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6"
         style={{
-          background: '#fff',
+          background: 'var(--atom-surface)',
           border: '1px solid var(--neutral-200)',
           borderRadius: 'var(--atom-radius-lg)',
         }}

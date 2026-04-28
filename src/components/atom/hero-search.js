@@ -40,7 +40,7 @@ function Field({ label, value, open, onToggle, children }) {
         <div
           className="absolute left-0 right-0 mt-2 rounded-atom-md overflow-hidden overflow-y-auto z-30"
           style={{
-            background: '#fff',
+            background: 'var(--atom-surface)',
             border: '1px solid var(--neutral-200)',
             boxShadow: 'var(--atom-shadow-lg)',
             maxHeight: 280,
@@ -237,7 +237,7 @@ export default function AtomHeroSearch({ lang = 'en', districts = [] }) {
           width: '100%',
           maxWidth: 560,
           height: 56,
-          background: '#fff',
+          background: 'var(--atom-surface)',
           border: '1px solid var(--neutral-200)',
           borderRadius: 'var(--atom-radius-pill)',
           boxShadow: 'var(--atom-shadow-md)',

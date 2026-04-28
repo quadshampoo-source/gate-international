@@ -66,7 +66,7 @@ function ContactBody({ lang, teamGroups }) {
                     <div
                       className="p-6"
                       style={{
-                        background: '#fff',
+                        background: 'var(--atom-surface)',
                         border: '1px solid var(--neutral-200)',
                         borderRadius: 'var(--atom-radius-lg)',
                       }}
@@ -180,7 +180,7 @@ function ContactBody({ lang, teamGroups }) {
                 id="wechat-qr-box"
                 className="p-5 mt-2 flex items-center gap-4"
                 style={{
-                  background: '#fff',
+                  background: 'var(--atom-surface)',
                   border: '1px solid var(--neutral-200)',
                   borderRadius: 'var(--atom-radius-lg)',
                 }}
@@ -212,7 +212,7 @@ function ContactBody({ lang, teamGroups }) {
             <div
               className="p-6 md:p-8"
               style={{
-                background: '#fff',
+                background: 'var(--atom-surface)',
                 border: '1px solid var(--neutral-200)',
                 borderRadius: 'var(--atom-radius-xl)',
                 boxShadow: 'var(--atom-shadow-md)',
@@ -263,7 +263,7 @@ function ContactRow({ href, external, onClick, icon, iconBg, iconColor = '#fff',
       {...props}
       className="flex items-center gap-4 p-4 transition-colors hover:bg-[var(--neutral-50)]"
       style={{
-        background: '#fff',
+        background: 'var(--atom-surface)',
         border: '1px solid var(--neutral-200)',
         borderRadius: 'var(--atom-radius-lg)',
         textDecoration: 'none',
@@ -295,7 +295,7 @@ function OfficeBlock({ title, address, hoursLabel, hours }) {
     <div
       className="p-4"
       style={{
-        background: '#fff',
+        background: 'var(--atom-surface)',
         border: '1px solid var(--neutral-200)',
         borderRadius: 'var(--atom-radius-md)',
       }}
