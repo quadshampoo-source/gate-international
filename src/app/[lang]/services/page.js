@@ -3,9 +3,21 @@ import { getDict } from '@/lib/i18n';
 import { getActiveTheme } from '@/lib/theme';
 import EditorialServices from '@/components/editorial/services';
 import AtomServices from '@/components/atom/services';
+import { buildPageMetadata } from '@/lib/seo';
 
 const CORE_ICONS = ['🗺️', '🇹🇷', '📜', '🗣️', '🏠', '🛋️', '💳', '🏦', '📊', '📦'];
 const EXTRA_ICONS = ['💎', '💻', '🏢', '📋', '⛵', '🚗', '📖', '🎥'];
+
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  const s = getDict(lang).services;
+  return buildPageMetadata({
+    lang,
+    path: '/services',
+    title: s.title,
+    description: s.sub,
+  });
+}
 
 export default async function ServicesPage({ params }) {
   const { lang } = await params;

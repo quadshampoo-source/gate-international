@@ -5,8 +5,21 @@ import AtomProjectsList from '@/components/atom/projects-list';
 import { getProjects } from '@/lib/data';
 import { getActiveTheme } from '@/lib/theme';
 import { getSiteSettings } from '@/lib/site-settings';
+import { getDict } from '@/lib/i18n';
+import { buildPageMetadata } from '@/lib/seo';
 
 export const revalidate = 60;
+
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  const t = getDict(lang).projects;
+  return buildPageMetadata({
+    lang,
+    path: '/projects',
+    title: t.title,
+    description: t.sub,
+  });
+}
 
 export default async function ProjectsPage({ params }) {
   const { lang } = await params;

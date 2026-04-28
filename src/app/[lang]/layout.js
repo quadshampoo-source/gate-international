@@ -2,46 +2,60 @@ import ThemeShell from '@/components/theme-shell';
 import PageTransition from '@/components/page-transition';
 import Analytics from '@/components/analytics';
 import WhatsappFab from '@/components/whatsapp-fab';
-import { LOCALES, DEFAULT_LOCALE, dirOf, getDict } from '@/lib/i18n';
+import { LOCALES, dirOf, getDict } from '@/lib/i18n';
 import { getActiveTheme } from '@/lib/theme';
 import { getTeam } from '@/lib/team';
 import { notFound } from 'next/navigation';
+import { SITE_URL, OG_LOCALE_MAP, buildAlternateLocales } from '@/lib/seo';
 
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gateinternational.co';
-
-const OG_LOCALE_MAP = {
-  en: 'en_US',
-  ar: 'ar_AR',
-  zh: 'zh_CN',
-  ru: 'ru_RU',
-  fa: 'fa_IR',
-  fr: 'fr_FR',
-};
-
+// Layout-level metadata = locale-aware defaults that propagate to any
+// child page that doesn't define its own metadata. Page-specific bits
+// (canonical, hreflang languages, og:url, page-specific image) live on
+// each page's own `generateMetadata` so they don't leak through
+// inheritance.
 export async function generateMetadata({ params }) {
   const { lang } = await params;
   const dict = getDict(lang);
-  const languages = Object.fromEntries(LOCALES.map((l) => [l, `${SITE_URL}/${l}`]));
-  languages['x-default'] = `${SITE_URL}/${DEFAULT_LOCALE}`;
+  const defaultTitle = `${dict.brand} — Istanbul, Bodrum & Bursa Premium Real Estate`;
   return {
     metadataBase: new URL(SITE_URL),
-    title: `${dict.brand} — Istanbul, Bodrum & Bursa Premium Real Estate`,
+    title: {
+      default: defaultTitle,
+      // Child pages with a string `title` get rendered as
+      //   "{title} | Gate International"
+      // Pages that need the bare brand title (eg. home) return
+      //   `title: { absolute: ... }` instead.
+      template: `%s | ${dict.brand}`,
+    },
     description: dict.home.heroSub,
-    alternates: {
-      canonical: `${SITE_URL}/${lang}`,
-      languages,
+    applicationName: dict.brand,
+    formatDetection: { email: false, address: false, telephone: false },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
     openGraph: {
       type: 'website',
       locale: OG_LOCALE_MAP[lang] || 'en_US',
-      alternateLocale: LOCALES.filter((l) => l !== lang).map((l) => OG_LOCALE_MAP[l]).filter(Boolean),
-      url: `${SITE_URL}/${lang}`,
+      alternateLocale: buildAlternateLocales(lang),
       siteName: dict.brand,
-      title: `${dict.brand} — Istanbul, Bodrum & Bursa Premium Real Estate`,
+      title: defaultTitle,
+      description: dict.home.heroSub,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: defaultTitle,
       description: dict.home.heroSub,
     },
   };

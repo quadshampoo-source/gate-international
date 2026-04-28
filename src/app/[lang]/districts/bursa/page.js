@@ -9,15 +9,19 @@ import OrbBackdrop from '@/components/cinematic/orb-backdrop';
 import EditorialDistrict from '@/components/editorial/district';
 import AtomDistrict from '@/components/atom/district';
 import { getActiveTheme } from '@/lib/theme';
+import { buildPageMetadata } from '@/lib/seo';
 
 export const revalidate = 60;
 
-export async function generateMetadata() {
-  return {
-    title: 'Bursa — Ottoman capital, modern investment · Gate International',
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  return buildPageMetadata({
+    lang,
+    path: '/districts/bursa',
+    title: 'Bursa — Ottoman capital, modern investment',
     description:
       'Premium real estate in Bursa: Osmangazi, Nilüfer and Mudanya seaside. Half the Istanbul price, Uludağ skiing and Marmara ferry in reach.',
-  };
+  });
 }
 
 const ADVANTAGES = [

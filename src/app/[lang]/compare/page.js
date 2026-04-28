@@ -5,8 +5,20 @@ import { getProjects } from '@/lib/data';
 import { getActiveTheme } from '@/lib/theme';
 import EditorialCompare from '@/components/editorial/compare';
 import AtomCompare from '@/components/atom/compare';
+import { buildPageMetadata } from '@/lib/seo';
 
 export const revalidate = 60;
+
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  const t = getDict(lang).compare;
+  return buildPageMetadata({
+    lang,
+    path: '/compare',
+    title: t.title,
+    description: t.sub,
+  });
+}
 
 const GROWTH = {
   Maslak: 'high', Kağıthane: 'high', Levent: 'high', Güneşli: 'high',

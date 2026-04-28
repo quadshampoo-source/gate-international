@@ -7,15 +7,19 @@ import { ScrollReveal, FadeIn, Counter } from '@/components/motion';
 import EditorialDistrict from '@/components/editorial/district';
 import AtomDistrict from '@/components/atom/district';
 import { getActiveTheme } from '@/lib/theme';
+import { buildPageMetadata } from '@/lib/seo';
 
 export const revalidate = 60;
 
-export async function generateMetadata() {
-  return {
-    title: 'Bodrum — Ultra-luxury villas on the Aegean · Gate International',
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  return buildPageMetadata({
+    lang,
+    path: '/districts/bodrum',
+    title: 'Bodrum — Ultra-luxury villas on the Aegean',
     description:
       'Ritz-Carlton, Mandarin Oriental, Aman and Kempinski branded residences on the Bodrum peninsula. Private beaches, invitation-only villas, citizenship-eligible investment.',
-  };
+  });
 }
 
 export default async function BodrumGuidePage({ params }) {

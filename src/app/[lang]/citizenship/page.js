@@ -10,13 +10,19 @@ import EditorialCitizenship from '@/components/editorial/citizenship';
 import AtomCitizenship from '@/components/atom/citizenship';
 import AtomShell from '@/components/atom/shell';
 import { getActiveTheme } from '@/lib/theme';
+import { buildPageMetadata } from '@/lib/seo';
 
 export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { lang } = await params;
   const t = getDict(lang).citizenshipV2;
-  return { title: `${t.heroTitle} — Gate International`, description: t.heroSub };
+  return buildPageMetadata({
+    lang,
+    path: '/citizenship',
+    title: t.heroTitle,
+    description: t.heroSub,
+  });
 }
 
 const STAT_METRICS = [

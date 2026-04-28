@@ -7,6 +7,18 @@ import EditorialWhyUs from '@/components/editorial/why-us';
 import AtomWhyUs from '@/components/atom/why-us';
 import { getActiveTheme } from '@/lib/theme';
 import { getTestimonials } from '@/lib/testimonials';
+import { buildPageMetadata } from '@/lib/seo';
+
+export async function generateMetadata({ params }) {
+  const { lang } = await params;
+  const w = getDict(lang).why;
+  return buildPageMetadata({
+    lang,
+    path: '/why-us',
+    title: w.title,
+    description: w.sub,
+  });
+}
 
 const TESTIMONIALS = [
   { name: 'Ahmed Al-Saud', role: 'Riyadh → Istanbul', q: 'Gate handled everything from airport pickup to TAPU registration. Flawless.', lang: 'EN' },

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
 import { whatsappLink } from '@/lib/utils';
+import { buildPageMetadata } from '@/lib/seo';
 import { ScrollReveal, FadeIn } from '@/components/motion';
 import BlurText from '@/components/cinematic/blur-text';
 import OrbBackdrop from '@/components/cinematic/orb-backdrop';
@@ -10,7 +11,12 @@ export const revalidate = 60;
 export async function generateMetadata({ params }) {
   const { lang } = await params;
   const t = getDict(lang).afterSale;
-  return { title: `${t.heroTitle} — Gate International`, description: t.heroSub };
+  return buildPageMetadata({
+    lang,
+    path: '/services/after-sale',
+    title: t.heroTitle,
+    description: t.heroSub,
+  });
 }
 
 const SERVICES = [

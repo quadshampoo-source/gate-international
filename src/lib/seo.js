@@ -81,6 +81,7 @@ export function buildPageMetadata({
   lang,
   path,
   title,
+  titleAbsolute = false,
   description,
   image,
   imageAlt,
@@ -88,6 +89,10 @@ export function buildPageMetadata({
   siteName = 'Gate International',
 }) {
   const canonical = localeUrl(path, lang);
+  // titleAbsolute=true short-circuits the layout's `%s | Gate International`
+  // template — used by the home page where the title already includes the
+  // brand and we don't want it duplicated.
+  const titleField = titleAbsolute ? { absolute: title } : title;
   const og = {
     type,
     locale: OG_LOCALE_MAP[lang] || OG_LOCALE_MAP[DEFAULT_LOCALE],
@@ -109,7 +114,7 @@ export function buildPageMetadata({
   };
   if (image) twitter.images = [image];
   return {
-    title,
+    title: titleField,
     description,
     alternates: {
       canonical,
