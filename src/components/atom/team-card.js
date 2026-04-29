@@ -118,7 +118,7 @@ export default function AtomTeamCard({ member, lang, dict }) {
           </Link>
         )}
         <Link
-          href={`mailto:hello@gateinternational.co?subject=${encodeURIComponent(`Inquiry for ${member.name}`)}`}
+          href={`mailto:${member.email || 'hello@gateinternational.co'}?subject=${encodeURIComponent(`Inquiry for ${member.name}`)}`}
           className="flex-1 inline-flex items-center justify-center gap-1.5 h-10 text-sm font-semibold transition-colors"
           style={{
             background: 'var(--atom-surface)',

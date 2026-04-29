@@ -103,7 +103,7 @@ export default function TeamCard({ member, lang, dict }) {
           </Link>
         )}
         <Link
-          href={`mailto:hello@gateinternational.co?subject=${encodeURIComponent(`Inquiry for ${member.name}`)}`}
+          href={`mailto:${member.email || 'hello@gateinternational.co'}?subject=${encodeURIComponent(`Inquiry for ${member.name}`)}`}
           className="flex-1 inline-flex items-center justify-center gap-2 h-10 rounded-xl border border-gold/35 text-gold hover:bg-gold/10 font-mono text-[11px] tracking-[0.14em] uppercase transition-colors"
         >
           <EmailIcon />
