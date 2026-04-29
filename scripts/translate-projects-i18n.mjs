@@ -12,8 +12,10 @@
 //   node scripts/translate-projects-i18n.mjs                # full run, skip already-translated locales
 //   node scripts/translate-projects-i18n.mjs --force        # overwrite even already-translated locales
 //
-// Backed by Anthropic claude-haiku-4-5 via the Messages API. Bump MODEL
-// below to claude-sonnet-4-6 if any locale's draft quality is unsatisfactory.
+// Backed by Anthropic claude-sonnet-4-5 via the Messages API. Two-tier strategy:
+// (1) bundled JSON call returning all 5 target langs at once, then
+// (2) tag-delimited per-language fallback if the bundled call truncates or
+//     fails JSON.parse (zh tends to emit ASCII " inside JSON strings).
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
@@ -34,7 +36,7 @@ if (!ANTHROPIC_KEY) {
   console.error('ANTHROPIC_API_KEY missing in .env.local'); process.exit(2);
 }
 
-const MODEL = 'claude-haiku-4-5-20251001';
+const MODEL = 'claude-sonnet-4-5';
 
 const args = process.argv.slice(2);
 const DRY_RUN = args.includes('--dry-run');
@@ -72,10 +74,10 @@ const SYSTEM_BASE = [
   'Numbers, prices, areas (m²), dates: keep numerals as-is, translate only the units / surrounding words.',
 ].join('\n');
 
-async function callAnthropic(systemSuffix, userText, { retries = 2 } = {}) {
+async function callAnthropicRaw(systemSuffix, userText, { retries = 2 } = {}) {
   const body = {
     model: MODEL,
-    max_tokens: 8192,
+    max_tokens: 16384,
     temperature: 0.3,
     system: SYSTEM_BASE + '\n\n' + systemSuffix,
     messages: [
@@ -103,12 +105,7 @@ async function callAnthropic(systemSuffix, userText, { retries = 2 } = {}) {
         throw new Error(`Anthropic ${res.status}: ${t.slice(0, 250)}`);
       }
       const data = await res.json();
-      const raw = (data?.content?.[0]?.text || '').trim();
-      // Defensive code-fence strip — Claude usually returns clean JSON when
-      // instructed, but the occasional ```json ... ``` wrapper still happens.
-      const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-      try { return JSON.parse(cleaned); }
-      catch { throw new Error('Non-JSON response: ' + cleaned.slice(0, 200)); }
+      return (data?.content?.[0]?.text || '').trim();
     } catch (e) {
       lastErr = e;
       if (i < retries) await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
@@ -117,15 +114,83 @@ async function callAnthropic(systemSuffix, userText, { retries = 2 } = {}) {
   throw lastErr;
 }
 
-async function translateString(text, { short = false } = {}) {
-  const suffix = (short ? 'Keep each translation under 120 characters. ' : '')
+async function callAnthropic(systemSuffix, userText, opts) {
+  const raw = await callAnthropicRaw(systemSuffix, userText, opts);
+  // Defensive code-fence strip — Claude usually returns clean JSON when
+  // instructed, but the occasional ```json ... ``` wrapper still happens.
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+  try { return JSON.parse(cleaned); }
+  catch { throw new Error('Non-JSON response: ' + cleaned.slice(0, 200)); }
+}
+
+const LANG_NAMES = {
+  ar: 'Modern Standard Arabic',
+  zh: 'Simplified Chinese',
+  ru: 'Russian',
+  fa: 'Persian (Farsi)',
+  fr: 'French',
+};
+
+// When the bundled 5-lang JSON call fails (truncation on long content; or
+// JSON.parse failure when zh emits ASCII " inside string values for Chinese
+// emphasis like "健康住宅"), retry per-language with tag-delimited output —
+// avoids JSON escape pitfalls entirely and gives each language its own 16K budget.
+async function translateStringPerLang(text, lang, { short = false } = {}) {
+  const suffix = `Translate the source text into ${LANG_NAMES[lang]}.\n`
+    + (short ? 'Keep the translation under 120 characters. ' : '')
+    + 'Return ONLY the translation wrapped between <T> and </T> tags — no JSON, no code fences, no preamble.';
+  const raw = await callAnthropicRaw(suffix, text);
+  const m = raw.match(/<T>([\s\S]*?)<\/T>/);
+  return m && m[1].trim() ? m[1].trim() : null;
+}
+
+async function translateString(text, opts = {}) {
+  const suffix = (opts.short ? 'Keep each translation under 120 characters. ' : '')
     + 'Return JSON exactly: {"ar":"...","zh":"...","ru":"...","fa":"...","fr":"..."}.';
-  const out = await callAnthropic(suffix, text);
   const result = {};
-  for (const l of TARGET_LANGS) {
-    if (typeof out[l] === 'string' && out[l].trim()) result[l] = out[l];
-  }
+  let bundleErr = null;
+  try {
+    const out = await callAnthropic(suffix, text);
+    for (const l of TARGET_LANGS) {
+      if (typeof out[l] === 'string' && out[l].trim()) result[l] = out[l];
+    }
+  } catch (e) { bundleErr = e; }
+
+  const missing = TARGET_LANGS.filter((l) => !result[l]);
+  if (missing.length === 0) return result;
+  if (bundleErr) console.log(`      ↳ bundled string call failed (${bundleErr.message.slice(0, 60)}…), per-lang fallback for ${missing.length} langs`);
+  else console.log(`      ↳ bundled string call partial, per-lang fill ${missing.length} langs`);
+
+  await Promise.all(missing.map(async (l) => {
+    try {
+      const v = await translateStringPerLang(text, l, opts);
+      if (v) result[l] = v;
+    } catch (e) {
+      console.log(`      ↳ ${l} per-lang failed: ${e.message.slice(0, 80)}`);
+    }
+  }));
   return result;
+}
+
+async function translateAmenitiesPerLang(payload, lang) {
+  const inputXml = payload.map((it, i) => `<ITEM index="${i}">\n<L>${it.label}</L>\n<D>${it.description}</D>\n</ITEM>`).join('\n');
+  const suffix = [
+    `Translate each amenity item into ${LANG_NAMES[lang]}.`,
+    'Input is a sequence of <ITEM> blocks each containing <L> (label) and <D> (description, may be empty).',
+    'Return ONLY the translated items in the same structure and SAME ORDER, wrapped between <ITEMS> and </ITEMS>. No JSON, no code fences, no preamble.',
+    'Each <ITEM> must have <L>translated label</L> and <D>translated description</D>. Preserve empty descriptions as <D></D>.',
+  ].join('\n');
+  const raw = await callAnthropicRaw(suffix, inputXml);
+  const blocks = [...raw.matchAll(/<ITEM[^>]*>([\s\S]*?)<\/ITEM>/g)];
+  if (blocks.length !== payload.length) return null;
+  return blocks.map((m, i) => {
+    const l = m[1].match(/<L>([\s\S]*?)<\/L>/);
+    const d = m[1].match(/<D>([\s\S]*?)<\/D>/);
+    return {
+      label: l ? l[1].trim() : payload[i].label,
+      description: d ? d[1].trim() : payload[i].description,
+    };
+  });
 }
 
 async function translateAmenities(items) {
@@ -137,17 +202,61 @@ async function translateAmenities(items) {
     'Return JSON exactly: {"ar":[...],"zh":[...],"ru":[...],"fa":[...],"fr":[...]} where each array has the SAME LENGTH and SAME ORDER as the input.',
     'Each output array element must be {"label":"...","description":"..."}.',
   ].join('\n');
-  const out = await callAnthropic(suffix, JSON.stringify(payload));
   const result = {};
-  for (const l of TARGET_LANGS) {
-    if (!Array.isArray(out[l]) || out[l].length !== items.length) continue;
-    result[l] = items.map((src, i) => ({
-      icon: src.icon,
-      label: out[l][i]?.label || src.label,
-      description: out[l][i]?.description || src.description,
-    }));
-  }
+  let bundleErr = null;
+  try {
+    const out = await callAnthropic(suffix, JSON.stringify(payload));
+    for (const l of TARGET_LANGS) {
+      if (!Array.isArray(out[l]) || out[l].length !== items.length) continue;
+      result[l] = items.map((src, i) => ({
+        icon: src.icon,
+        label: out[l][i]?.label || src.label,
+        description: out[l][i]?.description || src.description,
+      }));
+    }
+  } catch (e) { bundleErr = e; }
+
+  const missing = TARGET_LANGS.filter((l) => !result[l]);
+  if (missing.length === 0) return result;
+  if (bundleErr) console.log(`      ↳ bundled amenities call failed (${bundleErr.message.slice(0, 60)}…), per-lang fallback for ${missing.length} langs`);
+  else console.log(`      ↳ bundled amenities call partial, per-lang fill ${missing.length} langs`);
+
+  await Promise.all(missing.map(async (l) => {
+    try {
+      const arr = await translateAmenitiesPerLang(payload, l);
+      if (arr) {
+        result[l] = items.map((src, i) => ({
+          icon: src.icon,
+          label: arr[i]?.label || src.label,
+          description: arr[i]?.description || src.description,
+        }));
+      }
+    } catch (e) {
+      console.log(`      ↳ ${l} per-lang failed: ${e.message.slice(0, 80)}`);
+    }
+  }));
   return result;
+}
+
+async function translateFaqsPerLang(payload, lang) {
+  const inputXml = payload.map((it, i) => `<ITEM index="${i}">\n<Q>${it.question}</Q>\n<A>${it.answer}</A>\n</ITEM>`).join('\n');
+  const suffix = [
+    `Translate each FAQ item into ${LANG_NAMES[lang]}.`,
+    'Input is a sequence of <ITEM> blocks each containing <Q> (question) and <A> (answer).',
+    'Return ONLY the translated items in the same structure and SAME ORDER, wrapped between <ITEMS> and </ITEMS>. No JSON, no code fences, no preamble.',
+    'Each <ITEM> must have <Q>translated question</Q> and <A>translated answer</A>.',
+  ].join('\n');
+  const raw = await callAnthropicRaw(suffix, inputXml);
+  const blocks = [...raw.matchAll(/<ITEM[^>]*>([\s\S]*?)<\/ITEM>/g)];
+  if (blocks.length !== payload.length) return null;
+  return blocks.map((m, i) => {
+    const q = m[1].match(/<Q>([\s\S]*?)<\/Q>/);
+    const a = m[1].match(/<A>([\s\S]*?)<\/A>/);
+    return {
+      question: q ? q[1].trim() : payload[i].question,
+      answer: a ? a[1].trim() : payload[i].answer,
+    };
+  });
 }
 
 async function translateFaqs(items) {
@@ -157,15 +266,37 @@ async function translateFaqs(items) {
     'Return JSON exactly: {"ar":[...],"zh":[...],"ru":[...],"fa":[...],"fr":[...]} where each array has the SAME LENGTH and SAME ORDER as the input.',
     'Each output array element must be {"question":"...","answer":"..."}.',
   ].join('\n');
-  const out = await callAnthropic(suffix, JSON.stringify(payload));
   const result = {};
-  for (const l of TARGET_LANGS) {
-    if (!Array.isArray(out[l]) || out[l].length !== items.length) continue;
-    result[l] = out[l].map((it, i) => ({
-      question: it?.question || items[i].question,
-      answer: it?.answer || items[i].answer,
-    }));
-  }
+  let bundleErr = null;
+  try {
+    const out = await callAnthropic(suffix, JSON.stringify(payload));
+    for (const l of TARGET_LANGS) {
+      if (!Array.isArray(out[l]) || out[l].length !== items.length) continue;
+      result[l] = out[l].map((it, i) => ({
+        question: it?.question || items[i].question,
+        answer: it?.answer || items[i].answer,
+      }));
+    }
+  } catch (e) { bundleErr = e; }
+
+  const missing = TARGET_LANGS.filter((l) => !result[l]);
+  if (missing.length === 0) return result;
+  if (bundleErr) console.log(`      ↳ bundled faqs call failed (${bundleErr.message.slice(0, 60)}…), per-lang fallback for ${missing.length} langs`);
+  else console.log(`      ↳ bundled faqs call partial, per-lang fill ${missing.length} langs`);
+
+  await Promise.all(missing.map(async (l) => {
+    try {
+      const arr = await translateFaqsPerLang(payload, l);
+      if (arr) {
+        result[l] = arr.map((it, i) => ({
+          question: it?.question || items[i].question,
+          answer: it?.answer || items[i].answer,
+        }));
+      }
+    } catch (e) {
+      console.log(`      ↳ ${l} per-lang failed: ${e.message.slice(0, 80)}`);
+    }
+  }));
   return result;
 }
 
