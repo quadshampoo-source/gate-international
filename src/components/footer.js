@@ -35,7 +35,7 @@ export default function Footer({ lang, theme }) {
           <div className="col-span-2 md:col-span-1">
             <span className="font-serif text-2xl mb-3 block tracking-[0.04em]">{dict.brand}</span>
             <p className="text-fg-muted text-[13px] max-w-[280px]">
-              {dict.tagline}. Maslak 1453, Istanbul.
+              {dict.tagline}. Zorlu Residence, Beşiktaş, Istanbul.
             </p>
           </div>
           <div>
@@ -72,14 +72,17 @@ export default function Footer({ lang, theme }) {
             </h4>
             <ul className="list-none space-y-1.5">
               <li><Link href={`/${lang}/contact`} className="text-fg-muted text-[13px] hover:text-fg transition-colors">WhatsApp</Link></li>
-              <li><Link href={`/${lang}/contact`} className="text-fg-muted text-[13px] hover:text-fg transition-colors">WeChat</Link></li>
               <li><Link href={`/${lang}/contact`} className="text-fg-muted text-[13px] hover:text-fg transition-colors">Email</Link></li>
-              <li><Link href={`/${lang}/contact`} className="text-fg-muted text-[13px] hover:text-fg transition-colors">+90 212 000 1453</Link></li>
+              <li><Link href={`/${lang}/contact`} className="text-fg-muted text-[13px] hover:text-fg transition-colors">+90 535 520 6339</Link></li>
+              <li><a href="https://instagram.com/gate.international" target="_blank" rel="noreferrer" className="text-fg-muted text-[13px] hover:text-fg transition-colors">Instagram</a></li>
+              <li><a href="https://www.youtube.com/@gipturkey" target="_blank" rel="noreferrer" className="text-fg-muted text-[13px] hover:text-fg transition-colors">YouTube</a></li>
+              <li><a href="https://www.linkedin.com/company/renovia-care/" target="_blank" rel="noreferrer" className="text-fg-muted text-[13px] hover:text-fg transition-colors">LinkedIn</a></li>
             </ul>
           </div>
         </div>
         <div className="pt-6 border-t border-line flex flex-wrap justify-between gap-4 font-mono text-[11px] text-fg-dim tracking-[0.08em]">
           <span>{dict.footer.rights}</span>
+          <span className="text-gold">{dict.contact.renoviaBadge}</span>
           <span>{dict.footer.cities}</span>
         </div>
       </div>

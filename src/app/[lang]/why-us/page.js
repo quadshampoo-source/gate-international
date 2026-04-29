@@ -161,9 +161,9 @@ export default async function WhyUsPage({ params }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-line border border-line">
             {[
-              { city: w.officeIst, addr: 'Maslak 1453, Tower A · Floor 28\nSarıyer · Istanbul', code: '+90 212 000 1453' },
-              { city: w.officeRyd, addr: 'King Fahd Road, Al Olaya\nRiyadh 12213', code: '+966 11 000 0000' },
-              { city: w.officeSha, addr: 'Huaihai Road, Xuhui\nShanghai 200031', code: '+86 21 0000 0000' },
+              { city: w.officeIst, addr: 'Zorlu Residence R1 Blok, Teras Evler No:124\nBeşiktaş, Istanbul / Turkey', code: '+90 535 520 6339' },
+              { city: w.officeRyd, addr: 'King Fahd Road, Al Olaya\nRiyadh 12213', code: '' },
+              { city: w.officeSha, addr: 'Huaihai Road, Xuhui\nShanghai 200031', code: '' },
             ].map((o) => (
               <div key={o.city} className="bg-bg p-7 min-h-[200px] flex flex-col gap-4">
                 <div className="font-mono text-[10px] tracking-[0.16em] text-gold uppercase">{o.city}</div>

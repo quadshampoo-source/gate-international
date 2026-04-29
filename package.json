@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:smtp": "node scripts/test-smtp.mjs",
+    "test:editor-emails": "node scripts/test-editor-emails.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",

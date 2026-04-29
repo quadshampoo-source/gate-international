@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { WhatsappIcon, WechatIcon, MailIcon, PhoneIcon, CheckIcon, FakeQR } from '@/components/icons';
+import { WhatsappIcon, MailIcon, PhoneIcon, CheckIcon, InstagramIcon, YoutubeIcon, LinkedInIcon } from '@/components/icons';
 import TeamCard from '@/components/team-card';
 import { whatsappLink } from '@/lib/utils';
 import { getDict } from '@/lib/i18n';
@@ -103,28 +103,46 @@ export default function ContactClient({ lang, teamGroups = {} }) {
                   <div className="font-mono text-[10px] tracking-[0.16em] text-fg-muted uppercase mb-1">
                     {t.contact.whatsapp}
                   </div>
-                  <div className="font-serif text-[18px]">+90 212 000 1453</div>
+                  <div className="font-serif text-[18px]">+90 535 520 6339</div>
                 </div>
               </a>
-              <a
-                href="#wechat-qr-box"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('wechat-qr-box')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }}
-                className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised"
-              >
-                <div className="w-11 h-11 flex items-center justify-center text-bg flex-shrink-0" style={{ background: '#07C160', borderColor: '#07C160' }}>
-                  <WechatIcon />
+              <a href="https://instagram.com/gate.international" target="_blank" rel="noreferrer" className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised">
+                <div className="w-11 h-11 flex items-center justify-center text-bg flex-shrink-0" style={{ background: '#E1306C', borderColor: '#E1306C' }}>
+                  <InstagramIcon />
                 </div>
                 <div>
                   <div className="font-mono text-[10px] tracking-[0.16em] text-fg-muted uppercase mb-1">
-                    {t.contact.wechat}
+                    {t.contact.instagram}
                   </div>
-                  <div className="font-serif text-[18px]">GateIntl_Istanbul</div>
+                  <div className="font-serif text-[18px]">@gate.international</div>
                 </div>
               </a>
-              <a href="mailto:concierge@gateinternational.com" className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised">
+              <a href="https://www.youtube.com/@gipturkey" target="_blank" rel="noreferrer" className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised">
+                <div className="w-11 h-11 flex items-center justify-center text-bg flex-shrink-0" style={{ background: '#FF0000', borderColor: '#FF0000' }}>
+                  <YoutubeIcon />
+                </div>
+                <div>
+                  <div className="font-mono text-[10px] tracking-[0.16em] text-fg-muted uppercase mb-1">
+                    {t.contact.youtube}
+                  </div>
+                  <div className="font-serif text-[18px]">@gipturkey</div>
+                </div>
+              </a>
+              <a href="https://www.linkedin.com/company/renovia-care/" target="_blank" rel="noreferrer" className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised">
+                <div className="w-11 h-11 flex items-center justify-center text-bg flex-shrink-0" style={{ background: '#0A66C2', borderColor: '#0A66C2' }}>
+                  <LinkedInIcon />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-mono text-[10px] tracking-[0.16em] text-fg-muted uppercase mb-1">
+                    {t.contact.linkedin}
+                  </div>
+                  <div className="font-serif text-[18px]">renovia-care</div>
+                </div>
+                <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-gold border border-gold/40 rounded-full px-3 py-1 whitespace-nowrap">
+                  {t.contact.renoviaBadge}
+                </span>
+              </a>
+              <a href="mailto:hello@gateinternational.co" className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised">
                 <div className="w-11 h-11 border border-gold/35 flex items-center justify-center text-gold flex-shrink-0">
                   <MailIcon />
                 </div>
@@ -132,10 +150,10 @@ export default function ContactClient({ lang, teamGroups = {} }) {
                   <div className="font-mono text-[10px] tracking-[0.16em] text-fg-muted uppercase mb-1">
                     {t.contact.emailLabel}
                   </div>
-                  <div className="font-serif text-[18px]">concierge@gateinternational.com</div>
+                  <div className="font-serif text-[18px]">hello@gateinternational.co</div>
                 </div>
               </a>
-              <a href="tel:+902120001453" className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised">
+              <a href="tel:+905355206339" className="bg-bg px-7 py-6 flex items-center gap-5 cursor-pointer transition-colors hover:bg-bg-raised">
                 <div className="w-11 h-11 border border-gold/35 flex items-center justify-center text-gold flex-shrink-0">
                   <PhoneIcon />
                 </div>
@@ -143,7 +161,7 @@ export default function ContactClient({ lang, teamGroups = {} }) {
                   <div className="font-mono text-[10px] tracking-[0.16em] text-fg-muted uppercase mb-1">
                     {t.contact.phoneLabel}
                   </div>
-                  <div className="font-serif text-[18px]">+90 212 000 1453</div>
+                  <div className="font-serif text-[18px]">+90 535 520 6339</div>
                 </div>
               </a>
             </div>
@@ -169,18 +187,6 @@ export default function ContactClient({ lang, teamGroups = {} }) {
               />
             </div>
 
-            <div id="wechat-qr-box" className="p-6 bg-bg-raised border border-line flex items-center gap-5 mt-6">
-              <div className="w-[100px] h-[100px] p-1.5 bg-white flex-shrink-0">
-                <FakeQR />
-              </div>
-              <div>
-                <div className="font-mono text-[10px] tracking-[0.16em] text-fg-muted mb-1.5">
-                  WECHAT · 微信
-                </div>
-                <div className="font-serif text-[18px] mb-1">{t.contact.scanWechat}</div>
-                <div className="font-mono text-[11px] text-gold tracking-[0.08em]">ID: GateIntl_Istanbul</div>
-              </div>
-            </div>
           </div>
 
           <div>

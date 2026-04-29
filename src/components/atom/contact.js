@@ -125,34 +125,48 @@ function ContactBody({ lang, teamGroups }) {
                 icon={<WhatsAppGlyph />}
                 iconBg="#25D366"
                 label={t.contact.whatsapp}
-                value="+90 212 000 1453"
+                value="+90 535 520 6339"
               />
               <ContactRow
-                href="#wechat-qr-box"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('wechat-qr-box')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }}
-                icon={<WeChatGlyph />}
-                iconBg="#07C160"
-                label={t.contact.wechat}
-                value="GateIntl_Istanbul"
+                href="https://instagram.com/gate.international"
+                external
+                icon={<InstagramGlyph />}
+                iconBg="#E1306C"
+                label={t.contact.instagram}
+                value="@gate.international"
               />
               <ContactRow
-                href="mailto:concierge@gateinternational.com"
+                href="https://www.youtube.com/@gipturkey"
+                external
+                icon={<YoutubeGlyph />}
+                iconBg="#FF0000"
+                label={t.contact.youtube}
+                value="@gipturkey"
+              />
+              <ContactRow
+                href="https://www.linkedin.com/company/renovia-care/"
+                external
+                icon={<LinkedInGlyph />}
+                iconBg="#0A66C2"
+                label={t.contact.linkedin}
+                value="renovia-care"
+                badge={t.contact.renoviaBadge}
+              />
+              <ContactRow
+                href="mailto:hello@gateinternational.co"
                 icon={<MailGlyph />}
                 iconBg="var(--primary-50)"
                 iconColor="var(--primary-700)"
                 label={t.contact.emailLabel}
-                value="concierge@gateinternational.com"
+                value="hello@gateinternational.co"
               />
               <ContactRow
-                href="tel:+902120001453"
+                href="tel:+905355206339"
                 icon={<PhoneGlyph />}
                 iconBg="var(--primary-50)"
                 iconColor="var(--primary-700)"
                 label={t.contact.phoneLabel}
-                value="+90 212 000 1453"
+                value="+90 535 520 6339"
               />
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
@@ -176,36 +190,6 @@ function ContactBody({ lang, teamGroups }) {
                 />
               </div>
 
-              <div
-                id="wechat-qr-box"
-                className="p-5 mt-2 flex items-center gap-4"
-                style={{
-                  background: 'var(--atom-surface)',
-                  border: '1px solid var(--neutral-200)',
-                  borderRadius: 'var(--atom-radius-lg)',
-                }}
-              >
-                <div
-                  className="w-[88px] h-[88px] flex-shrink-0 grid place-items-center"
-                  style={{ background: 'var(--neutral-100)', borderRadius: 'var(--atom-radius-md)' }}
-                >
-                  <FakeQR />
-                </div>
-                <div>
-                  <div
-                    className="text-[10px] font-semibold uppercase tracking-wider mb-1"
-                    style={{ color: 'var(--neutral-400)' }}
-                  >
-                    WECHAT · 微信
-                  </div>
-                  <div className="text-base font-semibold mb-0.5" style={{ color: 'var(--neutral-900)' }}>
-                    {t.contact.scanWechat}
-                  </div>
-                  <div className="text-xs font-mono" style={{ color: 'var(--primary-600)' }}>
-                    ID: GateIntl_Istanbul
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Form column */}
@@ -253,7 +237,7 @@ function ContactBody({ lang, teamGroups }) {
   );
 }
 
-function ContactRow({ href, external, onClick, icon, iconBg, iconColor = '#fff', label, value }) {
+function ContactRow({ href, external, onClick, icon, iconBg, iconColor = '#fff', label, value, badge }) {
   const Anchor = external ? 'a' : (href?.startsWith('#') ? 'a' : 'a');
   const props = external ? { target: '_blank', rel: 'noreferrer' } : {};
   return (
@@ -275,7 +259,7 @@ function ContactRow({ href, external, onClick, icon, iconBg, iconColor = '#fff',
       >
         {icon}
       </span>
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <div
           className="text-[10px] font-semibold uppercase tracking-wider mb-0.5"
           style={{ color: 'var(--neutral-400)' }}
@@ -286,6 +270,19 @@ function ContactRow({ href, external, onClick, icon, iconBg, iconColor = '#fff',
           {value}
         </div>
       </div>
+      {badge && (
+        <span
+          className="text-[9px] font-semibold uppercase tracking-wider px-2.5 py-1 whitespace-nowrap"
+          style={{
+            color: 'var(--primary-700)',
+            background: 'var(--primary-50)',
+            border: '1px solid var(--primary-200)',
+            borderRadius: 'var(--atom-radius-pill)',
+          }}
+        >
+          {badge}
+        </span>
+      )}
     </Anchor>
   );
 }
@@ -368,11 +365,28 @@ function WhatsAppGlyph() {
   );
 }
 
-function WeChatGlyph() {
+function InstagramGlyph() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function YoutubeGlyph() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M9.5 4C5.36 4 2 6.69 2 10c0 1.74.95 3.31 2.46 4.42L4 16l1.97-1.04A8.6 8.6 0 0 0 9.5 16h.5a6.7 6.7 0 0 1-.06-.83C9.94 12.32 12.7 10 16 10c.45 0 .9.04 1.32.13C16.85 6.78 13.6 4 9.5 4Zm-2.5 4.4a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Zm5 0a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z" />
-      <path d="M16 11c-3.31 0-6 2.24-6 5s2.69 5 6 5c.81 0 1.59-.13 2.3-.37L20 22l-.4-1.36C21.06 19.65 22 18.4 22 17c0-2.76-2.69-5-6-5Zm-2 3.5a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5Zm4 0a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5Z" />
+      <path d="M23.5 6.5a3 3 0 0 0-2.1-2.1C19.5 4 12 4 12 4s-7.5 0-9.4.4A3 3 0 0 0 .5 6.5C0 8.5 0 12 0 12s0 3.5.5 5.5a3 3 0 0 0 2.1 2.1C4.5 20 12 20 12 20s7.5 0 9.4-.4a3 3 0 0 0 2.1-2.1c.5-2 .5-5.5.5-5.5s0-3.5-.5-5.5zM9.6 15.5V8.5l6.4 3.5-6.4 3.5z" />
+    </svg>
+  );
+}
+
+function LinkedInGlyph() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.28V1.72C24 .77 23.2 0 22.22 0z" />
     </svg>
   );
 }
@@ -398,26 +412,6 @@ function CheckGlyph() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
-
-function FakeQR() {
-  return (
-    <svg viewBox="0 0 80 80" width="72" height="72" aria-hidden>
-      <rect width="80" height="80" fill="#fff" />
-      <g fill="var(--neutral-900)">
-        {Array.from({ length: 64 }).map((_, i) => {
-          const r = Math.floor(i / 8);
-          const c = i % 8;
-          const filled = (r * 7 + c * 13) % 3 === 0;
-          if (!filled) return null;
-          return <rect key={i} x={c * 9 + 4} y={r * 9 + 4} width={8} height={8} />;
-        })}
-        <rect x="4" y="4" width="22" height="22" fill="none" stroke="var(--neutral-900)" strokeWidth="3" />
-        <rect x="54" y="4" width="22" height="22" fill="none" stroke="var(--neutral-900)" strokeWidth="3" />
-        <rect x="4" y="54" width="22" height="22" fill="none" stroke="var(--neutral-900)" strokeWidth="3" />
-      </g>
     </svg>
   );
 }

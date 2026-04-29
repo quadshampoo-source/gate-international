@@ -32,6 +32,32 @@ function PhoneIcon() {
   );
 }
 
+function IgIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function YtIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M23.5 6.5a3 3 0 0 0-2.1-2.1C19.5 4 12 4 12 4s-7.5 0-9.4.4A3 3 0 0 0 .5 6.5C0 8.5 0 12 0 12s0 3.5.5 5.5a3 3 0 0 0 2.1 2.1C4.5 20 12 20 12 20s7.5 0 9.4-.4a3 3 0 0 0 2.1-2.1c.5-2 .5-5.5.5-5.5s0-3.5-.5-5.5zM9.6 15.5V8.5l6.4 3.5-6.4 3.5z" />
+    </svg>
+  );
+}
+
+function LiIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45C23.2 24 24 23.23 24 22.28V1.72C24 .77 23.2 0 22.22 0z" />
+    </svg>
+  );
+}
+
 function renderTitle(title) {
   if (!title || typeof title !== 'string') return title;
   const parts = title.trim().split(/\s+/);
@@ -110,18 +136,53 @@ export default function EditorialContact({ lang, teamGroups = {} }) {
             <WaIcon /> {t.contact.whatsapp}
           </Link>
           <a
-            href="mailto:concierge@gateinternational.com"
+            href="mailto:hello@gateinternational.co"
             className="inline-flex items-center gap-2.5 h-12 px-6 rounded-full bg-[#051A24] text-white text-[13px] font-medium hover:bg-[#0a2a38] transition-colors"
           >
-            <EmailIcon /> concierge@gateinternational.com
+            <EmailIcon /> hello@gateinternational.co
           </a>
           <a
-            href="tel:+902120001453"
+            href="tel:+905355206339"
             className="inline-flex items-center gap-2.5 h-12 px-6 rounded-full text-[#051A24] text-[13px] font-medium transition-colors"
             style={{ background: '#FFFFFF', border: '1px solid #E0EBF0' }}
           >
-            <PhoneIcon /> +90 212 000 1453
+            <PhoneIcon /> +90 535 520 6339
           </a>
+          <a
+            href="https://instagram.com/gate.international"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 h-12 px-6 rounded-full text-white text-[13px] font-medium transition-colors"
+            style={{ background: '#E1306C' }}
+          >
+            <IgIcon /> @gate.international
+          </a>
+          <a
+            href="https://www.youtube.com/@gipturkey"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 h-12 px-6 rounded-full text-white text-[13px] font-medium transition-colors"
+            style={{ background: '#FF0000' }}
+          >
+            <YtIcon /> @gipturkey
+          </a>
+          <a
+            href="https://www.linkedin.com/company/renovia-care/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 h-12 px-6 rounded-full text-white text-[13px] font-medium transition-colors"
+            style={{ background: '#0A66C2' }}
+          >
+            <LiIcon /> LinkedIn
+          </a>
+        </div>
+        <div className="container-x flex justify-center mt-4">
+          <span
+            className="font-mono text-[10px] tracking-[0.16em] uppercase px-3 py-1 rounded-full"
+            style={{ color: '#C9A84C', border: '1px solid rgba(201,168,76,0.4)' }}
+          >
+            {t.contact.renoviaBadge}
+          </span>
         </div>
       </section>
 

@@ -24,31 +24,42 @@ export default function ResetPasswordPage() {
     const supabase = supabaseBrowser();
     let mounted = true;
 
-    // Three ways the recovery session can be established:
-    //   1. Fragment tokens (#access_token=…&type=recovery) — legacy/dashboard.
-    //      detectSessionInUrl in the browser client picks these up.
-    //   2. PKCE code (?code=…) — Supabase verify endpoint redirects here.
-    //      Also handled by detectSessionInUrl.
-    //   3. Hashed token (?token_hash=…&type=recovery) — comes from admin-
-    //      generated links that bypass the verify endpoint. We call
-    //      verifyOtp ourselves.
+    // Recovery sessions can land here in three shapes:
+    //   1. PKCE code (?code=…) — Supabase verify endpoint redirects here.
+    //      Must be exchanged via exchangeCodeForSession; the SSR browser
+    //      client does NOT auto-consume the URL.
+    //   2. Hashed token (?token_hash=…&type=recovery) — admin-generated
+    //      links that bypass /verify. We call verifyOtp ourselves.
+    //   3. Fragment tokens (#access_token=…&type=recovery) — legacy /
+    //      dashboard-style links. The client picks these up automatically.
     const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+    const code = params.get('code');
     const tokenHash = params.get('token_hash');
     const otpType = params.get('type');
+    const hasFragmentTokens =
+      typeof window !== 'undefined' && window.location.hash.includes('access_token');
 
-    if (tokenHash && otpType) {
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+        if (!mounted) return;
+        if (error) setLinkError(error.message || 'This reset link is invalid or has expired.');
+        else setReady(true);
+      });
+    } else if (tokenHash && otpType) {
       supabase.auth.verifyOtp({ token_hash: tokenHash, type: otpType }).then(({ error }) => {
         if (!mounted) return;
         if (error) setLinkError(error.message || 'This reset link is invalid or has expired.');
         else setReady(true);
       });
-    } else {
-      // detectSessionInUrl runs on client init; give it a tick to consume the
-      // hash/code, then check.
+    } else if (hasFragmentTokens) {
+      // Fragment-based recovery — the client consumes #access_token=… on init.
+      // Just wait for getSession / auth event.
       supabase.auth.getSession().then(({ data }) => {
         if (!mounted) return;
         if (data.session) setReady(true);
       });
+    } else {
+      setLinkError('This reset link is invalid or has already been used. Please request a new one.');
     }
 
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
@@ -56,24 +67,11 @@ export default function ResetPasswordPage() {
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') setReady(true);
     });
 
-    // If after 2s we still have no session and no recovery params in the URL,
-    // the link was consumed elsewhere or expired. Surface a clear error.
-    const timeout = setTimeout(() => {
-      if (!mounted || ready) return;
-      const hasHash = typeof window !== 'undefined' && window.location.hash.includes('access_token');
-      const hasCode = params.has('code');
-      const hasTokenHash = params.has('token_hash');
-      if (!hasHash && !hasCode && !hasTokenHash) {
-        setLinkError('This reset link is invalid or has already been used. Please request a new one.');
-      }
-    }, 2000);
-
     return () => {
       mounted = false;
-      clearTimeout(timeout);
       sub?.subscription?.unsubscribe?.();
     };
-  }, [ready]);
+  }, []);
 
   async function onSubmit(e) {
     e.preventDefault();

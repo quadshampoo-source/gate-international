@@ -156,8 +156,8 @@ export function organizationSchema() {
     address: [
       {
         '@type': 'PostalAddress',
-        streetAddress: 'Maslak 1453, Tower A',
-        addressLocality: 'Sarıyer',
+        streetAddress: 'Zorlu Residence R1 Blok, Teras Evler No:124',
+        addressLocality: 'Beşiktaş',
         addressRegion: 'Istanbul',
         addressCountry: 'TR',
       },
@@ -179,6 +179,8 @@ export function organizationSchema() {
     ],
     sameAs: [
       'https://instagram.com/gate.international',
+      'https://www.youtube.com/@gipturkey',
+      'https://www.linkedin.com/company/renovia-care/',
       'https://wa.me/905355206339',
     ],
   };

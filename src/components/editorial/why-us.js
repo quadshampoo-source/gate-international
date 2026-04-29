@@ -179,9 +179,9 @@ export default function EditorialWhyUs({ lang, testimonials }) {
           <Stagger stagger={0.08}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
-                { city: w.officeIst, flag: '🇹🇷', addr: 'Maslak 1453, Tower A · Floor 28\nSarıyer · Istanbul', code: '+90 212 000 1453' },
-                { city: w.officeRyd, flag: '🇸🇦', addr: 'King Fahd Road, Al Olaya\nRiyadh 12213', code: '+966 11 000 0000' },
-                { city: w.officeSha, flag: '🇨🇳', addr: 'Huaihai Road, Xuhui\nShanghai 200031', code: '+86 21 0000 0000' },
+                { city: w.officeIst, flag: '🇹🇷', addr: 'Zorlu Residence R1 Blok, Teras Evler No:124\nBeşiktaş, Istanbul / Turkey', code: '+90 535 520 6339' },
+                { city: w.officeRyd, flag: '🇸🇦', addr: 'King Fahd Road, Al Olaya\nRiyadh 12213', code: '' },
+                { city: w.officeSha, flag: '🇨🇳', addr: 'Huaihai Road, Xuhui\nShanghai 200031', code: '' },
               ].map((o) => (
                 <div
                   key={o.city}

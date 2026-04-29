@@ -51,15 +51,16 @@ export default function AtomFooter({ lang = 'en' }) {
           </FooterCol>
 
           <FooterCol heading={t.columns.connect.heading}>
-            <FooterLink href="https://instagram.com" external>Instagram</FooterLink>
-            <FooterLink href="https://wa.me/" external>WhatsApp</FooterLink>
-            <FooterLink href="https://linkedin.com" external>LinkedIn</FooterLink>
-            <FooterLink href="https://youtube.com" external>YouTube</FooterLink>
+            <FooterLink href="https://instagram.com/gate.international" external>Instagram</FooterLink>
+            <FooterLink href="https://wa.me/905355206339" external>WhatsApp</FooterLink>
+            <FooterLink href="https://www.linkedin.com/company/renovia-care/" external>LinkedIn</FooterLink>
+            <FooterLink href="https://www.youtube.com/@gipturkey" external>YouTube</FooterLink>
           </FooterCol>
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 pt-8" style={{ color: 'var(--atom-footer-fg-faint)', fontSize: 12 }}>
           <span>{t.copyright}</span>
+          <span style={{ color: 'var(--accent-coral, #C9A84C)' }}>Part of Renovia Care Group</span>
           <span>{t.legal.privacy} · {t.legal.terms} · {t.legal.cookies}</span>
         </div>
       </div>
