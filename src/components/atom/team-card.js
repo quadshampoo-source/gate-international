@@ -117,21 +117,19 @@ export default function AtomTeamCard({ member, lang, dict }) {
             {waText}
           </Link>
         )}
-        {member.email && (
-          <Link
-            href={`mailto:${member.email}`}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 h-10 text-sm font-semibold transition-colors"
-            style={{
-              background: 'var(--atom-surface)',
-              border: '1px solid var(--neutral-200)',
-              color: 'var(--primary-700)',
-              borderRadius: 'var(--atom-radius-md)',
-            }}
-          >
-            <EmailIcon />
-            {emailText}
-          </Link>
-        )}
+        <Link
+          href={`mailto:hello@gateinternational.co?subject=${encodeURIComponent(`Inquiry for ${member.name}`)}`}
+          className="flex-1 inline-flex items-center justify-center gap-1.5 h-10 text-sm font-semibold transition-colors"
+          style={{
+            background: 'var(--atom-surface)',
+            border: '1px solid var(--neutral-200)',
+            color: 'var(--primary-700)',
+            borderRadius: 'var(--atom-radius-md)',
+          }}
+        >
+          <EmailIcon />
+          {emailText}
+        </Link>
       </div>
     </div>
   );
